@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mE.Health.utility.roundview.RoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rllContinue"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:gravity="center"
+    android:orientation="horizontal"
+    app:rv_backgroundColor="@color/color_FF6605"
+    app:rv_isRadiusHalfHeight="true">
+
+    <com.mE.Health.utility.roundview.RoundTextView
+        android:id="@+id/rtvButton"
+        style="@style/textStyleSemiBold"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/continue_"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17"
+        app:rv_backgroundColor="@color/color_FF6605"
+        app:rv_isRadiusHalfHeight="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_15"
+        android:src="@drawable/ic_arrow_right" />
+
+</com.mE.Health.utility.roundview.RoundLinearLayout>
