@@ -9,10 +9,12 @@ import com.mE.Health.HomeActivity
 import com.mE.Health.R
 import com.mE.Health.databinding.AssistantFragmentBinding
 import com.mE.Health.databinding.HomeFragmentBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@AndroidEntryPoint
 class AssistantFragment : BaseFragment() {
 
     private lateinit var binding: AssistantFragmentBinding
@@ -27,7 +29,7 @@ class AssistantFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireContext() as HomeActivity).setBottomNavigationVisibility()
+        setBottomNavigationVisibility(requireActivity())
         initView()
         initHeader()
     }

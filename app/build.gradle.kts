@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+//    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -59,13 +60,10 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-
-//    implementation("com.google.dagger:hilt-android:2.44")
-//    implementation("com.google.dagger:hilt-compiler:2.44")
-
-    //ViewModels
-//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
-//    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
+    implementation("com.google.dagger:dagger:2.33")
+    implementation("com.google.dagger:dagger-android-support:2.27")
+    kapt ("com.google.dagger:dagger-compiler:2.33")
+    kapt ("com.google.dagger:dagger-android-processor:2.27")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
 
     //Dagger Hilt
@@ -79,4 +77,11 @@ dependencies {
     implementation("androidx.room:room-runtime:2.4.3")
     implementation("androidx.room:room-ktx:2.4.3")
     kapt("androidx.room:room-compiler:2.4.3")
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.22")
+
 }

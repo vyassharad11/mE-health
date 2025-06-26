@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
+
+
+            <TextView
+                style="@style/textStyleBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@string/detail"
+                android:textColor="@color/color_333333"
+                android:textSize="@dimen/sp_24" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_15"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/sp_12">
+
+
+                    <com.mE.Health.utility.roundview.RoundLinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_10"
+                        app:rv_backgroundColor="@color/color_AF09C00"
+                        app:rv_cornerRadius="@dimen/dp_10">
+
+                        <ImageView
+                            android:layout_width="@dimen/dp_30"
+                            android:layout_height="@dimen/dp_30"
+                            android:src="@drawable/ic_calendar" />
+
+                    </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_20"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/textStyleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="11 Jun 2025"
+                            android:textColor="@color/text_color_primary"
+                            android:textSize="@dimen/sp_16" />
+
+                        <TextView
+                            style="@style/textStyleSemiBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10:00 AM - 11:00 AM"
+                            android:textColor="@color/text_color_orange"
+                            android:textSize="@dimen/sp_12" />
+                    </LinearLayout>
+
+                    <com.mE.Health.utility.roundview.RoundTextView
+                        android:id="@+id/rtvStatus"
+                        style="@style/textStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="@dimen/dp_25"
+                        android:paddingVertical="@dimen/dp_5"
+                        android:text="Completed"
+                        android:textColor="@color/color_06C270"
+                        android:textSize="@dimen/sp_12"
+                        app:rv_backgroundColor="@color/color_A06C270"
+                        app:rv_isRadiusHalfHeight="true" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_5"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_12">
+
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        style="@style/textStyleBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Id: APT-2023051501"
+                        android:textColor="@color/text_color_primary"
+                        android:textSize="@dimen/sp_18" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_7"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="@dimen/dp_5"
+                            android:layout_height="match_parent"
+                            android:background="@color/color_FF6605" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_12"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/textStyleRegular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="11 Jun 2025,\n10:00 AM-11:00 AM"
+                                android:textColor="@color/text_color_primary"
+                                android:textSize="@dimen/sp_12" />
+
+                            <TextView
+                                style="@style/textStyleRegular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:text="Based on your recent activity and climate,\nhere’s personalized guidance on your daily\nwater intake to stay hydrated and healthy."
+                                android:textColor="@color/text_color_primary"
+                                android:textSize="@dimen/sp_10" />
+
+                            <TextView
+                                style="@style/textStyleSemiBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:text="@string/read_more"
+                                android:textColor="@color/text_color_orange"
+                                android:textSize="@dimen/sp_13" />
+
+                        </LinearLayout>
+
+                        <com.mE.Health.utility.roundview.RoundTextView
+                            android:id="@+id/tvStatus"
+                            style="@style/textStyleSemiBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:paddingHorizontal="@dimen/dp_20"
+                            android:paddingVertical="@dimen/dp_5"
+                            android:text="Final"
+                            android:textColor="@color/color_06C270"
+                            android:textSize="@dimen/sp_8"
+                            app:rv_backgroundColor="@color/color_A06C270"
+                            app:rv_isRadiusHalfHeight="true" />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_5"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/dp_12"
+                    android:paddingVertical="@dimen/dp_15">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/dummy_doctor" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_20"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/textStyleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Dr. Davide Joe"
+                            android:textColor="@color/text_color_orange"
+                            android:textSize="@dimen/sp_18" />
+
+                        <TextView
+                            style="@style/textStyleRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Hospital Name"
+                            android:textColor="@color/text_color_primary"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right_arrow" />
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_5"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/dp_12"
+                    android:paddingVertical="@dimen/dp_15">
+
+
+                    <TextView
+                        style="@style/textStyleBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reason"
+                        android:textColor="@color/text_color_primary"
+                        android:textSize="@dimen/sp_17" />
+
+                    <TextView
+                        style="@style/textStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="To go for regular checkups\nfor diabetes "
+                        android:textColor="@color/color_6E6B78"
+                        android:textSize="@dimen/sp_14" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_5"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_12">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/textStyleSemiBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Visits Status"
+                            android:textColor="@color/color_333333"
+                            android:textSize="@dimen/sp_17" />
+
+                        <com.mE.Health.utility.roundview.RoundTextView
+                            android:id="@+id/rtvVisitStatus"
+                            style="@style/textStyleSemiBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:paddingHorizontal="@dimen/dp_25"
+                            android:paddingVertical="@dimen/dp_5"
+                            android:text="Completed"
+                            android:textColor="@color/color_06C270"
+                            android:textSize="@dimen/sp_10"
+                            app:rv_backgroundColor="@color/color_A06C270"
+                            app:rv_isRadiusHalfHeight="true" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        style="@style/textStyleRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:text="Start Date: 11/06/2025"
+                        android:textColor="@color/text_color_primary"
+                        android:textSize="@dimen/sp_17" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_15"
+                android:orientation="horizontal"
+                android:layout_marginRight="@dimen/dp_10"
+                android:paddingHorizontal="@dimen/dp_18"
+                android:paddingVertical="@dimen/sp_14">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_refresh" />
+
+                    <TextView
+                        style="@style/textStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:text="Sync Data"
+                        android:textColor="@color/color_333333"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_upload_orange" />
+
+                    <TextView
+                        style="@style/textStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:gravity="center_vertical"
+                        android:text="Share Record"
+                        android:textColor="@color/color_333333"
+                        android:textSize="@dimen/sp_16" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <com.mE.Health.utility.roundview.RoundTextView
+                android:id="@+id/tvEditAppointment"
+                style="@style/textStyleSemiBold"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_45"
+                android:layout_marginHorizontal="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_15"
+                android:gravity="center"
+                android:text="@string/edit_appointment"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_17"
+                android:visibility="gone"
+                app:rv_backgroundColor="@color/color_FF6605"
+                app:rv_isRadiusHalfHeight="true" />
+
+            <com.mE.Health.utility.roundview.RoundTextView
+                android:id="@+id/tvCancelAppointment"
+                style="@style/textStyleSemiBold"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_45"
+                android:layout_marginHorizontal="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_15"
+                android:gravity="center"
+                android:text="@string/cancel_appointment"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_17"
+                android:visibility="gone"
+                app:rv_backgroundColor="@color/color_FF6605"
+                app:rv_isRadiusHalfHeight="true" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

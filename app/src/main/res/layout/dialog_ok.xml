@@ -13,6 +13,22 @@
     app:rv_backgroundColor="@color/white"
     app:rv_cornerRadius="@dimen/dp_10">
 
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/textStyleBold"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:minWidth="60dp"
+        android:visibility="gone"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp"
+        android:textAllCaps="true"
+        android:text="@string/whoops"
+        android:textColor="@color/color_333333"
+        android:textSize="@dimen/sp_16"
+        tools:ignore="UnusedAttribute" />
 
     <TextView
         android:id="@+id/tvMessage"

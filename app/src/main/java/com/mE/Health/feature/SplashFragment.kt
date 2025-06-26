@@ -13,7 +13,7 @@ import com.mE.Health.R
 import com.mE.Health.databinding.SplashFragmentBinding
 import com.mE.Health.feature.LoginFragment
 
-class SplashFragment  : Fragment() {
+class SplashFragment  : BaseFragment() {
 
     private var _binding: SplashFragmentBinding? = null
 
@@ -35,21 +35,6 @@ class SplashFragment  : Fragment() {
                 LoginFragment(),
                 "LoginFragment"
             )
-        }, 2000L)
-    }
-
-    private fun replaceFragmentWithoutBack(containerViewId: Int, fragment: Fragment, fragmentTag: String) {
-        try {
-            if (activity == null) return
-            fragment.enterTransition = Slide(Gravity.END)
-            fragment.exitTransition = Slide(Gravity.START)
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(containerViewId, fragment, fragmentTag)
-                .commitAllowingStateLoss()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } catch (e: Error) {
-            e.printStackTrace()
-        }
+        }, 5000L)
     }
 }

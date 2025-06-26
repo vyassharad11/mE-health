@@ -12,10 +12,12 @@ import com.mE.Health.databinding.AssistFragmentBinding
 import com.mE.Health.databinding.AssistantFragmentBinding
 import com.mE.Health.databinding.HomeFragmentBinding
 import com.mE.Health.feature.adapter.AssistAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@AndroidEntryPoint
 class AssistFragment : BaseFragment() {
 
     private lateinit var binding: AssistFragmentBinding
@@ -30,7 +32,7 @@ class AssistFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireContext() as HomeActivity).setBottomNavigationVisibility()
+        setBottomNavigationVisibility(requireActivity())
         initView()
         initHeader()
     }

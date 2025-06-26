@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dp_5"
+    app:cardCornerRadius="@dimen/dp_5"
+    app:cardElevation="@dimen/dp_5"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.mE.Health.utility.roundview.RoundTextView
+            android:id="@+id/tvMyChart"
+            style="@style/textStyleRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:padding="@dimen/dp_10"
+            android:text="@string/my_chart"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            app:rv_backgroundColor="@color/color_333333"
+            app:rv_cornerRadius_BL="@dimen/dp_5"
+            app:rv_cornerRadius_TR="@dimen/dp_5" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="@dimen/dp_70"
+                android:src="@drawable/dummy_cambridge" />
+
+            <TextView
+                android:id="@+id/tvName"
+                style="@style/textStyleBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@string/app_name"
+                android:textColor="@color/color_3D3434"
+                android:textSize="@dimen/sp_20" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_140"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:orientation="horizontal"
+           >
+
+            <com.mE.Health.utility.roundview.RoundTextView
+                android:id="@+id/tvConnect"
+                style="@style/textStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:paddingHorizontal="@dimen/dp_20"
+                android:text="@string/connect"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                app:rv_backgroundColor="@color/color_FF6605"
+                app:rv_cornerRadius="@dimen/dp_5" />
+
+            <ImageView
+                android:id="@+id/ivReload"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_reload"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
