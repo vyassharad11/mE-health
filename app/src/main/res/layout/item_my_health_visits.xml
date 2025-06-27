@@ -79,7 +79,7 @@
                 android:text="View Details"
                 android:paddingHorizontal="@dimen/dp_30"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_17"
+                android:textSize="@dimen/sp_14"
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_isRadiusHalfHeight="true" />
 

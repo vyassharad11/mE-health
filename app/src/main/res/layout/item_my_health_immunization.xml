@@ -105,7 +105,7 @@
                     android:text="View Details"
                     android:layout_marginRight="@dimen/dp_10"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     app:rv_backgroundColor="@color/color_FF6605"
                     app:rv_isRadiusHalfHeight="true" />
 
@@ -124,7 +124,7 @@
                     android:text="View Patient"
                     app:rv_strokeWidth="@dimen/dp_1"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     app:rv_isRadiusHalfHeight="true" />
 
             </LinearLayout>

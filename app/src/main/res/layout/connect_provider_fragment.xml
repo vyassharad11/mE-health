@@ -28,7 +28,7 @@
             style="@style/textStyleSemiBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/background_color"
             android:drawableLeft="@drawable/ic_search"
             android:drawablePadding="@dimen/dp_10"
             android:hint="@string/search_by"

@@ -32,8 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="Lisinopril 10mg
-Active"
+                    android:text="Lisinopril 10mg Active"
                     android:layout_marginTop="@dimen/dp_5"
                     android:textColor="@color/color_333333"
                     android:textSize="@dimen/sp_18" />
@@ -80,7 +79,7 @@ Active"
                 android:text="View Details"
                 android:paddingHorizontal="@dimen/dp_30"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_17"
+                android:textSize="@dimen/sp_14"
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_isRadiusHalfHeight="true" />
 

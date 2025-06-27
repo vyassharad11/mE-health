@@ -87,7 +87,7 @@
     <string name="list_of_allergies">List of Allergies</string>
     <string name="list_of_immunization">List of Immunization</string>
     <string name="list_of_billings">List of Billings</string>
-
+    <string name="list_of_vitals">List of Vitals</string>
     <string name="appointment_description">Based on the data provided, here is some advice on savings ratio for your finance profile:\n\n. Understand Your Financial Goals: Start by identifying your short-term and long-term financial goals. Whether it\'s saving for a vacation, emergency fund, retirement, or any other goal, having clarity on what you are saving for will help determine your savings ratio.\n\n2. *Assess Your Current Financial Situation:* Review your income, expenses, assets, liabilities, and spending habits. Understanding your cash flow will give you a clear \n\n</string>
     <string name="detail">Details</string>
     <string name="start_date">Start Date</string>
@@ -100,9 +100,27 @@
     <string name="lab">Lab</string>
     <string name="back">Back</string>
     <string name="edit_appointment">Edit Appointment</string>
+    <string name="edit_medication">Edit Medication</string>
     <string name="cancel_appointment">Cancel Appointment</string>
+    <string name="medication">Medication</string>
+    <string name="medication_id">Medication ID</string>
+    <string name="dosage_instruction">Dosage Instruction</string>
     <string name="a">Or</string>
-
+    <string name="reason">Reason</string>
+    <string name="sync_data">Sync Data</string>
+    <string name="share_record">Share Record</string>
+    <string name="vital">Vital</string>
+    <string name="final_">Final</string>
+    <string name="patient_name">Patient Name</string>
+    <string name="vital_id">Vital ID</string>
+    <string name="visits_status">Visits Status</string>
+    <string name="in_progress">In-progress</string>
+    <string name="log_new_vital">Log New Vital</string>
+    <string name="clinical_status">Clinical Status</string>
+    <string name="recorded_date">Recorded Date</string>
+    <string name="active">Active</string>
+    <string name="allergy_id">Allergy ID</string>
+    <string name="refresh_data">Refresh Data</string>
 
 
 </resources>

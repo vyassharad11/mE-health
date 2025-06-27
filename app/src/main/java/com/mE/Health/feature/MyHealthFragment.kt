@@ -22,6 +22,7 @@ import com.mE.Health.feature.adapter.MyHealthPractitionerAdapter
 import com.mE.Health.feature.adapter.MyHealthProcedureAdapter
 import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.MyHealthVisitsAdapter
+import com.mE.Health.feature.adapter.MyHealthVitalAdapter
 import com.mE.Health.models.MyHealthTypeModel
 import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
@@ -54,7 +55,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.my_health)
+        binding.toolbar.tvTitle.text = getString(R.string.back)
         binding.toolbar.ivBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -97,7 +98,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         }
 
                         4 -> {
-
+                            setVitalData()
                         }
 
                         5 -> {
@@ -131,7 +132,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.ivSearch.setOnClickListener(this)
         binding.ivCross.setOnClickListener(this)
         binding.ivFilter.setOnClickListener(this)
-        binding.ivCalendar.setOnClickListener(this)
+        binding.ivFilterCalendar.setOnClickListener(this)
         binding.ivDateCancel.setOnClickListener(this)
     }
 
@@ -170,7 +171,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 )
             }
 
-            R.id.ivCalendar -> {
+            R.id.ivFilterCalendar -> {
                 openDateRangePicker()
             }
         }
@@ -320,6 +321,25 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+    private fun setVitalData() {
+        binding.tvMyHealthType.text = getString(R.string.list_of_vitals)
+        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
+        val adapter = MyHealthVitalAdapter(requireActivity())
+        binding.rvList.adapter = adapter
+        adapter.apply {
+            onItemClickListener = object : MyHealthVitalAdapter.OnClickCallback {
+                override fun onClicked(view: View?,position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        VitalDetailsFragment(),
+                        "VitalDetailsFragment",
+                        "MyHealthFragment"
+                    )
+                }
+            }
+        }
+    }
+
     private fun setMedicationData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_medication)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
@@ -327,7 +347,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthMedicationAdapter.OnClickCallback {
-                override fun onClicked(view: View?, type: String) {
+                override fun onClicked(view: View?, position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        MedicationDetailsFragment(),
+                        "MedicationDetailsFragment",
+                        "MyHealthFragment"
+                    )
                 }
             }
         }
@@ -367,7 +393,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthAllergiesAdapter.OnClickCallback {
-                override fun onClicked(view: View?, type: String) {
+                override fun onClicked(view: View?, position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        AllergiesDetailsFragment(),
+                        "AllergiesDetailsFragment",
+                        "MyHealthFragment"
+                    )
                 }
             }
         }
