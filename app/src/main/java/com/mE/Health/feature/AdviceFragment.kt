@@ -14,10 +14,12 @@ import com.mE.Health.databinding.HomeFragmentBinding
 import com.mE.Health.feature.adapter.AdviceListAdapter
 import com.mE.Health.feature.adapter.AssistAdapter
 import com.mE.Health.models.AdviceDTO
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@AndroidEntryPoint
 class AdviceFragment : BaseFragment() {
 
     private lateinit var binding: AssistFragmentBinding
@@ -32,7 +34,7 @@ class AdviceFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireContext() as HomeActivity).setBottomNavigationVisibility()
+        setBottomNavigationVisibility(requireActivity())
         initView()
         initHeader()
     }

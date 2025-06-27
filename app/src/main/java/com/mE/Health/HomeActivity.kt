@@ -1,24 +1,26 @@
 package com.mE.Health
 
-import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.Slide
 import com.mE.Health.databinding.ActivityHomeBinding
 import com.mE.Health.feature.HomeFragment
+import com.mE.Health.feature.MyPersonaFragment
 import com.mE.Health.feature.adapter.HomeMenuAdapter
 import com.mE.Health.feature.adapter.RadioButtonListAdapter
-import com.mE.Health.models.AdviceDTO
 import com.mE.Health.models.NavMenuDTO
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
@@ -32,7 +34,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        openFragment()
+        openFragment(HomeFragment())
         initView()
         initNavMenu()
         activeDashboardMenu()
@@ -45,27 +47,30 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         binding.rllVoice.setOnClickListener(this)
     }
 
-    private fun openFragment() {
+    private fun openFragment( fragment: Fragment) {
+        fragment.enterTransition = Slide(Gravity.END)
+        fragment.exitTransition = Slide(Gravity.START)
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, HomeFragment())
+            .add(R.id.fragment_container, fragment)
             .commit()
     }
 
     override fun onClick(v: View?) {
-        refreshMenu()
         when (v?.id) {
             R.id.llMenu -> {
-                updateNavMenuVisibility(View.VISIBLE)
+                refreshMenu()
+                updateNavMenuVisibility(if (binding.rvNavMenu.isVisible) View.GONE else View.VISIBLE)
                 binding.ivMenu.setImageResource(R.drawable.ic_nav_menu_selected)
                 binding.tvMenu.setTextColor(ContextCompat.getColor(this, R.color.color_FF6605))
             }
 
             R.id.llVoice, R.id.rllVoice -> {
-                updateNavMenuVisibility(View.GONE)
-                openDialog()
+//                updateNavMenuVisibility(View.GONE)
+//                openDialog()
             }
 
             R.id.llDashboard -> {
+                refreshMenu()
                 updateNavMenuVisibility(View.GONE)
                 activeDashboardMenu()
             }
@@ -108,10 +113,14 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvDashboard.setTextColor(ContextCompat.getColor(this, R.color.color_FF6605))
     }
 
-    fun updateNavMenuVisibility(visibility: Int){
-        binding.rvNavMenu   .visibility = visibility
+    fun updateNavMenuVisibility(visibility: Int) {
+        binding.rvNavMenu.visibility = visibility
         binding.llMenuView.visibility = visibility
-        binding.fragmentContainer.setPadding(0,0,if (visibility==View.VISIBLE)-100 else 0,0)
+        binding.fragmentContainer.setPadding(0, 0, if (visibility == View.VISIBLE) -100 else 0, 0)
+        if (visibility==View.GONE){
+            refreshMenu()
+            activeDashboardMenu()
+        }
     }
 
     private fun refreshMenu() {
@@ -132,6 +141,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 override fun onClicked(view: View?, position: Int) {
                     selectedItem = position
                     notifyDataSetChanged()
+                    if (position==1){
+                        updateNavMenuVisibility(View.GONE)
+                        homeNavClickAction()
+//                        openFragment(MyPersonaFragment())
+                    }
                 }
             }
         }
@@ -147,22 +161,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun openDialog() {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_ok)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(0))
-        dialog.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        dialog.setCancelable(false)
-//        dialog.window!!.attributes.windowAnimations = R.style.animation
-        val tvMessage = dialog.findViewById<TextView>(R.id.tvMessage)
-        tvMessage.text = getString(R.string.dialog_description)
-        val tvOk = dialog.findViewById<View>(R.id.tvOk)
-        tvOk.setOnClickListener(View.OnClickListener {
-            dialog.dismiss()
-        })
-        dialog.show()
+    private fun homeNavClickAction() {
+        val fm: FragmentManager = supportFragmentManager
+        val fragment: HomeFragment =
+            fm.findFragmentById(R.id.fragment_container) as HomeFragment
+        fragment.navClickAction()
     }
 }

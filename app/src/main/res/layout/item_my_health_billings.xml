@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dp_5"
+    android:layout_marginTop="@dimen/dp_5"
+    app:cardCornerRadius="@dimen/dp_5"
+    app:cardElevation="@dimen/dp_2"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.mE.Health.utility.roundview.RoundLinearLayout
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:rv_backgroundColor="@color/color_FF6605"
+            app:rv_cornerRadius_BL="@dimen/dp_6"
+            app:rv_cornerRadius_TL="@dimen/dp_6" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/dp_5"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvName"
+                    style="@style/textStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="Clinic Name"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_18" />
+
+
+                <com.mE.Health.utility.roundview.RoundTextView
+                    android:id="@+id/tvStatus"
+                    style="@style/textStyleSemiBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:paddingVertical="@dimen/dp_5"
+                    android:text="Planned"
+                    android:textColor="@color/color_F09C00"
+                    android:textSize="@dimen/sp_8"
+                    app:rv_backgroundColor="@color/color_AF09C00"
+                    app:rv_isRadiusHalfHeight="true" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_10">
+
+                <TextView
+                    style="@style/textStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="19/05/2025"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_16" />
+
+
+                <TextView
+                    style="@style/textStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="$8.40"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_18" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

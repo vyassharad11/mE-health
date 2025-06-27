@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mE.Health.R
-import com.mE.Health.databinding.ForgotFragmentBinding
 import com.mE.Health.databinding.MeUserFragmentBinding
-import com.mE.Health.viewmodels.MainViewModel
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -16,7 +14,6 @@ import com.mE.Health.viewmodels.MainViewModel
 class MeUserFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: MeUserFragmentBinding
-    lateinit var mainViewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,13 +29,6 @@ class MeUserFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initView() {
-//        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-//
-//        mainViewModel.productsLiveData.observe(requireActivity(), Observer {
-//            val text =  it.joinToString { x -> x.title + "\n\n" }
-//            Log.i("=================","===========text: $text")
-//        })
-
         binding.tvBackLogin.setOnClickListener(this)
         binding.rllContinue.setOnClickListener(this)
     }

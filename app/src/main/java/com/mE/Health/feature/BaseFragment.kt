@@ -1,12 +1,21 @@
 package com.mE.Health.feature
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.telephony.SmsMessage
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.transition.Slide
+import com.mE.Health.HomeActivity
 import com.mE.Health.R
+import com.mE.Health.utility.DialogProgress
+import dagger.hilt.android.internal.managers.ViewComponentManager
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.BufferedReader
@@ -15,6 +24,9 @@ import java.io.InputStreamReader
 import java.util.Locale
 
 open class BaseFragment : Fragment(){
+
+    var dialogProgress: DialogProgress? = null
+
 
     fun replaceFragment(
         containerViewId: Int,
@@ -115,5 +127,78 @@ open class BaseFragment : Fragment(){
         }
         reader.close()
         return result.toString()
+    }
+
+    fun showProgressDialog() {
+        try {
+            if (activity != null) {
+                if (dialogProgress != null && dialogProgress!!.isShowing)
+                    dialogProgress!!.dismiss()
+                dialogProgress = DialogProgress(requireActivity())
+                dialogProgress!!.show()
+            }
+        } catch (e: java.lang.Exception) {
+        }
+    }
+
+    fun hideProgressDialog() {
+        try {
+            if (dialogProgress != null && dialogProgress!!.isShowing)
+                dialogProgress!!.dismiss()
+        } catch (e: java.lang.Exception) {
+
+        }
+    }
+
+    fun showDialogOk(message: String) {
+        val dialog = Dialog(requireActivity())
+        dialog.setContentView(R.layout.dialog_ok)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(0))
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.setCancelable(false)
+        val tvMessage = dialog.findViewById<TextView>(R.id.tvMessage)
+        val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+        tvMessage.text = message
+        tvTitle.visibility = View.VISIBLE
+        val tvOk = dialog.findViewById<View>(R.id.tvOk)
+        tvOk.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+        dialog.show()
+    }
+
+    fun setBottomNavigationVisibility(context: Context){
+        (getActivity(context) as HomeActivity).setBottomNavigationVisibility()
+    }
+
+    private fun getActivity(context: Context): Context {
+        return if (context is ViewComponentManager.FragmentContextWrapper) {
+            context.baseContext
+        } else context
+    }
+
+    fun openReadMoreDialog(context: Context, title: String, message: String) {
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.dialog_read_more)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(0))
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.setCancelable(false)
+//        dialog.window!!.attributes.windowAnimations = R.style.animation
+        val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+        val tvMessage = dialog.findViewById<TextView>(R.id.tvMessage)
+        if (TextUtils.isEmpty(title))tvTitle.visibility = View.INVISIBLE
+        tvTitle.text = title
+        tvMessage.text = message
+        val tvOk = dialog.findViewById<View>(R.id.tvOk)
+        tvOk.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+        dialog.show()
     }
 }
