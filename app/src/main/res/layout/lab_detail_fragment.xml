@@ -30,7 +30,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:text="@string/detail"
                 android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_24" />
+                android:textSize="@dimen/sp_34" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -280,12 +280,12 @@
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_gravity="center_vertical"
                             android:layout_marginRight="@dimen/dp_10"
                             android:paddingHorizontal="@dimen/dp_20"
                             android:paddingVertical="@dimen/dp_5"
                             android:text="In-progress"
-                            android:layout_alignParentRight="true"
                             android:textColor="@color/color_0063F7"
                             android:textSize="@dimen/sp_10"
                             app:rv_backgroundColor="@color/color_1A0063F7"
@@ -308,38 +308,63 @@
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
                 android:layout_width="match_parent"
-                android:paddingHorizontal="@dimen/dp_18"
-                android:paddingVertical="@dimen/sp_14"
-                app:rv_cornerRadius="@dimen/dp_10"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_15"
                 android:orientation="horizontal"
-                app:rv_backgroundColor="@color/color_F5F5F5"
-                android:layout_height="wrap_content">
+                android:paddingHorizontal="@dimen/dp_18"
+                android:paddingVertical="@dimen/sp_14"
+                app:rv_isRadiusHalfHeight="true"
+                app:rv_backgroundColor="@color/color_F5F5F5">
 
-                <TextView
-                    style="@style/textStyleMedium"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Refresh Data"
+                    android:layout_marginRight="@dimen/dp_5"
                     android:layout_weight="1"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/ic_refresh"
-                    android:drawablePadding="@dimen/dp_12"
-                    android:textColor="@color/color_333333"
-                    android:textSize="@dimen/sp_17" />
+                    android:gravity="center">
 
-                <TextView
-                    style="@style/textStyleMedium"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_refresh" />
+
+                    <TextView
+                        style="@style/textStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:gravity="center_vertical"
+                        android:text="@string/refresh_data"
+                        android:textColor="@color/text_color_primary"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Share Record"
+                    android:layout_marginLeft="@dimen/dp_5"
                     android:layout_weight="1"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/ic_upload_orange"
-                    android:drawablePadding="@dimen/dp_12"
-                    android:textColor="@color/color_333333"
-                    android:textSize="@dimen/sp_17" />
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_upload_orange" />
+
+                    <TextView
+                        style="@style/textStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:gravity="center_vertical|center"
+                        android:text="@string/share_record"
+                        android:textColor="@color/text_color_primary"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
 
 
             </com.mE.Health.utility.roundview.RoundLinearLayout>

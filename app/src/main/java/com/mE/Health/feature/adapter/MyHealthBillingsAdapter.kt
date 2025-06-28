@@ -19,7 +19,7 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(view: View?, type: String)
+        fun onClicked(view: View?, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -38,15 +38,12 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
     }
 
     override fun onBindViewHolder(holder: MyHealthBillingsAdapter.MyViewHolder, position: Int) {
-
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.onClicked(
+                holder.itemView,
+                position
+            )
+        }
     }
 
     override fun getItemCount(): Int {

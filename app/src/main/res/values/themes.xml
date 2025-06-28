@@ -67,4 +67,12 @@
         <item name="colorPrimary">@color/white</item>
     </style>
 
+
+    <style name="CustomDatePickerTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:calendarTextColor">@color/color_06C270</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
 </resources>

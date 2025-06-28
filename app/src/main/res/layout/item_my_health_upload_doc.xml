@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dp_5"
+    app:cardCornerRadius="@dimen/dp_5"
+    app:cardElevation="@dimen/dp_2"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dp_10">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/tvName"
+                style="@style/textStyleSemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:text="Blood Test-01.pdf"
+                android:textColor="@color/text_color_primary"
+                android:textSize="@dimen/sp_15" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyleSemiBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/category_"
+                    android:textColor="@color/text_color_primary"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:id="@+id/tvCategory"
+                    style="@style/textStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:text="Appointment"
+                    android:textColor="@color/color_6E6B78"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tvDateTime"
+                style="@style/textStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:text="3 June 2025"
+                android:textColor="@color/color_6E6B78"
+                android:textSize="@dimen/sp_12" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.mE.Health.utility.roundview.RoundLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_12"
+                app:rv_backgroundColor="@color/color_FF6605"
+                app:rv_cornerRadius_TR="@dimen/dp_5">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_user_group" />
+            </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+            <com.mE.Health.utility.roundview.RoundLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1"
+                android:padding="@dimen/dp_12"
+                app:rv_backgroundColor="@color/color_FF6605">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_delete_white" />
+            </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+            <com.mE.Health.utility.roundview.RoundLinearLayout
+                android:id="@+id/rllDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1"
+                android:padding="@dimen/dp_12"
+                app:rv_backgroundColor="@color/color_FF6605"
+                app:rv_cornerRadius_BR="@dimen/dp_5">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_hand" />
+            </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -79,14 +79,22 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
 
             R.id.tvLogin -> {
                 if (isValid) {
-                    viewModel.userLogin(
-                        request = LoginRequest(
-                            email,
-                            password,
-                            "test",
-                            USER_TYPE
+                    if (!isNetworkAvailable) {
+                            dialogOK(
+                                requireActivity(),
+                                resources.getString(R.string.whoops),
+                                resources.getString(R.string.network_error)
+                            )
+                            return
+                        }
+                        viewModel.userLogin(
+                            request = LoginRequest(
+                                email,
+                                password,
+                                "test",
+                                USER_TYPE
+                            )
                         )
-                    )
                 }
 //                requireActivity().startActivity(Intent(requireActivity(), HomeActivity::class.java))
 //                requireActivity().finish()
@@ -135,7 +143,12 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
 
                 is NetworkResult.Success -> {
                     hideProgressDialog()
-                    requireActivity().startActivity(Intent(requireActivity(), HomeActivity::class.java))
+                    requireActivity().startActivity(
+                        Intent(
+                            requireActivity(),
+                            HomeActivity::class.java
+                        )
+                    )
                     requireActivity().finish()
                 }
 

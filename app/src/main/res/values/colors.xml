@@ -23,9 +23,10 @@
     <color name="color_3D3434">#3D3434</color>
     <color name="color_777777">#777777</color>
     <color name="color_06C270">#06C270</color>
+    <color name="color_A06C270">#1A06C270</color>
     <color name="color_F09C00">#F09C00</color>
     <color name="color_AF09C00">#1AF09C00</color>
-    <color name="color_A06C270">#1A06C270</color>
+
     <color name="color_AFF6605">#1AFF6605</color>
     <color name="color_0063F7">#0063F7</color>
     <color name="color_1A0063F7">#1A0063F7</color>
