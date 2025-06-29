@@ -121,6 +121,29 @@
     <string name="active">Active</string>
     <string name="allergy_id">Allergy ID</string>
     <string name="refresh_data">Refresh Data</string>
-
+    <string name="completed">Completed</string>
+    <string name="add_immunization">Add Immunization</string>
+    <string name="record_details">Record Details</string>
+    <string name="immunization_id">Immunization ID</string>
+    <string name="location">Location</string>
+    <string name="provider">Provider</string>
+    <string name="planned">Planned</string>
+    <string name="insurance_company">Insurance Company</string>
+    <string name="coverage_type">Coverage Type</string>
+    <string name="plan_id">Plan ID</string>
+    <string name="view_invoice">View Invoice</string>
+    <string name="billing">Billing</string>
+    <string name="list_of_files">List of Files</string>
+    <string name="category_">Category : </string>
+    <string name="upload">Upload</string>
+    <string name="procedure_details">Procedure Details</string>
+    <string name="procedure_id">Procedure ID</string>
+    <string name="procedure">Procedure</string>
+    <string name="add_follow_up">Add Follow-Up</string>
+    <string name="visit_detail">Visit Details</string>
+    <string name="visit_id">Visit ID</string>
+    <string name="status">Status</string>
+    <string name="type">Type</string>
+    <string name="network_error">There\'s no network connection right now. Please check your Wifi connection or mobile data.</string>
 
 </resources>

@@ -43,8 +43,16 @@ class ConnectProviderFragment : BaseFragment() {
         setBottomNavigationVisibility(requireActivity())
         initView()
         initHeader()
-//        observeResponse()
-//        viewModel.stateList()
+        observeResponse()
+        if (!isNetworkAvailable) {
+            dialogOK(
+                requireActivity(),
+                resources.getString(R.string.whoops),
+                resources.getString(R.string.network_error)
+            )
+            return
+        }
+        viewModel.stateList()
     }
 
     private fun initView() {

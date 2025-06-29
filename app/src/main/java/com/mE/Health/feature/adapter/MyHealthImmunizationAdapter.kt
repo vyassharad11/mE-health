@@ -11,21 +11,25 @@ import com.bumptech.glide.Glide
 import com.mE.Health.R
 import com.mE.Health.models.ProviderDetail
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.roundview.RoundTextView
+
+enum class ClickState {
+    DETAIL, VIEW_PATIENT
+}
 
 class MyHealthImmunizationAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthImmunizationAdapter.MyViewHolder>() {
 
-    private var itemList: List<ProviderDetail> = ArrayList()
-    var type = Constants.ALL
-
     interface OnClickCallback {
-        fun onClicked(view: View?, type: String)
+        fun onClicked(view: View?,  position: Int,  clickState: ClickState)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var tvViewDetails: RoundTextView = itemView.findViewById(R.id.tvViewDetails)
+        var tvViewPatient: RoundTextView = itemView.findViewById(R.id.tvViewPatient)
     }
 
     override fun onCreateViewHolder(
@@ -38,7 +42,13 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
     }
 
     override fun onBindViewHolder(holder: MyHealthImmunizationAdapter.MyViewHolder, position: Int) {
-
+        holder.tvViewDetails.setOnClickListener {
+            onItemClickListener?.onClicked(
+                holder.tvViewDetails,
+                position,
+                ClickState.DETAIL
+            )
+        }
     }
 
     override fun getItemId(position: Int): Long {

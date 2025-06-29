@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tvName"
+                    android:id="@+id/tvVisitName"
                     style="@style/textStyleBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
 
 
                 <com.mE.Health.utility.roundview.RoundTextView
-                    android:id="@+id/tvStatus"
+                    android:id="@+id/tvVisitStatus"
                     style="@style/textStyleSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

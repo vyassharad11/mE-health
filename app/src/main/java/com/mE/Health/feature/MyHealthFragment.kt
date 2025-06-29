@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mE.Health.R
 import com.mE.Health.databinding.MyHealthFragmentBinding
+import com.mE.Health.feature.adapter.ClickState
 import com.mE.Health.feature.adapter.MyHealthAllergiesAdapter
 import com.mE.Health.feature.adapter.MyHealthAppointmentAdapter
 import com.mE.Health.feature.adapter.MyHealthBillingsAdapter
@@ -21,6 +22,7 @@ import com.mE.Health.feature.adapter.MyHealthMedicationAdapter
 import com.mE.Health.feature.adapter.MyHealthPractitionerAdapter
 import com.mE.Health.feature.adapter.MyHealthProcedureAdapter
 import com.mE.Health.feature.adapter.MyHealthTypeAdapter
+import com.mE.Health.feature.adapter.MyHealthUploadDocAdapter
 import com.mE.Health.feature.adapter.MyHealthVisitsAdapter
 import com.mE.Health.feature.adapter.MyHealthVitalAdapter
 import com.mE.Health.models.MyHealthTypeModel
@@ -28,6 +30,10 @@ import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.FilterItem
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 
 /**
@@ -38,6 +44,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: MyHealthFragmentBinding
     private var filterList = ArrayList<FilterItem>()
+    private var firstDateSelected: Long = 0
+    private var secondDateSelected: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +58,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        firstDateSelected = Calendar.getInstance().timeInMillis
+        secondDateSelected = Calendar.getInstance().timeInMillis
         initView()
         initHeader()
     }
@@ -80,6 +90,9 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     myHealthTypeAdapter.notifyDataSetChanged()
                     getFilterList()
                     initFilterUI()
+                    binding.rllUpload.visibility = View.GONE
+                    firstDateSelected = Calendar.getInstance().timeInMillis
+                    secondDateSelected = Calendar.getInstance().timeInMillis
                     when (position) {
                         0 -> {
                             setPractitionerData()
@@ -124,6 +137,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         10 -> {
                             setBillingData()
                         }
+
+                        11 -> {
+                            setUploadDocumentData()
+                        }
                     }
                 }
             }
@@ -136,7 +153,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.ivDateCancel.setOnClickListener(this)
     }
 
-    private fun initFilterUI(){
+    private fun initFilterUI() {
         binding.rlDateLayout.visibility = View.GONE
         binding.rvFilter.visibility = View.GONE
         binding.rlSearchLayout.visibility = View.GONE
@@ -188,14 +205,28 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         return filterList
     }
 
-
     private fun openDateRangePicker() {
-        var rangeDatePicker: MaterialDatePicker<Pair<Long, Long>> =
-            MaterialDatePicker.Builder.dateRangePicker().setTitleText("SELECT A DATE").build()
-        rangeDatePicker.show(requireActivity().supportFragmentManager, "MATERIAL_DATE_PICKER")
-        rangeDatePicker.addOnPositiveButtonClickListener {
+        val picker =
+            MaterialDatePicker.Builder.dateRangePicker().setTheme(R.style.CustomDatePickerTheme)
+                .setTitleText("Select Date Range")
+                .setSelection(Pair(firstDateSelected, secondDateSelected))
+                .build()
+        picker.show(requireActivity().supportFragmentManager, "TAG")
+        picker.addOnNegativeButtonClickListener { picker?.dismiss() }
+        picker.addOnPositiveButtonClickListener {
             binding.rlDateLayout.visibility = View.VISIBLE
+            firstDateSelected = it.first
+            secondDateSelected = it.second
+            binding.tvDateRange.text =
+                "Date Range : ${convertTimeToDate(firstDateSelected)} - ${convertTimeToDate(secondDateSelected)}"
         }
+    }
+
+    private fun convertTimeToDate(time: Long): String {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendar.timeInMillis = time
+        val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        return simpleDateFormat.format(calendar.time)
     }
 
     private fun getAllMyHealthType(): ArrayList<MyHealthTypeModel> {
@@ -263,18 +294,19 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             onItemClickListener = object : MyHealthAppointmentAdapter.OnClickCallback {
                 override fun onClicked(view: View?, position: Int, type: String) {
 
-                    when(type){
-                        Constants.READ_MORE->{
+                    when (type) {
+                        Constants.READ_MORE -> {
                             openReadMoreDialog(
                                 requireActivity(),
                                 "",
                                 getString(R.string.appointment_description)
                             )
                         }
-                        Constants.DETAIL->{
-                            val fragment =  AppointmentDetailsFragment()
+
+                        Constants.DETAIL -> {
+                            val fragment = AppointmentDetailsFragment()
                             val bundle = Bundle()
-                            bundle.putInt("position",position)
+                            bundle.putInt("position", position)
                             fragment.arguments = bundle
                             addFragment(
                                 R.id.fragment_container,
@@ -309,7 +341,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthLabAdapter.OnClickCallback {
-                override fun onClicked(view: View?,position: Int) {
+                override fun onClicked(view: View?, position: Int) {
                     addFragment(
                         R.id.fragment_container,
                         LabDetailsFragment(),
@@ -328,7 +360,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = adapter
         adapter.apply {
             onItemClickListener = object : MyHealthVitalAdapter.OnClickCallback {
-                override fun onClicked(view: View?,position: Int) {
+                override fun onClicked(view: View?, position: Int) {
                     addFragment(
                         R.id.fragment_container,
                         VitalDetailsFragment(),
@@ -367,7 +399,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthVisitsAdapter.OnClickCallback {
-                override fun onClicked(view: View?, type: String) {
+                override fun onClicked(view: View?, position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        VisitsDetailsFragment(),
+                        "VisitsDetailsFragment",
+                        "MyHealthFragment"
+                    )
                 }
             }
         }
@@ -380,7 +418,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthProcedureAdapter.OnClickCallback {
-                override fun onClicked(view: View?, type: String) {
+                override fun onClicked(view: View?, position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        ProcedureDetailsFragment(),
+                        "ProcedureDetailsFragment",
+                        "MyHealthFragment"
+                    )
                 }
             }
         }
@@ -412,7 +456,19 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthImmunizationAdapter.OnClickCallback {
-                override fun onClicked(view: View?, type: String) {
+                override fun onClicked(view: View?, position: Int, clickState: ClickState) {
+                    when (clickState) {
+                        ClickState.DETAIL -> {
+                            addFragment(
+                                R.id.fragment_container,
+                                ImmunizationDetailsFragment(),
+                                "ImmunizationDetailsFragment",
+                                "MyHealthFragment"
+                            )
+                        }
+
+                        else -> {}
+                    }
                 }
             }
         }
@@ -425,7 +481,33 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthBillingsAdapter.OnClickCallback {
-                override fun onClicked(view: View?, type: String) {
+                override fun onClicked(view: View?, position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        BillingDetailsFragment(),
+                        "BillingDetailsFragment",
+                        "MyHealthFragment"
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setUploadDocumentData() {
+        binding.rllUpload.visibility = View.VISIBLE
+        binding.tvMyHealthType.text = getString(R.string.list_of_files)
+        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
+        val practitionerAdapter = MyHealthUploadDocAdapter(requireActivity())
+        binding.rvList.adapter = practitionerAdapter
+        practitionerAdapter.apply {
+            onItemClickListener = object : MyHealthUploadDocAdapter.OnClickCallback {
+                override fun onClicked(view: View?, position: Int) {
+//                    addFragment(
+//                        R.id.fragment_container,
+//                        PractitionerDetailsFragment(),
+//                        "PractitionerDetailsFragment",
+//                        "MyHealthFragment"
+//                    )
                 }
             }
         }

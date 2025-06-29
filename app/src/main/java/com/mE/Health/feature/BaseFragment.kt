@@ -3,7 +3,7 @@ package com.mE.Health.feature
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
-import android.telephony.SmsMessage
+import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.view.Gravity
@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.transition.Slide
 import com.mE.Health.HomeActivity
 import com.mE.Health.R
+import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.DialogProgress
 import dagger.hilt.android.internal.managers.ViewComponentManager
 import org.json.JSONArray
@@ -23,9 +24,11 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Locale
 
+
 open class BaseFragment : Fragment(){
 
     var dialogProgress: DialogProgress? = null
+    var dialogOK: Dialog? = null
 
 
     fun replaceFragment(
@@ -200,5 +203,28 @@ open class BaseFragment : Fragment(){
             dialog.dismiss()
         })
         dialog.show()
+    }
+
+    val isNetworkAvailable: Boolean
+        get() {
+            try {
+                val cm =
+                    requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val networkInfo = cm.activeNetworkInfo
+                if (networkInfo != null && networkInfo.isConnected)
+                    return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return false
+        }
+
+
+    fun dialogOK(context: Context, title: String, message: String) {
+        if (context == null) return
+        if (dialogOK != null && dialogOK!!.isShowing)
+            dialogOK!!.dismiss()
+        dialogOK = DialogOK(context, title, message)
+        dialogOK!!.show()
     }
 }
