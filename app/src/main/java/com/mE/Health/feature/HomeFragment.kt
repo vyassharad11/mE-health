@@ -40,8 +40,8 @@ class HomeFragment : BaseFragment() {
             (requireActivity() as HomeActivity).updateNavMenuVisibility(View.GONE)
             replaceFragment(
                 R.id.fragment_container,
-                AssistantFragment(),
-                "AssistantFragment",
+                AIAssistantFragment(),
+                "AIAssistantFragment",
                 "HomeFragment"
             )
         }

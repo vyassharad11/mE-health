@@ -26,7 +26,7 @@ class CountryStateListAdapter(private val mContext: Context, private val list: L
     var onItemClickListener: OnClickCallback? = null
 
     init {
-        this.itemList=list
+        this.itemList = list
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -59,7 +59,7 @@ class CountryStateListAdapter(private val mContext: Context, private val list: L
 
         holder.tvName.text = data.country ?: data.state
         holder.tvCount.text = data.count
-        holder.ivType.setImageResource( data.countryLogo!!)
+        holder.ivType.setImageResource(data.countryLogo!!)
     }
 
     override fun getItemId(position: Int): Long {

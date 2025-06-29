@@ -5,17 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.mE.Health.HomeActivity
 import com.mE.Health.R
 import com.mE.Health.databinding.AssistantFragmentBinding
-import com.mE.Health.databinding.HomeFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 @AndroidEntryPoint
-class AssistantFragment : BaseFragment() {
+class AIAssistantFragment : BaseFragment() {
 
     private lateinit var binding: AssistantFragmentBinding
 
@@ -36,7 +34,7 @@ class AssistantFragment : BaseFragment() {
 
     private fun initView(){
         binding.rllAiAssist.setOnClickListener {
-            replaceFragment(
+            addFragment(
                 R.id.fragment_container,
                 AssistFragment(),
                 "AssistFragment",
@@ -45,10 +43,10 @@ class AssistantFragment : BaseFragment() {
         }
 
         binding.rllAdvice.setOnClickListener {
-            replaceFragment(
+            addFragment(
                 R.id.fragment_container,
-                AdviceFragment(),
-                "AdviceFragment",
+                AdviceListFragment(),
+                "AdviceListFragment",
                 "AssistantFragment"
             )
         }
