@@ -52,7 +52,7 @@ class ConnectProviderFragment : BaseFragment() {
             )
             return
         }
-        viewModel.stateList()
+//        viewModel.stateList()
     }
 
     private fun initView() {

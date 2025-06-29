@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/dp_5"
-    app:cardCornerRadius="@dimen/dp_5"
-    app:cardElevation="@dimen/dp_2"
+    app:cardCornerRadius="@dimen/dp_8"
+    app:cardElevation="@dimen/dp_5"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:padding="@dimen/dp_10">
+            android:padding="@dimen/dp_8">
 
             <TextView
                 android:id="@+id/tvName"

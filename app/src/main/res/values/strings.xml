@@ -75,6 +75,7 @@
 
     <string name="my_profile">My Profile</string>
     <string name="my_health">My Health</string>
+    <string name="health">Health</string>
     <string name="practitioner">Practitioner</string>
     <string name="list_of_practitioner">List of Practitioner</string>
     <string name="search_allergies">Search allergies....</string>
@@ -145,5 +146,14 @@
     <string name="status">Status</string>
     <string name="type">Type</string>
     <string name="network_error">There\'s no network connection right now. Please check your Wifi connection or mobile data.</string>
+    <string name="edit">Edit</string>
+    <string name="basic_details">Basic Details</string>
+    <string name="phone">Phone</string>
+    <string name="anniversary">Anniversary</string>
+    <string name="married">Married</string>
+    <string name="gender">Gender</string>
+    <string name="apply">Apply</string>
+    <string name="no_record_found">No records found in this range.</string>
+    <string name="maybe_your_body">Maybe your body was just busy being awesome.</string>
 
 </resources>

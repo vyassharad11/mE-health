@@ -8,13 +8,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.R
 
-class AssistAdapter (val context: Context) :
+class AssistAdapter(val context: Context, private val list: ArrayList<String>) :
     RecyclerView.Adapter<AssistAdapter.MyViewHolder>() {
 
+    interface OnClickCallback {
+        fun onClicked(view: View?, position: Int)
+    }
+
+    var onItemClickListener: OnClickCallback? = null
+
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //item initalization
-        var tv_office: TextView = itemView.findViewById(R.id.tv_office)
-        var tv_device: TextView = itemView.findViewById(R.id.tv_device)
+        var tvAssistName: TextView = itemView.findViewById(R.id.tvAssistName)
     }
 
     override fun onCreateViewHolder(
@@ -28,28 +32,16 @@ class AssistAdapter (val context: Context) :
 
     override fun onBindViewHolder(holder: AssistAdapter.MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-
-            //is selected is used for selecting the position of item
-//            if (dataList[position].isSelected) {
-//                dataList[position].setIsSelected(false)
-//                holder.ll_design.setBackgroundColor(Color.GREEN)
-//            } else {
-//                dataList[position].setIsSelected(true)
-//
-//                holder.ll_design.setBackgroundColor(Color.WHITE)
-//            }
+            onItemClickListener?.onClicked(
+                holder.itemView,
+                position
+            )
         }
+        holder.tvAssistName.text = list[position]
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
 
     override fun getItemCount(): Int {
-        return 12
+        return list.size
     }
 }

@@ -30,12 +30,14 @@
 
     <TextView
         android:id="@+id/tvMessage"
-        style="@style/textStyleRegular"
+        style="@style/textStyleSemiBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:lineSpacingMultiplier="1.1"
         android:minHeight="80dp"
+        android:lineSpacingExtra="@dimen/dp_5"
+        android:gravity="center"
         android:paddingHorizontal="@dimen/dp_18"
         android:text="@string/ai_assistant_read_more"
         android:scrollbars="vertical"
