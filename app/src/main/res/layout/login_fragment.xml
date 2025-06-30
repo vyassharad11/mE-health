@@ -202,6 +202,7 @@
             android:gravity="center"
             android:text="@string/already_me_user"
             android:textColor="@color/white"
+            android:visibility="gone"
             android:textSize="@dimen/sp_17"
             app:rv_backgroundColor="@color/color_333333"
             app:rv_isRadiusHalfHeight="true" />

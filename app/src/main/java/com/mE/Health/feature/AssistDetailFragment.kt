@@ -47,6 +47,9 @@ class AssistDetailFragment : BaseFragment() {
         binding.toolbar.ivBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        binding.toolbar.tvTitle.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     private fun initView() {

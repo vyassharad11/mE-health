@@ -4,17 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mE.Health.R
-import com.mE.Health.models.ProviderDetail
-import com.mE.Health.utility.Constants
 
-class MyHealthConditionAdapter(private val mContext: Context) :
-    RecyclerView.Adapter<MyHealthConditionAdapter.MyViewHolder>() {
-
+class MedicationListAdapter(val context: Context) :
+    RecyclerView.Adapter<MedicationListAdapter.MyViewHolder>() {
 
     interface OnClickCallback {
         fun onClicked(view: View?, position: Int)
@@ -22,21 +16,20 @@ class MyHealthConditionAdapter(private val mContext: Context) :
 
     var onItemClickListener: OnClickCallback? = null
 
-
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        var tvAssistName: TextView = itemView.findViewById(R.id.tvAssistName)
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyHealthConditionAdapter.MyViewHolder {
+    ): MedicationListAdapter.MyViewHolder {
         var view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_my_health_condition, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_medication_list, parent, false)
         return MyViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MyHealthConditionAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MedicationListAdapter.MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
             onItemClickListener?.onClicked(
                 holder.itemView,
@@ -45,7 +38,8 @@ class MyHealthConditionAdapter(private val mContext: Context) :
         }
     }
 
+
     override fun getItemCount(): Int {
-        return 10
+        return 5
     }
 }

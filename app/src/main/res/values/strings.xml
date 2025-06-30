@@ -155,5 +155,18 @@
     <string name="apply">Apply</string>
     <string name="no_record_found">No records found in this range.</string>
     <string name="maybe_your_body">Maybe your body was just busy being awesome.</string>
+    <string name="onset">Onset</string>
+    <string name="practitioners">Practitioners</string>
+    <string name="vitals">Vitals</string>
+    <string name="labs">Labs</string>
+    <string name="add_related_data">Add Related Data</string>
+    <string name="current_details">Current Details</string>
+    <string name="list_of_practitioners">List Of Practitioners</string>
+    <string name="condition">Condition</string>
+    <string name="treatment">Treatment</string>
+    <string name="booked">Booked</string>
+    <string name="lab_result">Lab Result</string>
+    <string name="hemoglobin">Hemoglobin</string>
+    <string name="medical_documents">Medical Documents</string>
 
 </resources>
