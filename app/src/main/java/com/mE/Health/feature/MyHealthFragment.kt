@@ -69,6 +69,9 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.toolbar.ivBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        binding.toolbar.tvTitle.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         binding.toolbar.ivSetting.visibility = View.VISIBLE
         binding.toolbar.ivSetting.setOnClickListener {
 
@@ -328,7 +331,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthConditionAdapter.OnClickCallback {
-                override fun onClicked(view: View?, type: String) {
+                override fun onClicked(view: View?, position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        ConditionDetailsFragment(),
+                        "ConditionDetailsFragment",
+                        "MyHealthFragment"
+                    )
                 }
             }
         }

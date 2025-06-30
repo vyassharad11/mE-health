@@ -47,7 +47,9 @@ class ImmunizationDetailsFragment : BaseFragment() {
         binding.toolbar.ivBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
+        binding.toolbar.tvTitle.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         binding.toolbar.ivSetting.visibility = View.VISIBLE
         binding.toolbar.ivSetting.setOnClickListener {
 

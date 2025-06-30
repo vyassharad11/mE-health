@@ -5,32 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
-import com.mE.Health.databinding.AllergiesDetailFragmentBinding
-import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MedicationDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
 import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.databinding.PractitionerListDetailsFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 @AndroidEntryPoint
-class AllergiesDetailsFragment : BaseFragment() {
+class PractitionersListDetailsFragment : BaseFragment() {
 
-    private lateinit var binding: AllergiesDetailFragmentBinding
+    private lateinit var binding: PractitionerListDetailsFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = AllergiesDetailFragmentBinding.inflate(inflater, container, false)
+        binding = PractitionerListDetailsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -56,6 +48,6 @@ class AllergiesDetailsFragment : BaseFragment() {
     }
 
     private fun initView() {
-
     }
+
 }

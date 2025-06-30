@@ -69,6 +69,9 @@ class AdviceListFragment : BaseFragment() {
         binding.toolbar.ivBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
+         binding.toolbar.tvTitle.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         binding.toolbar.ivSetting.visibility = View.VISIBLE
         binding.toolbar.ivSetting.setImageResource(R.drawable.ic_filter_primary)
         binding.toolbar.ivSetting.setOnClickListener {

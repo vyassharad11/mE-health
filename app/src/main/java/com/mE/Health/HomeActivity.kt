@@ -156,8 +156,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             add(NavMenuDTO(getString(R.string.dashboard), R.drawable.nav_menu_dashboard))
             add(NavMenuDTO(getString(R.string.my_persona), R.drawable.nav_menu_persona))
             add(NavMenuDTO(getString(R.string.settings), R.drawable.nav_menu_settings))
-            add(NavMenuDTO(getString(R.string.contact_us), R.drawable.nav_menu_settings))
-            add(NavMenuDTO(getString(R.string.logout), R.drawable.nav_menu_settings))
+            add(NavMenuDTO(getString(R.string.contact_us), R.drawable.nav_menu_contact_us))
+            add(NavMenuDTO(getString(R.string.logout), R.drawable.nav_menu_logout))
         }
     }
 

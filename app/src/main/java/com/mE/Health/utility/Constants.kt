@@ -18,6 +18,8 @@ object Constants {
     const val MY_CHART = "my_chart"
     const val READ_MORE = "read_more"
     const val DETAIL = "detail"
+    const val PRACTITIONER = "Practitioner"
+    const val MEDICATION = "Medication"
     const val CONNECTION_URL = "connection_url"
 
 
