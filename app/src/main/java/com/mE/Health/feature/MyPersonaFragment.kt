@@ -53,7 +53,7 @@ class MyPersonaFragment : BaseFragment() {
         }
 
         binding.rllMyHealth.setOnClickListener {
-            replaceFragment(
+            addFragment(
                 R.id.fragment_container,
                 MyHealthFragment(),
                 "MyHealthFragment",

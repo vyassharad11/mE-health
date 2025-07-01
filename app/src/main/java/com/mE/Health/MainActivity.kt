@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+        (this.applicationContext as MyApplication).setCurrentActivity(this)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         openFragment()

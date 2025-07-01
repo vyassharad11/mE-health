@@ -37,7 +37,7 @@ class HomeFragment : BaseFragment() {
 
     private fun initView() {
         binding.rllAiAssistant.setOnClickListener {
-            (requireActivity() as HomeActivity).updateNavMenuVisibility(View.GONE)
+            (requireActivity() as HomeActivity).updateMenu(View.GONE)
             replaceFragment(
                 R.id.fragment_container,
                 AIAssistantFragment(),
@@ -52,7 +52,7 @@ class HomeFragment : BaseFragment() {
             openReadMoreDialog(requireActivity(), getString(R.string.data_marketplace), getString(R.string.market_place_read_more))
         }
         binding.tvMarketPlace.setOnClickListener {
-            (requireActivity() as HomeActivity).updateNavMenuVisibility(View.GONE)
+            (requireActivity() as HomeActivity).updateMenu(View.GONE)
             replaceFragment(
                 R.id.fragment_container,
                 ConnectProviderFragment(),

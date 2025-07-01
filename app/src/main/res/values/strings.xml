@@ -168,5 +168,7 @@
     <string name="lab_result">Lab Result</string>
     <string name="hemoglobin">Hemoglobin</string>
     <string name="medical_documents">Medical Documents</string>
+    <string name="user_content">User Content</string>
+    <string name="data_items">Data Items</string>
 
 </resources>

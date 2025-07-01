@@ -31,15 +31,15 @@
             android:elevation="@dimen/dp_5"
             android:orientation="horizontal"
             app:rv_backgroundColor="@color/color_333333"
-            app:rv_cornerRadius="@dimen/dp_6">
+            app:rv_cornerRadius="@dimen/dp_10">
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
                 android:layout_width="@dimen/dp_30"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:rv_backgroundColor="@color/color_FF6605"
-                app:rv_cornerRadius_BL="@dimen/dp_6"
-                app:rv_cornerRadius_TL="@dimen/dp_6" />
+                app:rv_backgroundColor="@color/color_FB531C"
+                app:rv_cornerRadius_BL="@dimen/dp_10"
+                app:rv_cornerRadius_TL="@dimen/dp_10" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -84,15 +84,15 @@
             android:elevation="@dimen/dp_5"
             android:orientation="horizontal"
             app:rv_backgroundColor="@color/color_333333"
-            app:rv_cornerRadius="@dimen/dp_6">
+            app:rv_cornerRadius="@dimen/dp_10">
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
                 android:layout_width="@dimen/dp_30"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:rv_backgroundColor="@color/color_FF6605"
-                app:rv_cornerRadius_BL="@dimen/dp_6"
-                app:rv_cornerRadius_TL="@dimen/dp_6" />
+                app:rv_backgroundColor="@color/color_FB531C"
+                app:rv_cornerRadius_BL="@dimen/dp_10"
+                app:rv_cornerRadius_TL="@dimen/dp_10" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
