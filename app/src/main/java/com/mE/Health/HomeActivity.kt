@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Slide
 import com.mE.Health.databinding.ActivityHomeBinding
+import com.mE.Health.databinding.ActivityHomeNewBinding
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
 import com.mE.Health.feature.adapter.HomeMenuAdapter
@@ -25,15 +26,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var binding: ActivityHomeBinding
+    private lateinit var binding: ActivityHomeNewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityHomeNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
+        (this.applicationContext as MyApplication).setCurrentActivity(this)
         openFragment(HomeFragment())
         initView()
         initNavMenu()
@@ -47,7 +47,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         binding.rllVoice.setOnClickListener(this)
     }
 
-    private fun openFragment( fragment: Fragment) {
+    private fun openFragment(fragment: Fragment) {
         fragment.enterTransition = Slide(Gravity.END)
         fragment.exitTransition = Slide(Gravity.START)
         supportFragmentManager.beginTransaction()
@@ -73,6 +73,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 refreshMenu()
                 updateNavMenuVisibility(View.GONE)
                 activeDashboardMenu()
+                clearBackStack()
+                if (getBackStackCount()!! > 0)
+                    openFragment(HomeFragment())
             }
         }
     }
@@ -101,11 +104,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun setBottomNavigationVisibility() {
-        if (supportFragmentManager.backStackEntryCount == 0) {
-            binding.rlBottomMenu.visibility = View.VISIBLE
-        } else {
-            binding.rlBottomMenu.visibility = View.GONE
-        }
+//        if (supportFragmentManager.backStackEntryCount == 0) {
+//            binding.rlBottomMenu.visibility = View.VISIBLE
+//        } else {
+//            binding.rlBottomMenu.visibility = View.GONE
+//        }
     }
 
     private fun activeDashboardMenu() {
@@ -115,12 +118,19 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     fun updateNavMenuVisibility(visibility: Int) {
         binding.rvNavMenu.visibility = visibility
-        binding.llMenuView.visibility = visibility
+//        binding.llMenuView.visibility = visibility
         binding.fragmentContainer.setPadding(0, 0, if (visibility == View.VISIBLE) -100 else 0, 0)
-        if (visibility==View.GONE){
-            refreshMenu()
-            activeDashboardMenu()
+        if (visibility == View.GONE) {
+//            refreshMenu()
+//            activeDashboardMenu()
         }
+    }
+
+    fun updateMenu(visibility: Int) {
+        binding.rvNavMenu.visibility = visibility
+        binding.fragmentContainer.setPadding(0, 0, if (visibility == View.VISIBLE) -100 else 0, 0)
+        refreshMenu()
+        activeDashboardMenu()
     }
 
     private fun refreshMenu() {
@@ -131,17 +141,17 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvDashboard.setTextColor(ContextCompat.getColor(this, R.color.color_333333))
     }
 
-    private fun initNavMenu(){
+    private fun initNavMenu() {
         binding.rvNavMenu.layoutManager = LinearLayoutManager(this)
-        val adapter = HomeMenuAdapter(this,getNavMenuItem())
+        val adapter = HomeMenuAdapter(this, getNavMenuItem())
         binding.rvNavMenu.adapter = adapter
         adapter.apply {
-            onItemClickListener =  object : HomeMenuAdapter.OnClickCallback,
+            onItemClickListener = object : HomeMenuAdapter.OnClickCallback,
                 RadioButtonListAdapter.OnClickCallback {
                 override fun onClicked(view: View?, position: Int) {
                     selectedItem = position
                     notifyDataSetChanged()
-                    if (position==1){
+                    if (position == 1) {
                         updateNavMenuVisibility(View.GONE)
                         homeNavClickAction()
 //                        openFragment(MyPersonaFragment())
@@ -151,7 +161,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun getNavMenuItem():ArrayList<NavMenuDTO> {
+    private fun getNavMenuItem(): ArrayList<NavMenuDTO> {
         return ArrayList<NavMenuDTO>().apply {
             add(NavMenuDTO(getString(R.string.dashboard), R.drawable.nav_menu_dashboard))
             add(NavMenuDTO(getString(R.string.my_persona), R.drawable.nav_menu_persona))
@@ -162,9 +172,40 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun homeNavClickAction() {
-        val fm: FragmentManager = supportFragmentManager
-        val fragment: HomeFragment =
-            fm.findFragmentById(R.id.fragment_container) as HomeFragment
-        fragment.navClickAction()
+//        val fm: FragmentManager = supportFragmentManager
+//        val fragment: HomeFragment =
+//            fm.findFragmentById(R.id.fragment_container) as HomeFragment
+//        fragment.navClickAction()
+        clearBackStack()
+        addFragment(MyPersonaFragment())
+    }
+
+    private fun addFragment(fragment: Fragment) {
+        fragment.enterTransition = Slide(Gravity.END)
+        fragment.exitTransition = Slide(Gravity.START)
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, fragment)
+            .addToBackStack("HomeFragment")
+            .commitAllowingStateLoss()
+    }
+
+    private fun clearBackStack() {
+        try {
+            val manager = supportFragmentManager
+            for (i in 0 until manager.backStackEntryCount) {
+                val first = manager.getBackStackEntryAt(i)
+                manager.popBackStack(first.id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getBackStackCount(): Int? {
+        return supportFragmentManager?.backStackEntryCount
+    }
+
+    fun updateSideNavMenu() {
+        binding.rvNavMenu.visibility = if (binding.rvNavMenu.isVisible) View.GONE else View.VISIBLE
     }
 }

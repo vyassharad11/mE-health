@@ -1,31 +1,48 @@
 package com.mE.Health.feature
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
 import android.telephony.TelephonyManager
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.transition.Slide
 import com.mE.Health.HomeActivity
+import com.mE.Health.MyApplication
 import com.mE.Health.R
+import com.mE.Health.utility.BaseInterface
 import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.DialogProgress
 import dagger.hilt.android.internal.managers.ViewComponentManager
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.BufferedReader
+import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Date
 import java.util.Locale
 
 
-open class BaseFragment : Fragment(){
+open class BaseFragment : Fragment() {
 
     var dialogProgress: DialogProgress? = null
     var dialogOK: Dialog? = null
@@ -97,7 +114,7 @@ open class BaseFragment : Fragment(){
                 var countryIso = tm.networkCountryIso
                 if (TextUtils.isEmpty(countryIso))
                     countryIso = Locale.getDefault().country
-                val response = readRawFileAsString( R.raw.country_codes)
+                val response = readRawFileAsString(R.raw.country_codes)
                 val array = JSONArray(response)
                 for (i in 0 until array.length()) {
                     val jsonObject = array.getJSONObject(i)
@@ -106,7 +123,7 @@ open class BaseFragment : Fragment(){
                             ignoreCase = true
                         )
                     ) {
-                        countryDTO =jsonObject.optString("phone-code")
+                        countryDTO = jsonObject.optString("phone-code")
                         break
                     }
                 }
@@ -120,7 +137,7 @@ open class BaseFragment : Fragment(){
             return countryDTO
         }
 
-    private fun readRawFileAsString( rawFile: Int): String {
+    private fun readRawFileAsString(rawFile: Int): String {
         val inputStream = requireActivity().resources.openRawResource(rawFile)
         val reader = BufferedReader(InputStreamReader(inputStream))
         val result = StringBuffer()
@@ -173,8 +190,15 @@ open class BaseFragment : Fragment(){
         dialog.show()
     }
 
-    fun setBottomNavigationVisibility(context: Context){
+    fun setBottomNavigationVisibility(context: Context) {
         (getActivity(context) as HomeActivity).setBottomNavigationVisibility()
+    }
+
+    private fun updateSideNavMenuVisibility(mActivity: Activity) {
+        val mCurrentActivity = (mActivity.applicationContext as MyApplication).getCurrentActivity()
+        if ((mCurrentActivity as HomeActivity) != null) {
+            (mActivity as HomeActivity).updateSideNavMenu()
+        }
     }
 
     private fun getActivity(context: Context): Context {
@@ -195,7 +219,7 @@ open class BaseFragment : Fragment(){
 //        dialog.window!!.attributes.windowAnimations = R.style.animation
         val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
         val tvMessage = dialog.findViewById<TextView>(R.id.tvMessage)
-        if (TextUtils.isEmpty(title))tvTitle.visibility = View.INVISIBLE
+        if (TextUtils.isEmpty(title)) tvTitle.visibility = View.INVISIBLE
         tvTitle.text = title
         tvMessage.text = message
         val tvOk = dialog.findViewById<View>(R.id.tvOk)
@@ -227,4 +251,207 @@ open class BaseFragment : Fragment(){
         dialogOK = DialogOK(context, title, message)
         dialogOK!!.show()
     }
+
+
+    var filePath = ""
+     var cameraUri: Uri? = null
+     var cropPicturePath = ""
+     var picturePath = ""
+     var imageStoragePath = ""
+
+    fun log(tag: String, str: String) {
+        Log.i(tag, str)
+    }
+
+    fun checkPermission(
+        permission: Array<String>,
+        requestCode: Array<Int> = arrayOf(101)
+    ): Boolean {
+        var check = true
+        val notGPermission: ArrayList<String> = ArrayList()
+        val notGPermissionRequest: ArrayList<Int> = ArrayList()
+        for (i in 0 until permission.size) {
+            if (ContextCompat.checkSelfPermission(
+                    requireActivity(),
+                    permission[i]
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                log(javaClass.name, "Permission for : ${permission[i]} not granted")
+                notGPermission.add(permission[i])
+                notGPermissionRequest.add(requestCode[0])
+                check = false
+            } else {
+                log(javaClass.name, "Permission for : ${permission[i]} granted")
+            }
+        }
+        if (!check) {
+            requestPermissions(
+                notGPermission.toArray(arrayOfNulls<String>(notGPermission.size)),
+                requestCode[0]
+            )
+        }
+        return check
+    }
+
+    interface OnClickCallback {
+        fun onClick( position: Int)
+    }
+
+    fun showUploadDocument( onClickCallback: OnClickCallback) {
+        val dialog = Dialog(requireActivity())
+        dialog.setContentView(R.layout.dialog_camera_video)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(0))
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.window?.setWindowAnimations(R.style.DialogAnimation)
+        dialog.setCancelable(true)
+        val tvPicture = dialog.findViewById<TextView>(R.id.tvPicture)
+        val tvVideo = dialog.findViewById<TextView>(R.id.tvVideo)
+        val tvDocument = dialog.findViewById<View>(R.id.tvDocument)
+        val tvCancel = dialog.findViewById<View>(R.id.tvCancel)
+        tvPicture.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+            onClickCallback.onClick(1)
+        })
+        tvVideo.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+            onClickCallback.onClick(2)
+        })
+        tvDocument.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+            onClickCallback.onClick(3)
+        })
+        tvCancel.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+        dialog.show()
+    }
+
+    fun openGallery() {
+        try {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            requireActivity().startActivityForResult(Intent.createChooser(intent, ""), BaseInterface.GALLERY)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireActivity(), e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun openVideo() {
+        try {
+            var mediaChooser = Intent(Intent.ACTION_GET_CONTENT)
+            mediaChooser.setType("video/*")
+            requireActivity().startActivityForResult(mediaChooser, BaseInterface.TAKE_VIDEO)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireActivity(), e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+    private val isSDCARDMounted: Boolean
+        get() {
+            val status = Environment.getExternalStorageState()
+            return status == Environment.MEDIA_MOUNTED
+        }
+
+    fun getAbsolutePath(uri: Uri): String {
+        val projection = arrayOf(MediaStore.MediaColumns.DATA)
+        val cursor = requireActivity().contentResolver.query(
+            uri, projection,
+            null, null, null
+        )
+        var filePath = ""
+        if (cursor != null) {
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
+            cursor.moveToFirst()
+            filePath = cursor.getString(columnIndex)
+        }
+        cursor?.close()
+        return filePath
+    }
+
+    fun getImageFilePath(uri: Uri): String? {
+        val file = File(uri.path)
+        var res: String? = null
+        val filePath =
+            file.path.split(":".toRegex()).toTypedArray()
+        val image_id = filePath[filePath.size - 1]
+        val cursor = requireActivity().getContentResolver().query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
+            MediaStore.Images.Media._ID + " = ? ",
+            arrayOf(image_id), null
+        )
+        if (cursor != null) {
+            cursor.moveToFirst()
+            res = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+            cursor.close()
+        }
+        return res
+    }
+
+
+    protected fun performCrop(activity: Activity, picUri: Uri) {
+        try {
+            val cropIntent = Intent("com.android.camera.action.CROP")
+            cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            cropIntent.setDataAndType(picUri, "image/*")
+            cropIntent.putExtra("crop", "true")
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, getTempUri(activity))
+            cropIntent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+            startActivityForResult(cropIntent, BaseInterface.CROP)
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
+            Toast.makeText(
+                activity,
+                "crop_action_support",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(
+                activity,
+                "crop_action_support",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
+     fun getTempUri(activity: Activity): Uri {
+        return Uri.fromFile(getTempFile(activity))
+    }
+
+    private fun getTempFile(activity: Activity): File {
+        val imageName = SimpleDateFormat("ddMMMyyyy_HHmmss", Locale.US)
+            .format(Date()) + ".jpg"
+        val tempFile = getNewFile(BaseInterface.IMAGE_DIRECTORY_CROP, imageName)
+        cropPicturePath = tempFile.path
+        return tempFile
+    }
+
+
+    fun getNewFile(directoryName: String, imageName: String): File {
+        val file: File
+        if (isSDCARDMounted) {
+            val folder = File(requireActivity().getExternalFilesDir(""), directoryName)
+            folder.mkdir()
+            file = File(folder, imageName)
+            try {
+                file.createNewFile()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        } else {
+            file = File(requireActivity().filesDir, imageName)
+        }
+        return file
+    }
+
+
 }

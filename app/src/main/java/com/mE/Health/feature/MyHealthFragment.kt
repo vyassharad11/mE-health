@@ -1,9 +1,18 @@
 package com.mE.Health.feature
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.OpenableColumns
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +39,8 @@ import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.FilterItem
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -46,6 +57,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private var filterList = ArrayList<FilterItem>()
     private var firstDateSelected: Long = 0
     private var secondDateSelected: Long = 0
+    private var myHealthTypeAdapter: MyHealthTypeAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,14 +95,14 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         getFilterList()
         binding.rvType.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-        val myHealthTypeAdapter = MyHealthTypeAdapter(requireActivity(), getAllMyHealthType())
+        myHealthTypeAdapter = MyHealthTypeAdapter(requireActivity(), getAllMyHealthType())
         binding.rvType.adapter = myHealthTypeAdapter
-        myHealthTypeAdapter.apply {
+        myHealthTypeAdapter?.apply {
             onItemClickListener = object : MyHealthTypeAdapter.OnClickCallback {
                 override fun onClicked(view: View?, position: Int) {
-                    if (myHealthTypeAdapter.selectedItem == position) return
-                    myHealthTypeAdapter.selectedItem = position
-                    myHealthTypeAdapter.notifyDataSetChanged()
+                    if (myHealthTypeAdapter?.selectedItem == position) return
+                    myHealthTypeAdapter?.selectedItem = position
+                    myHealthTypeAdapter?.notifyDataSetChanged()
                     getFilterList()
                     initFilterUI()
                     binding.rllUpload.visibility = View.GONE
@@ -154,6 +166,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.ivFilter.setOnClickListener(this)
         binding.ivFilterCalendar.setOnClickListener(this)
         binding.ivDateCancel.setOnClickListener(this)
+        binding.ivFileUpload.setOnClickListener(this)
     }
 
     private fun initFilterUI() {
@@ -194,6 +207,31 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             R.id.ivFilterCalendar -> {
                 openDateRangePicker()
             }
+
+            R.id.ivFileUpload -> {
+                val onClickListener = object : OnClickCallback {
+                    override fun onClick(position: Int) {
+                        when (position) {
+                            1 -> {
+                                val photoPickerIntent = Intent(Intent.ACTION_PICK)
+                                photoPickerIntent.type = "image/*"
+                                getPhotoPicker.launch(photoPickerIntent)
+                            }
+
+                            2 -> {
+                                val pickerIntent = Intent(Intent.ACTION_PICK)
+                                pickerIntent.type = "video/*"
+                                getVideoPicker.launch(pickerIntent)
+                            }
+
+                            3 -> {
+                                pickPdfLauncher.launch(arrayOf("application/pdf"))
+                            }
+                        }
+                    }
+                }
+                if (myHealthTypeAdapter?.selectedItem == 11) showUploadDocument(onClickListener)
+            }
         }
     }
 
@@ -221,7 +259,11 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             firstDateSelected = it.first
             secondDateSelected = it.second
             binding.tvDateRange.text =
-                "Date Range : ${convertTimeToDate(firstDateSelected)} - ${convertTimeToDate(secondDateSelected)}"
+                "Date Range : ${convertTimeToDate(firstDateSelected)} - ${
+                    convertTimeToDate(
+                        secondDateSelected
+                    )
+                }"
         }
     }
 
@@ -246,7 +288,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             add(MyHealthTypeModel("Allergies", "6", R.drawable.ic_allergy))
             add(MyHealthTypeModel("Immunizations", "6", R.drawable.ic_immunization))
             add(MyHealthTypeModel("Billings", "6", R.drawable.ic_billing))
-            add(MyHealthTypeModel("Upload Documents", "6", R.drawable.ic_upload))
+            add(MyHealthTypeModel("Upload Documents", "6", R.drawable.ic_upload_health))
         }
         return typeList
     }
@@ -520,5 +562,191 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    private val getPhotoPicker =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val selectedImage: Uri = it?.data?.data!!
+                try {
+                    val bitmap =
+                        MediaStore.Images.Media.getBitmap(
+                            requireActivity().contentResolver,
+                            selectedImage
+                        )
+//                    binding.ivDemo.setImageBitmap(bitmap)
+                    var uri = it?.data?.data!!
+                    if (uri != null) {
+                        picturePath = getAbsolutePath(uri)
+                        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+                        if (TextUtils.isEmpty(picturePath))
+                            picturePath = uri.path.toString()
+                        val file = File(picturePath)
+                        if (!file.isFile || file.length() == 0L) {
+                            Toast.makeText(
+                                activity,
+                                "gallery_pick_error",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                            return@registerForActivityResult
+                        }
+                        filePath = picturePath
+                        Log.i(
+                            javaClass.name,
+                            "Gallery picturePath : $picturePath: ${file.length()}"
+                        )
+                        val cursor = requireActivity()!!.contentResolver
+                            .query(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                arrayOf(MediaStore.Images.Media._ID),
+                                MediaStore.Images.Media.DATA + "=? ",
+                                arrayOf(picturePath), null
+                            )
+                        if (cursor != null && cursor.moveToFirst()) {
+                            val id =
+                                cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
+                            uri = Uri.parse("content://media/external/images/media/$id")
+                        }
+                        cursor?.close()
+                        val fragment = UserContentFragment()
+                        val bundle = Bundle()
+                        bundle.putString("IMAGE_PATH",picturePath)
+                        fragment.arguments = bundle
+                        addFragment(
+                            R.id.fragment_container,
+                            fragment,
+                            "UserContentFragment",
+                            "MyHealthFragment"
+                        )
+                        Log.i("=============", "=========picturePath: $picturePath")
+                    }
+                } catch (e: IOException) {
+                    Log.i("TAG", "Some exception $e")
+                }
+            }
+        }
+
+
+    private val getVideoPicker =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val selectedImage: Uri = it?.data?.data!!
+                try {
+                    val bitmap =
+                        MediaStore.Images.Media.getBitmap(
+                            requireActivity().contentResolver,
+                            selectedImage
+                        )
+//                    binding.ivDemo.setImageBitmap(bitmap)
+                    var uri = it?.data?.data!!
+                    if (uri != null) {
+                        picturePath = getAbsolutePath(uri)
+                        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+                        if (TextUtils.isEmpty(picturePath))
+                            picturePath = uri.path.toString()
+                        val file = File(picturePath)
+                        if (!file.isFile || file.length() == 0L) {
+                            Toast.makeText(
+                                activity,
+                                "gallery_pick_error",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                            return@registerForActivityResult
+                        }
+                        filePath = picturePath
+                        Log.i(
+                            javaClass.name,
+                            "Gallery videoPath : $picturePath: ${file.length()}"
+                        )
+                        val cursor = requireActivity()!!.contentResolver
+                            .query(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                arrayOf(MediaStore.Images.Media._ID),
+                                MediaStore.Images.Media.DATA + "=? ",
+                                arrayOf(picturePath), null
+                            )
+                        if (cursor != null && cursor.moveToFirst()) {
+                            val id =
+                                cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
+                            uri = Uri.parse("content://media/external/images/media/$id")
+                        }
+                        cursor?.close()
+                        val fragment = UserContentFragment()
+                        val bundle = Bundle()
+                        bundle.putString("IMAGE_PATH",picturePath)
+                        fragment.arguments = bundle
+                        addFragment(
+                            R.id.fragment_container,
+                            UserContentFragment(),
+                            "UserContentFragment",
+                            "MyHealthFragment"
+                        )
+                        Log.i("=============", "=========videoPath: $picturePath")
+                    }
+                } catch (e: IOException) {
+                    Log.i("TAG", "Some exception $e")
+                }
+            }
+        }
+
+
+    private var selectedPdfUri: Uri? = null
+
+    private val pickPdfLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let {
+                selectedPdfUri = it
+                // Get the file information
+                val fileInfo = getFileInfo(it)
+                val fileName = fileInfo.first
+                val fileSize = fileInfo.second.toFloat()
+
+                // Convert file size to MB
+                val fileSizeInMB = java.lang.String.format("%.3f", fileSize / 1000000.0)
+
+                // Update the UI with the file information
+                val name =
+                    "Filename - $fileName\nFile size - $fileSizeInMB MB\nFile path - ${it.path}"
+                Log.i("================", "=====$name")
+                addFragment(
+                    R.id.fragment_container,
+                    UserContentFragment(),
+                    "UserContentFragment",
+                    "MyHealthFragment"
+                )
+            } ?: run {
+                // Handle the case where no file was selected
+                Toast.makeText(requireActivity(), "No file selected", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    // Function to get the file name from URI - optional
+    private fun getFileInfo(uri: Uri): kotlin.Pair<String, Long> {
+        // Initialize default values
+        var fileName = "Unknown"
+        var fileSize = 0L
+        // Query the content resolver to get the file name and size
+        requireActivity().contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            // Move to the first row
+            if (cursor.moveToFirst()) {
+                // Get the display name and size columns
+                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                // Check if the columns exist
+                if (nameIndex != -1) {
+                    // Get the file name and size
+                    fileName = cursor.getString(nameIndex)
+                    fileSize = cursor.getLong(sizeIndex)
+                }
+            }
+        }
+        // Return the file name and size as a pair
+        return kotlin.Pair(fileName, fileSize)
     }
 }

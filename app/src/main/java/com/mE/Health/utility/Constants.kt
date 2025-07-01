@@ -21,6 +21,8 @@ object Constants {
     const val PRACTITIONER = "Practitioner"
     const val MEDICATION = "Medication"
     const val CONNECTION_URL = "connection_url"
+    const val NAV_DASHBOARD = "dashboard"
+    const val NAV_MENU = "menu"
 
 
     const val CODE = "code="

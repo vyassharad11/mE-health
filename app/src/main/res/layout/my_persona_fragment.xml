@@ -19,7 +19,7 @@
         android:layout_marginStart="@dimen/dp_20"
         android:text="@string/my_persona"
         android:textColor="@color/color_333333"
-        android:textSize="@dimen/sp_24" />
+        android:textSize="@dimen/sp_34" />
 
     <LinearLayout
         android:layout_width="match_parent"
