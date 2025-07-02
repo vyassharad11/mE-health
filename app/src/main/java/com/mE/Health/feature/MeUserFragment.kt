@@ -36,7 +36,7 @@ class MeUserFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.rllContinue -> {
-                addFragment(
+                addFragmentLogin(
                     R.id.fragment_container,
                     MeUserSecondFragment(),
                     "MeUserSecondFragment",

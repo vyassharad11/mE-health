@@ -9,6 +9,8 @@
     android:layout_marginTop="@dimen/dp_10"
     app:rv_backgroundColor="@color/white"
     app:rv_strokeWidth="@dimen/dp_1"
+    android:gravity="center"
+    android:layout_gravity="center"
     app:rv_strokeColor="@color/text_color_orange"
     app:rv_isRadiusHalfHeight="true">
 

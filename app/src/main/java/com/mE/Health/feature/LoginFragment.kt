@@ -101,7 +101,7 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.tvForgot -> {
-                replaceFragment(
+                replaceFragmentLogin(
                     R.id.fragment_container,
                     ForgotFragment(),
                     "ForgotFragment",
@@ -110,7 +110,7 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.tvAlreadyUser -> {
-                replaceFragment(
+                replaceFragmentLogin(
                     R.id.fragment_container,
                     MeUserFragment(),
                     "MeUserFragment",
@@ -119,7 +119,7 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.tvSignup -> {
-                replaceFragment(
+                replaceFragmentLogin(
                     R.id.fragment_container,
                     RegistrationFirstFragment(),
                     "RegistrationFirstFragment",

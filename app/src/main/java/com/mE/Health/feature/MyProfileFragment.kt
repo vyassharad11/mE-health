@@ -54,6 +54,15 @@ class MyProfileFragment : BaseFragment() {
     }
 
     private fun initView() {
-
+        var status = false
+        binding.ivToggle.setOnClickListener {
+            if (status) {
+                status = false
+                binding.ivToggle.setImageResource(R.drawable.toggle_off)
+            } else {
+                status = true
+                binding.ivToggle.setImageResource(R.drawable.toggle_on)
+            }
+        }
     }
 }

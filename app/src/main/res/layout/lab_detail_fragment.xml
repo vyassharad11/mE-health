@@ -313,8 +313,8 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/dp_18"
                 android:paddingVertical="@dimen/sp_14"
-                app:rv_isRadiusHalfHeight="true"
-                app:rv_backgroundColor="@color/color_F5F5F5">
+                app:rv_backgroundColor="@color/color_F5F5F5"
+                app:rv_isRadiusHalfHeight="true">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -368,6 +368,9 @@
 
 
             </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+            <include layout="@layout/bottom_view" />
+
 
         </LinearLayout>
 

@@ -173,7 +173,7 @@
                         android:background="@color/background_color"
                         android:drawableLeft="@drawable/ic_search"
                         android:drawablePadding="@dimen/dp_10"
-                        android:hint="@string/search_allergies"
+                        android:hint="Search here..."
                         android:imeOptions="actionDone"
                         android:maxLines="1"
                         android:paddingHorizontal="@dimen/dp_10"
@@ -229,6 +229,8 @@
                     android:textSize="@dimen/sp_17"
                     android:layout_height="wrap_content"/>
             </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+            <include layout="@layout/bottom_view" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

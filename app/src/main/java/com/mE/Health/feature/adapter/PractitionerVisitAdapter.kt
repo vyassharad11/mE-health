@@ -15,7 +15,7 @@ class PractitionerVisitAdapter(val context: Context) :
     RecyclerView.Adapter<PractitionerVisitAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        var rtvAddCalendar: RoundTextView = itemView.findViewById(R.id.rtvAddCalendar)
+        var rtvAddCalendar: RoundTextView = itemView.findViewById(R.id.rtvAddCalendar)
     }
 
     override fun onCreateViewHolder(
@@ -23,13 +23,14 @@ class PractitionerVisitAdapter(val context: Context) :
         viewType: Int
     ): PractitionerVisitAdapter.MyViewHolder {
         var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_practitioner_visit, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_practitioner_appointment, parent, false)
         return MyViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: PractitionerVisitAdapter.MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
         }
+        holder.rtvAddCalendar.visibility =  if (position==0) View.GONE else View.VISIBLE
     }
 
     override fun getItemCount(): Int {

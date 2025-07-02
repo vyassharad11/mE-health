@@ -48,7 +48,7 @@ open class BaseFragment : Fragment() {
     var dialogOK: Dialog? = null
 
 
-    fun replaceFragment(
+    fun replaceFragmentLogin(
         containerViewId: Int,
         fragment: Fragment,
         fragmentTag: String,
@@ -69,7 +69,32 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    fun addFragment(
+
+    fun replaceFragment(
+        containerViewId: Int,
+        fragment: Fragment,
+        fragmentTag: String,
+        backStackStateTag: String
+    ) {
+        try {
+            if (activity == null) return
+            if (updateSideNavMenuVisibility(requireActivity())){
+                return
+            }
+            fragment.enterTransition = Slide(Gravity.END)
+            fragment.exitTransition = Slide(Gravity.START)
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(containerViewId, fragment, fragmentTag)
+                .addToBackStack(backStackStateTag)
+                .commitAllowingStateLoss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } catch (e: Error) {
+            e.printStackTrace()
+        }
+    }
+
+    fun addFragmentLogin(
         containerViewId: Int,
         fragment: Fragment,
         fragmentTag: String,
@@ -89,6 +114,31 @@ open class BaseFragment : Fragment() {
             e.printStackTrace()
         }
     }
+
+    fun addFragment(
+        containerViewId: Int,
+        fragment: Fragment,
+        fragmentTag: String,
+        backStackStateTag: String
+    ) {
+        try {
+            if (activity == null) return
+            if (updateSideNavMenuVisibility(requireActivity())){
+                return
+            }
+            fragment.enterTransition = Slide(Gravity.END)
+            fragment.exitTransition = Slide(Gravity.START)
+            requireActivity().supportFragmentManager.beginTransaction()
+                .add(containerViewId, fragment, fragmentTag)
+                .addToBackStack(backStackStateTag)
+                .commitAllowingStateLoss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } catch (e: Error) {
+            e.printStackTrace()
+        }
+    }
+
 
     fun replaceFragmentWithoutBack(containerViewId: Int, fragment: Fragment, fragmentTag: String) {
         try {
@@ -194,11 +244,13 @@ open class BaseFragment : Fragment() {
         (getActivity(context) as HomeActivity).setBottomNavigationVisibility()
     }
 
-    private fun updateSideNavMenuVisibility(mActivity: Activity) {
+    private fun updateSideNavMenuVisibility(mActivity: Activity) : Boolean {
+        var status  = false
         val mCurrentActivity = (mActivity.applicationContext as MyApplication).getCurrentActivity()
         if ((mCurrentActivity as HomeActivity) != null) {
-            (mActivity as HomeActivity).updateSideNavMenu()
+            status = (mActivity as HomeActivity).hideSideNavRequired()
         }
+        return status
     }
 
     private fun getActivity(context: Context): Context {

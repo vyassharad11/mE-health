@@ -44,7 +44,7 @@ class MeUserSecondFragment : BaseFragment() {
         }
 
         binding.continueLayout.rllContinue.setOnClickListener {
-            addFragment(
+            addFragmentLogin(
                 R.id.fragment_container,
                 MeUserWelcomeFragment(),
                 "MeUserWelcomeFragment",

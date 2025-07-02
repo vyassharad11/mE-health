@@ -11,6 +11,7 @@ import com.mE.Health.R
 import com.mE.Health.feature.adapter.BottomSheetFilterAdapter
 import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.models.MyHealthTypeModel
+import com.mE.Health.utility.roundview.RoundLinearLayout
 import com.mE.Health.utility.roundview.RoundTextView
 
 data class FilterItem(val name: String, var isChecked: Boolean = false)
@@ -35,6 +36,7 @@ class BottomSheetFilter(val filterList: ArrayList<FilterItem>) : BottomSheetDial
         super.onViewCreated(view, savedInstanceState)
         val rvList = view.findViewById<RecyclerView>(R.id.rvBottomSheetFilter)
         val tvApply = view.findViewById<RoundTextView>(R.id.tvApply)
+        val rllCancel = view.findViewById<RoundLinearLayout>(R.id.rllCancel)
         val listAdapter = BottomSheetFilterAdapter(requireActivity(), filterList)
         rvList.layoutManager = LinearLayoutManager(requireActivity())
         rvList.adapter = listAdapter
@@ -47,6 +49,9 @@ class BottomSheetFilter(val filterList: ArrayList<FilterItem>) : BottomSheetDial
             }
             tvApply.setOnClickListener {
                 onCompleteListener?.onComplete(filterList)
+                dismiss()
+            }
+            rllCancel.setOnClickListener {
                 dismiss()
             }
         }

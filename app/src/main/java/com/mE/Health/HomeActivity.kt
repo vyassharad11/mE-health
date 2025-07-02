@@ -83,12 +83,14 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onBackPressed() {
         try {
+            if (hideSideNavRequired()) return
             closeKeyboard()
             if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
             } else {
                 finish()
             }
+
             setBottomNavigationVisibility()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -205,7 +207,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         return supportFragmentManager?.backStackEntryCount
     }
 
-    fun updateSideNavMenu() {
-        binding.rvNavMenu.visibility = if (binding.rvNavMenu.isVisible) View.GONE else View.VISIBLE
+    fun hideSideNavRequired(): Boolean {
+        if (binding.rvNavMenu.isVisible) {
+            binding.rvNavMenu.visibility = View.GONE
+            binding.fragmentContainer.setPadding(0, 0, 0, 0)
+            return true
+        }
+        return false
     }
 }

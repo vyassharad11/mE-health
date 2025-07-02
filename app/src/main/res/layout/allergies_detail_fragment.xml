@@ -580,6 +580,8 @@
 
             </com.mE.Health.utility.roundview.RoundLinearLayout>
 
+            <include layout="@layout/bottom_view" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
