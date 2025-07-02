@@ -440,6 +440,10 @@
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_isRadiusHalfHeight="true" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

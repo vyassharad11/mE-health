@@ -363,6 +363,8 @@
             app:rv_backgroundColor="@color/color_FF6605"
             app:rv_isRadiusHalfHeight="true" />
 
+        <include layout="@layout/bottom_view" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -167,26 +168,33 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.ivFilterCalendar.setOnClickListener(this)
         binding.ivDateCancel.setOnClickListener(this)
         binding.ivFileUpload.setOnClickListener(this)
+        binding.rllUpload.setOnClickListener(this)
     }
 
     private fun initFilterUI() {
         binding.rlDateLayout.visibility = View.GONE
         binding.rvFilter.visibility = View.GONE
         binding.rlSearchLayout.visibility = View.GONE
+        binding.ivFilterCalendar.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
+        binding.ivFilter.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
+        binding.ivSearch.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.ivSearch -> {
                 binding.rlSearchLayout.visibility = View.VISIBLE
+                binding.ivSearch.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.color_F02C2C))
             }
 
             R.id.ivCross -> {
                 binding.rlSearchLayout.visibility = View.GONE
+                binding.ivSearch.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
             }
 
             R.id.ivDateCancel -> {
                 binding.rlDateLayout.visibility = View.GONE
+                binding.ivFilterCalendar.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
             }
 
             R.id.ivFilter -> {
@@ -208,7 +216,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 openDateRangePicker()
             }
 
-            R.id.ivFileUpload -> {
+            R.id.ivFileUpload,  R.id.rllUpload -> {
                 val onClickListener = object : OnClickCallback {
                     override fun onClick(position: Int) {
                         when (position) {
@@ -256,6 +264,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         picker.addOnNegativeButtonClickListener { picker?.dismiss() }
         picker.addOnPositiveButtonClickListener {
             binding.rlDateLayout.visibility = View.VISIBLE
+            binding.ivFilterCalendar.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.color_FF6605))
             firstDateSelected = it.first
             secondDateSelected = it.second
             binding.tvDateRange.text =
@@ -277,18 +286,18 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun getAllMyHealthType(): ArrayList<MyHealthTypeModel> {
         val typeList: ArrayList<MyHealthTypeModel> = ArrayList()
         typeList.apply {
-            add(MyHealthTypeModel("Practictioner", "10", R.drawable.ic_car))
+            add(MyHealthTypeModel("Practitioners", "10", R.drawable.ic_car))
             add(MyHealthTypeModel("Appointments", "6", R.drawable.ic_appoinment))
-            add(MyHealthTypeModel("Conditions", "15", R.drawable.ic_conditions))
+            add(MyHealthTypeModel("Conditions", "15", R.drawable.ic_conditions_my_health))
             add(MyHealthTypeModel("Labs", "6", R.drawable.ic_labs))
             add(MyHealthTypeModel("Vitals", "6", R.drawable.ic_vitals))
-            add(MyHealthTypeModel("Medications", "6", R.drawable.ic_medications))
+            add(MyHealthTypeModel("Medications", "6", R.drawable.ic_medication_my_health))
             add(MyHealthTypeModel("Visits", "6", R.drawable.ic_visits))
             add(MyHealthTypeModel("Procedures", "6", R.drawable.ic_procedures))
             add(MyHealthTypeModel("Allergies", "6", R.drawable.ic_allergy))
             add(MyHealthTypeModel("Immunizations", "6", R.drawable.ic_immunization))
             add(MyHealthTypeModel("Billings", "6", R.drawable.ic_billing))
-            add(MyHealthTypeModel("Upload Documents", "6", R.drawable.ic_upload_health))
+            add(MyHealthTypeModel("Record Vaults", "6", R.drawable.ic_upload_health))
         }
         return typeList
     }
@@ -296,6 +305,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private fun showFilterData(itemList: ArrayList<String>) {
         binding.rvFilter.visibility = View.VISIBLE
+        binding.ivFilter.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.color_F02C2C))
         binding.rvFilter.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         val myHealthFilterAdapter = MyHealthFilterAdapter(requireActivity(), itemList)
@@ -306,13 +316,16 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     filterList[position].isChecked = false
                     itemList.removeAt(position)
                     notifyDataSetChanged()
+                    if (itemList.size==0){
+                        binding.ivFilter.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
+                    }
                 }
             }
         }
     }
 
     private fun setPractitionerData() {
-        binding.tvMyHealthType.text = getString(R.string.list_of_practitioner)
+        binding.tvMyHealthType.text = getString(R.string.list_of_practitioners)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val practitionerAdapter = MyHealthPractitionerAdapter(requireActivity())
         binding.rvList.adapter = practitionerAdapter
