@@ -171,7 +171,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:paddingVertical="@dimen/dp_20"
-                        android:paddingHorizontal="@dimen/dp_10"
+                        android:paddingHorizontal="@dimen/dp_15"
                         app:rv_backgroundColor="@color/white">
 
 
@@ -202,6 +202,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/tvFilterStartDate"
                                     style="@style/textStyleMedium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -239,7 +240,7 @@
                         android:elevation="@dimen/dp_5"
                         android:orientation="vertical"
                         android:paddingVertical="@dimen/dp_20"
-                        android:paddingHorizontal="@dimen/dp_10"
+                        android:paddingHorizontal="@dimen/dp_15"
                         app:rv_backgroundColor="@color/white"
                         app:rv_cornerRadius="@dimen/dp_6">
 
@@ -271,6 +272,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/tvFilterEndDate"
                                     style="@style/textStyleMedium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"

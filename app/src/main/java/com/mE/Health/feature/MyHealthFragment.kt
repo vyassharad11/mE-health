@@ -1,6 +1,7 @@
 package com.mE.Health.feature
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -171,6 +172,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.ivDateCancel.setOnClickListener(this)
         binding.ivFileUpload.setOnClickListener(this)
         binding.rllUpload.setOnClickListener(this)
+        binding.cvStartData.setOnClickListener(this)
+        binding.cvEndData.setOnClickListener(this)
     }
 
     private fun initFilterUI() {
@@ -195,6 +198,9 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 R.color.text_color_primary
             )
         )
+
+        binding.tvFilterStartDate.text = "MM-DD-YYYY"
+        binding.tvFilterEndDate.text = "MM-DD-YYYY"
     }
 
     override fun onClick(v: View?) {
@@ -288,6 +294,14 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
                 if (myHealthTypeAdapter?.selectedItem == 11) showUploadDocument(onClickListener)
+            }
+
+            R.id.cvStartData -> {
+                showStartDateCalendar()
+            }
+
+            R.id.cvEndData -> {
+                showEndDateCalendar()
             }
         }
     }
@@ -825,5 +839,49 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
         // Return the file name and size as a pair
         return kotlin.Pair(fileName, fileSize)
+    }
+
+    private var startDate = ""
+    private var endDate = ""
+    val startDateCalendar = Calendar.getInstance()
+
+    private fun showStartDateCalendar() {
+        val datePickerDialog = DatePickerDialog(
+            requireActivity(),
+            R.style.my_dialog_theme,
+            { view, year, monthOfYear, dayOfMonth ->
+                startDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+                binding.tvFilterStartDate.text = startDate+"  "
+                startDateCalendar.set(Calendar.YEAR, year)
+                startDateCalendar.set(Calendar.MONTH, monthOfYear)
+                startDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            },
+            startDateCalendar.get(Calendar.YEAR),
+            startDateCalendar.get(Calendar.MONTH),
+            startDateCalendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
+    private fun showEndDateCalendar() {
+        val calendar = Calendar.getInstance()
+        var mYear = calendar.get(Calendar.YEAR)
+        var mMonth = calendar.get(Calendar.MONTH)
+        var mDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val datePickerDialog = DatePickerDialog(
+            requireActivity(),
+            R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
+                endDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+                binding.tvFilterEndDate.text = endDate+"  "
+                mYear = year
+                mMonth = monthOfYear
+                mDay = dayOfMonth
+            },
+            mYear,
+            mMonth,
+            mDay
+        )
+        datePickerDialog.datePicker.minDate = startDateCalendar.timeInMillis;
+        datePickerDialog.show()
     }
 }
