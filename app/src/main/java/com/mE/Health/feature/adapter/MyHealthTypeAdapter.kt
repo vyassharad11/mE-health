@@ -68,8 +68,8 @@ class MyHealthTypeAdapter(private val mContext: Context,
 
     private fun setActiveType(holder: MyHealthTypeAdapter.MyViewHolder){
         val layoutParams = holder.cvLayout.layoutParams
-        layoutParams.height =mContext.resources.getDimensionPixelOffset(R.dimen.dp_280)
-        layoutParams.width = mContext.resources.getDimensionPixelOffset(R.dimen.dp_180)
+        layoutParams.height =mContext.resources.getDimensionPixelOffset(R.dimen.dp_240)
+        layoutParams.width = mContext.resources.getDimensionPixelOffset(R.dimen.dp_140)
         holder.cvLayout.layoutParams = layoutParams
         holder.llMain.setPadding(0, 0, 0, 0)
         holder.rllBottomView.delegate.backgroundColor = ContextCompat.getColor(mContext,R.color.color_FF6605)
@@ -79,8 +79,8 @@ class MyHealthTypeAdapter(private val mContext: Context,
     private fun setInActiveType(holder: MyHealthTypeAdapter.MyViewHolder){
         holder.llMain.setPadding(0, mContext.resources.getDimensionPixelOffset(R.dimen.dp_20), 0, 0)
         val layoutParams = holder.cvLayout.layoutParams
-        layoutParams.height =mContext.resources.getDimensionPixelOffset(R.dimen.dp_240)
-        layoutParams.width = mContext.resources.getDimensionPixelOffset(R.dimen.dp_180)
+        layoutParams.height =mContext.resources.getDimensionPixelOffset(R.dimen.dp_200)
+        layoutParams.width = mContext.resources.getDimensionPixelOffset(R.dimen.dp_140)
         holder.cvLayout.layoutParams = layoutParams
         holder.rllBottomView.delegate.backgroundColor = ContextCompat.getColor(mContext,R.color.color_6E6B78)
         holder.cvLayout.strokeColor = ContextCompat.getColor(mContext,R.color.white)

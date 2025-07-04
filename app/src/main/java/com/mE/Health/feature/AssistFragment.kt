@@ -69,10 +69,13 @@ class AssistFragment : BaseFragment() {
             add("Chronic Condition Detector")
             add("Preventive Care Advisor")
             add("Medication Adherence Risk Predictor")
-            add("Social Determinants of Health (SDoH) Estimator")
+            add("Date Range Handler")
+            add("Health Goal Interpreter")
+            add("Imaging Based condition Validator")
             add("Social Determinants of Health (SDoH) Estimator")
             add("Polypharmacy Risk Detector")
             add("Gaps in Care Identifier")
+            add("Imaging Trend Analyzer")
             add("Behavioral Health Risk Estimator")
         }
     }

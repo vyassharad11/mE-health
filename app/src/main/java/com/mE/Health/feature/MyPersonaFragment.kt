@@ -28,6 +28,7 @@ class MyPersonaFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        activeHomeMenu(requireActivity())
         initView()
         initHeader()
     }
@@ -44,7 +45,8 @@ class MyPersonaFragment : BaseFragment() {
 
     private fun initView() {
         binding.rllMyProfile.setOnClickListener {
-            addFragment(
+            refreshBottomMenu(requireActivity())
+            replaceFragment(
                 R.id.fragment_container,
                 MyProfileFragment(),
                 "MyProfileFragment",
@@ -53,7 +55,8 @@ class MyPersonaFragment : BaseFragment() {
         }
 
         binding.rllMyHealth.setOnClickListener {
-            addFragment(
+            refreshBottomMenu(requireActivity())
+            replaceFragment(
                 R.id.fragment_container,
                 MyHealthFragment(),
                 "MyHealthFragment",

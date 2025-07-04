@@ -59,6 +59,7 @@ class BottomSheetAdviceFilter(val filterList: ArrayList<AdviceFilterItem>) :
         val rvList = view.findViewById<RecyclerView>(R.id.rvBottomSheetFilter)
         val tvApply = view.findViewById<RoundTextView>(R.id.tvApply)
         val ivBack = view.findViewById<ImageView>(R.id.ivBack)
+        val tvToolbarTitle = view.findViewById<TextView>(R.id.tvToolbarTitle)
         val listAdapter = BottomSheetFilterAdapter(requireActivity(), filterList)
         rvList.layoutManager = LinearLayoutManager(requireActivity())
         rvList.adapter = listAdapter
@@ -75,6 +76,9 @@ class BottomSheetAdviceFilter(val filterList: ArrayList<AdviceFilterItem>) :
                 dismiss()
             }
             ivBack.setOnClickListener {
+                dismiss()
+            }
+            tvToolbarTitle.setOnClickListener {
                 dismiss()
             }
         }

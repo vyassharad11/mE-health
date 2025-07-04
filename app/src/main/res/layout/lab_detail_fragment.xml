@@ -336,7 +336,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:gravity="center_vertical"
-                        android:text="@string/refresh_data"
+                        android:text="@string/sync_data"
                         android:textColor="@color/text_color_primary"
                         android:textSize="@dimen/sp_16" />
                 </LinearLayout>

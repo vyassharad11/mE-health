@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.R
@@ -22,6 +23,7 @@ class MyHealthUploadDocAdapter(private val mContext: Context) :
         var tvName: TextView = itemView.findViewById(R.id.tvName)
         var tvCategory: TextView = itemView.findViewById(R.id.tvCategory)
         var tvDateTime: TextView = itemView.findViewById(R.id.tvDateTime)
+        var ivFileType: ImageView = itemView.findViewById(R.id.ivFileType)
     }
 
     override fun onCreateViewHolder(
@@ -41,17 +43,24 @@ class MyHealthUploadDocAdapter(private val mContext: Context) :
             )
         }
 
-        if (position==1){
-            holder.tvName.text = "Report4.mp4"
-            holder.tvCategory.text = "Appointment"
-            holder.tvDateTime.text = "${position+1} days ago"
-        }  else   if (position==2){
-            holder.tvName.text = "Report.jpg"
-            holder.tvCategory.text = "Labs"
-            holder.tvDateTime.text = "${position+1} days ago"
-        } else {
-            holder.tvName.text = "Blood Test-01.pdf"
-            holder.tvCategory.text = "Appointment"
+        when (position) {
+            1 -> {
+                holder.tvName.text = "Report4.mp4"
+                holder.tvCategory.text = "Appointment"
+                holder.tvDateTime.text = "${position + 1} days ago"
+                holder.ivFileType.setImageResource(R.drawable.ic_pdf_eye_icon)
+            }
+
+            2 -> {
+                holder.tvName.text = "Report.jpg"
+                holder.tvCategory.text = "Labs"
+                holder.tvDateTime.text = "${position + 1} days ago"
+            }
+
+            else -> {
+                holder.tvName.text = "Blood Test-01.pdf"
+                holder.tvCategory.text = "Appointment"
+            }
         }
     }
 

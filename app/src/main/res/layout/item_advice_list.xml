@@ -98,12 +98,14 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:weightSum="4"
             android:orientation="vertical">
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:padding="@dimen/dp_12"
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_cornerRadius_TR="@dimen/dp_5">
@@ -115,8 +117,9 @@
             </com.mE.Health.utility.roundview.RoundLinearLayout>
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="1dp"
                 android:padding="@dimen/dp_12"
                 app:rv_backgroundColor="@color/color_FF6605">
@@ -128,8 +131,9 @@
             </com.mE.Health.utility.roundview.RoundLinearLayout>
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="1dp"
                 android:padding="@dimen/dp_12"
                 app:rv_backgroundColor="@color/color_FF6605">
@@ -141,8 +145,9 @@
             </com.mE.Health.utility.roundview.RoundLinearLayout>
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="1dp"
                 android:padding="@dimen/dp_12"
                 app:rv_backgroundColor="@color/color_FF6605"

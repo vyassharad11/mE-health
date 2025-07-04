@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -107,6 +108,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     getFilterList()
                     initFilterUI()
                     binding.rllUpload.visibility = View.GONE
+                    binding.rlDateCalendarLayout.visibility = View.GONE
                     firstDateSelected = Calendar.getInstance().timeInMillis
                     secondDateSelected = Calendar.getInstance().timeInMillis
                     when (position) {
@@ -165,7 +167,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.ivSearch.setOnClickListener(this)
         binding.ivCross.setOnClickListener(this)
         binding.ivFilter.setOnClickListener(this)
-        binding.ivFilterCalendar.setOnClickListener(this)
+        binding.ivCalendarFilter.setOnClickListener(this)
         binding.ivDateCancel.setOnClickListener(this)
         binding.ivFileUpload.setOnClickListener(this)
         binding.rllUpload.setOnClickListener(this)
@@ -175,26 +177,56 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rlDateLayout.visibility = View.GONE
         binding.rvFilter.visibility = View.GONE
         binding.rlSearchLayout.visibility = View.GONE
-        binding.ivFilterCalendar.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
-        binding.ivFilter.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
-        binding.ivSearch.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
+        binding.ivCalendarFilter.setColorFilter(
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.text_color_primary
+            )
+        )
+        binding.ivFilter.setColorFilter(
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.text_color_primary
+            )
+        )
+        binding.ivSearch.setColorFilter(
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.text_color_primary
+            )
+        )
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.ivSearch -> {
                 binding.rlSearchLayout.visibility = View.VISIBLE
-                binding.ivSearch.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.color_F02C2C))
+                binding.ivSearch.setColorFilter(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        R.color.color_FF6605
+                    )
+                )
             }
 
             R.id.ivCross -> {
                 binding.rlSearchLayout.visibility = View.GONE
-                binding.ivSearch.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
+                binding.ivSearch.setColorFilter(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        R.color.text_color_primary
+                    )
+                )
             }
 
             R.id.ivDateCancel -> {
                 binding.rlDateLayout.visibility = View.GONE
-                binding.ivFilterCalendar.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
+                binding.ivCalendarFilter.setColorFilter(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        R.color.text_color_primary
+                    )
+                )
             }
 
             R.id.ivFilter -> {
@@ -212,11 +244,28 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 )
             }
 
-            R.id.ivFilterCalendar -> {
-                openDateRangePicker()
+            R.id.ivCalendarFilter -> {
+//                openDateRangePicker()
+                if (binding.rlDateCalendarLayout.isVisible) {
+                    binding.ivCalendarFilter.setColorFilter(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.text_color_primary
+                        )
+                    )
+                    binding.rlDateCalendarLayout.visibility = View.GONE
+                } else {
+                    binding.ivCalendarFilter.setColorFilter(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.color_FF6605
+                        )
+                    )
+                    binding.rlDateCalendarLayout.visibility = View.VISIBLE
+                }
             }
 
-            R.id.ivFileUpload,  R.id.rllUpload -> {
+            R.id.ivFileUpload, R.id.rllUpload -> {
                 val onClickListener = object : OnClickCallback {
                     override fun onClick(position: Int) {
                         when (position) {
@@ -264,7 +313,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         picker.addOnNegativeButtonClickListener { picker?.dismiss() }
         picker.addOnPositiveButtonClickListener {
             binding.rlDateLayout.visibility = View.VISIBLE
-            binding.ivFilterCalendar.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.color_FF6605))
+            binding.ivCalendarFilter.setColorFilter(
+                ContextCompat.getColor(
+                    requireActivity(),
+                    R.color.color_FF6605
+                )
+            )
             firstDateSelected = it.first
             secondDateSelected = it.second
             binding.tvDateRange.text =
@@ -286,7 +340,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun getAllMyHealthType(): ArrayList<MyHealthTypeModel> {
         val typeList: ArrayList<MyHealthTypeModel> = ArrayList()
         typeList.apply {
-            add(MyHealthTypeModel("Practitioners", "10", R.drawable.ic_car))
+            add(MyHealthTypeModel("Practitioners", "10", R.drawable.ic_practitioner))
             add(MyHealthTypeModel("Appointments", "6", R.drawable.ic_appoinment))
             add(MyHealthTypeModel("Conditions", "15", R.drawable.ic_conditions_my_health))
             add(MyHealthTypeModel("Labs", "6", R.drawable.ic_labs))
@@ -305,7 +359,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private fun showFilterData(itemList: ArrayList<String>) {
         binding.rvFilter.visibility = View.VISIBLE
-        binding.ivFilter.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.color_F02C2C))
+        binding.ivFilter.setColorFilter(
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.color_FF6605
+            )
+        )
         binding.rvFilter.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         val myHealthFilterAdapter = MyHealthFilterAdapter(requireActivity(), itemList)
@@ -316,8 +375,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     filterList[position].isChecked = false
                     itemList.removeAt(position)
                     notifyDataSetChanged()
-                    if (itemList.size==0){
-                        binding.ivFilter.setColorFilter(ContextCompat.getColor(requireActivity(), R.color.text_color_primary))
+                    if (itemList.size == 0) {
+                        binding.ivFilter.setColorFilter(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.text_color_primary
+                            )
+                        )
                     }
                 }
             }
@@ -626,7 +690,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         cursor?.close()
                         val fragment = UserContentFragment()
                         val bundle = Bundle()
-                        bundle.putString("IMAGE_PATH",picturePath)
+                        bundle.putString("IMAGE_PATH", picturePath)
                         fragment.arguments = bundle
                         addFragment(
                             R.id.fragment_container,
@@ -692,7 +756,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         cursor?.close()
                         val fragment = UserContentFragment()
                         val bundle = Bundle()
-                        bundle.putString("IMAGE_PATH",picturePath)
+                        bundle.putString("IMAGE_PATH", picturePath)
                         fragment.arguments = bundle
                         addFragment(
                             R.id.fragment_container,

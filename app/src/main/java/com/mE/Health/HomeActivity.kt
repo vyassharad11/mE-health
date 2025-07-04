@@ -1,8 +1,8 @@
 package com.mE.Health
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Slide
-import com.mE.Health.databinding.ActivityHomeBinding
 import com.mE.Health.databinding.ActivityHomeNewBinding
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
@@ -27,13 +26,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityHomeNewBinding
+    private var isNavActive = false
+    private var navMenuAdapter: HomeMenuAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityHomeNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
         (this.applicationContext as MyApplication).setCurrentActivity(this)
+        isNavActive = false
         openFragment(HomeFragment())
         initView()
         initNavMenu()
@@ -59,6 +60,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.llMenu -> {
                 refreshMenu()
+                isNavActive = true
                 updateNavMenuVisibility(if (binding.rvNavMenu.isVisible) View.GONE else View.VISIBLE)
                 binding.ivMenu.setImageResource(R.drawable.ic_nav_menu_selected)
                 binding.tvMenu.setTextColor(ContextCompat.getColor(this, R.color.color_FF6605))
@@ -71,6 +73,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.llDashboard -> {
                 refreshMenu()
+                isNavActive = false
                 updateNavMenuVisibility(View.GONE)
                 activeDashboardMenu()
                 clearBackStack()
@@ -85,12 +88,17 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         try {
             if (hideSideNavRequired()) return
             closeKeyboard()
+            val manager = supportFragmentManager
             if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
+                if (supportFragmentManager.backStackEntryCount == 1 && isNavActive) {
+                    updateNavMenuVisibility(View.VISIBLE)
+                    navMenuAdapter?.selectedItem = -1
+                    navMenuAdapter?.notifyDataSetChanged()
+                }
             } else {
                 finish()
             }
-
             setBottomNavigationVisibility()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -113,9 +121,14 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 //        }
     }
 
-    private fun activeDashboardMenu() {
+    fun activeDashboardMenu() {
         binding.ivDashboard.setImageResource(R.drawable.ic_nav_dashboard_selected)
         binding.tvDashboard.setTextColor(ContextCompat.getColor(this, R.color.color_FF6605))
+    }
+
+    fun activeHomeMenu() {
+        binding.ivMenu.setImageResource(R.drawable.ic_nav_menu_selected)
+        binding.tvMenu.setTextColor(ContextCompat.getColor(this, R.color.color_FF6605))
     }
 
     fun updateNavMenuVisibility(visibility: Int) {
@@ -135,7 +148,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         activeDashboardMenu()
     }
 
-    private fun refreshMenu() {
+    fun refreshMenu() {
         binding.ivMenu.setImageResource(R.drawable.ic_nav_menu)
         binding.ivDashboard.setImageResource(R.drawable.ic_nav_dashboard)
         binding.tvMenu.setTextColor(ContextCompat.getColor(this, R.color.color_333333))
@@ -145,9 +158,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun initNavMenu() {
         binding.rvNavMenu.layoutManager = LinearLayoutManager(this)
-        val adapter = HomeMenuAdapter(this, getNavMenuItem())
-        binding.rvNavMenu.adapter = adapter
-        adapter.apply {
+        navMenuAdapter = HomeMenuAdapter(this, getNavMenuItem())
+        binding.rvNavMenu.adapter = navMenuAdapter
+        navMenuAdapter?.apply {
             onItemClickListener = object : HomeMenuAdapter.OnClickCallback,
                 RadioButtonListAdapter.OnClickCallback {
                 override fun onClicked(view: View?, position: Int) {
@@ -157,6 +170,18 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         updateNavMenuVisibility(View.GONE)
                         homeNavClickAction()
 //                        openFragment(MyPersonaFragment())
+                    } else if (position == 4) {
+                        val intent = Intent(this@HomeActivity, MainActivity::class.java)
+                        intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NEW_TASK or
+                                Intent.FLAG_ACTIVITY_NEW_TASK
+                                or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                        overridePendingTransition(
+                            R.anim.enter_from_bottom,
+                            android.R.anim.fade_out
+                        )
+                        finish()
                     }
                 }
             }
@@ -214,5 +239,13 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             return true
         }
         return false
+    }
+
+    fun updateSideNavStatus() {
+        isNavActive = false
+    }
+
+    fun getSideNavStatus(): Boolean {
+        return isNavActive
     }
 }

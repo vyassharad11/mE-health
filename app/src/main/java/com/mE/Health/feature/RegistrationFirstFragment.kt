@@ -38,6 +38,7 @@ class RegistrationFirstFragment : BaseFragment(), View.OnClickListener {
 
     private fun initHeader() {
         binding.toolbar.tvTitle.text = ""
+        binding.toolbar.appBar.setBackgroundColor(ContextCompat.getColor(requireActivity(),R.color.white))
         binding.toolbar.ivBack.setOnClickListener {
             requireActivity().onBackPressed()
         }

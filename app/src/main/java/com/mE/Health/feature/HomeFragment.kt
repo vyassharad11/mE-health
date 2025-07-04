@@ -32,12 +32,16 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        refreshBottomMenu(requireActivity())
+        activeDashboardMenu(requireActivity())
         initView()
     }
 
     private fun initView() {
         binding.rllAiAssistant.setOnClickListener {
             (requireActivity() as HomeActivity).updateMenu(View.GONE)
+            refreshBottomMenu(requireActivity())
+            updateSideNavStatus(requireActivity())
             replaceFragment(
                 R.id.fragment_container,
                 AIAssistantFragment(),
@@ -53,6 +57,8 @@ class HomeFragment : BaseFragment() {
         }
         binding.tvMarketPlace.setOnClickListener {
             (requireActivity() as HomeActivity).updateMenu(View.GONE)
+            refreshBottomMenu(requireActivity())
+            updateSideNavStatus(requireActivity())
             replaceFragment(
                 R.id.fragment_container,
                 ConnectProviderFragment(),
