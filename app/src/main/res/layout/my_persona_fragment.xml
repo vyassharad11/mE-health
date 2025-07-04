@@ -71,11 +71,11 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="@dimen/dp_15"
-                android:src="@drawable/ic_right_arrow" />
+                android:src="@drawable/ic_right_arrow_light_gray" />
 
         </com.mE.Health.utility.roundview.RoundLinearLayout>
 
@@ -121,12 +121,13 @@
 
             </LinearLayout>
 
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="@dimen/dp_15"
-                android:src="@drawable/ic_right_arrow" />
+                android:src="@drawable/ic_right_arrow_light_gray" />
 
         </com.mE.Health.utility.roundview.RoundLinearLayout>
 

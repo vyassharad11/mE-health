@@ -244,6 +244,23 @@ open class BaseFragment : Fragment() {
         (getActivity(context) as HomeActivity).setBottomNavigationVisibility()
     }
 
+     fun refreshBottomMenu(context: Context) {
+        (getActivity(context) as HomeActivity).refreshMenu()
+    }
+
+    fun activeDashboardMenu(context: Context) {
+        if (!(getActivity(context) as HomeActivity).getSideNavStatus())
+            (getActivity(context) as HomeActivity).activeDashboardMenu()
+    }
+
+    fun activeHomeMenu(context: Context) {
+        (getActivity(context) as HomeActivity).activeHomeMenu()
+    }
+
+   fun updateSideNavStatus(context: Context) {
+        (getActivity(context) as HomeActivity).updateSideNavStatus()
+    }
+
     private fun updateSideNavMenuVisibility(mActivity: Activity) : Boolean {
         var status  = false
         val mCurrentActivity = (mActivity.applicationContext as MyApplication).getCurrentActivity()
