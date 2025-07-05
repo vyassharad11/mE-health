@@ -37,11 +37,6 @@ class BottomSheetFilter(val filterList: ArrayList<FilterItem>) : BottomSheetDial
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme) /* hack to make background transparent */
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-//    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val rvList = view.findViewById<RecyclerView>(R.id.rvBottomSheetFilter)

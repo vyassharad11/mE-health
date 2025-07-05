@@ -112,4 +112,12 @@
     <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
     </style>
+
+
+    <style name="Colors_Widget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/white</item>
+        <item name="chipStrokeColor">@color/text_color_orange</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/text_color_primary</item>
+    </style>
 </resources>

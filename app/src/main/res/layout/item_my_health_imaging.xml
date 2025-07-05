@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dp_5"
+    app:cardCornerRadius="@dimen/dp_5"
+    app:cardElevation="@dimen/dp_2"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dp_10">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvName"
+                    style="@style/textStyleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="X-Ray (DX)"
+                    android:textColor="@color/text_color_primary"
+                    android:textSize="@dimen/sp_16" />
+
+
+                <com.mE.Health.utility.roundview.RoundTextView
+                    android:id="@+id/tvStatus"
+                    style="@style/textStyleSemiBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:paddingVertical="@dimen/dp_5"
+                    android:text="@string/final_"
+                    android:textColor="@color/color_06C270"
+                    android:textSize="@dimen/sp_8"
+                    app:rv_backgroundColor="@color/color_A06C270"
+                    app:rv_isRadiusHalfHeight="true" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                style="@style/textStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="Hospital name"
+                android:textColor="@color/color_878787"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                style="@style/textStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="11 Jun 2025"
+                android:textColor="@color/color_878787"
+                android:textSize="@dimen/sp_12" />
+
+
+            <TextView
+                android:id="@+id/tvDescription"
+                style="@style/textStyleMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="Chest X-ray for bronchitis"
+                android:textColor="@color/text_color_primary"
+                android:textSize="@dimen/sp_16" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:orientation="horizontal">
+
+                <com.mE.Health.utility.roundview.RoundTextView
+                    android:id="@+id/tvViewDetails"
+                    style="@style/textStyleSemiBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/dp_30"
+                    android:paddingVertical="@dimen/dp_4"
+                    android:text="View Details"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    app:rv_backgroundColor="@color/color_FF6605"
+                    app:rv_isRadiusHalfHeight="true" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
