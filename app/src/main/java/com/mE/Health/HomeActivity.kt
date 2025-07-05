@@ -16,6 +16,7 @@ import androidx.transition.Slide
 import com.mE.Health.databinding.ActivityHomeNewBinding
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
+import com.mE.Health.feature.SettingFragment
 import com.mE.Health.feature.adapter.HomeMenuAdapter
 import com.mE.Health.feature.adapter.RadioButtonListAdapter
 import com.mE.Health.models.NavMenuDTO
@@ -168,8 +169,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                     notifyDataSetChanged()
                     if (position == 1) {
                         updateNavMenuVisibility(View.GONE)
-                        homeNavClickAction()
-//                        openFragment(MyPersonaFragment())
+                        homeNavClickAction(MyPersonaFragment())
+                    }  else if (position == 2) {
+                        updateNavMenuVisibility(View.GONE)
+                        homeNavClickAction(SettingFragment())
                     } else if (position == 4) {
                         val intent = Intent(this@HomeActivity, MainActivity::class.java)
                         intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or
@@ -198,13 +201,13 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun homeNavClickAction() {
+    private fun homeNavClickAction(fragment: Fragment) {
 //        val fm: FragmentManager = supportFragmentManager
 //        val fragment: HomeFragment =
 //            fm.findFragmentById(R.id.fragment_container) as HomeFragment
 //        fragment.navClickAction()
         clearBackStack()
-        addFragment(MyPersonaFragment())
+        addFragment(fragment)
     }
 
     private fun addFragment(fragment: Fragment) {

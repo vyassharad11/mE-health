@@ -342,13 +342,6 @@
                         android:textColor="@color/color_6E6B78"
                         android:textSize="@dimen/sp_18" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dp_50"
-                        android:visibility="gone"
-                        android:thumb="@drawable/custom_thumb"
-                        app:track="@drawable/custom_track" />
-
                     <ImageView
                         android:id="@+id/ivToggle"
                         android:layout_width="wrap_content"

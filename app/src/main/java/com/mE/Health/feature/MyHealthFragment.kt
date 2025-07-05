@@ -28,6 +28,7 @@ import com.mE.Health.feature.adapter.MyHealthAppointmentAdapter
 import com.mE.Health.feature.adapter.MyHealthBillingsAdapter
 import com.mE.Health.feature.adapter.MyHealthConditionAdapter
 import com.mE.Health.feature.adapter.MyHealthFilterAdapter
+import com.mE.Health.feature.adapter.MyHealthImagingAdapter
 import com.mE.Health.feature.adapter.MyHealthImmunizationAdapter
 import com.mE.Health.feature.adapter.MyHealthLabAdapter
 import com.mE.Health.feature.adapter.MyHealthMedicationAdapter
@@ -158,6 +159,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         }
 
                         11 -> {
+                            setImagingData()
+                        }
+
+                        12 -> {
                             setUploadDocumentData()
                         }
                     }
@@ -293,7 +298,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         }
                     }
                 }
-                if (myHealthTypeAdapter?.selectedItem == 11) showUploadDocument(onClickListener)
+                showUploadDocument(onClickListener)
             }
 
             R.id.cvStartData -> {
@@ -365,6 +370,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             add(MyHealthTypeModel("Allergies", "6", R.drawable.ic_allergy))
             add(MyHealthTypeModel("Immunizations", "6", R.drawable.ic_immunization))
             add(MyHealthTypeModel("Billings", "6", R.drawable.ic_billing))
+            add(MyHealthTypeModel("Imaging", "10", R.drawable.ic_imaging))
             add(MyHealthTypeModel("Record Vaults", "6", R.drawable.ic_upload_health))
         }
         return typeList
@@ -655,6 +661,25 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+    private fun setImagingData() {
+        binding.tvMyHealthType.text = getString(R.string.list_of_imaging)
+        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
+        val practitionerAdapter = MyHealthImagingAdapter(requireActivity())
+        binding.rvList.adapter = practitionerAdapter
+        practitionerAdapter.apply {
+            onItemClickListener = object : MyHealthImagingAdapter.OnClickCallback {
+                override fun onClicked(view: View?, position: Int) {
+                    addFragment(
+                        R.id.fragment_container,
+                        ImagingDetailsFragment(),
+                        "ImagingDetailsFragment",
+                        "MyHealthFragment"
+                    )
+                }
+            }
+        }
+    }
+
     private val getPhotoPicker =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -851,7 +876,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             R.style.my_dialog_theme,
             { view, year, monthOfYear, dayOfMonth ->
                 startDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
-                binding.tvFilterStartDate.text = startDate+"  "
+                binding.tvFilterStartDate.text = startDate + "  "
                 startDateCalendar.set(Calendar.YEAR, year)
                 startDateCalendar.set(Calendar.MONTH, monthOfYear)
                 startDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -872,7 +897,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             requireActivity(),
             R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
                 endDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
-                binding.tvFilterEndDate.text = endDate+"  "
+                binding.tvFilterEndDate.text = endDate + "  "
                 mYear = year
                 mMonth = monthOfYear
                 mDay = dayOfMonth

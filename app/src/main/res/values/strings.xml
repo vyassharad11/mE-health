@@ -170,5 +170,19 @@
     <string name="medical_documents">Medical Documents</string>
     <string name="user_content">User Content</string>
     <string name="data_items">Data Items</string>
+    <string name="my_settings">My Settings</string>
+    <string name="preferences">Preferences</string>
+    <string name="update_preferences">Update Preferences</string>
+    <string name="change_password">Change Password</string>
+    <string name="connected_accounts">Connected Accounts</string>
+    <string name="health_care">Health Care</string>
+    <string name="transactions">Transactions</string>
+    <string name="bank_accounts">Bank Accounts</string>
+    <string name="allow_location_access">Allow Location Access</string>
+    <string name="never">Never</string>
+    <string name="while_using_app">While Using The App</string>
+    <string name="list_of_imaging">List of Imaging</string>
+    <string name="imaging">Imaging</string>
+    <string name="image_report">6 Image <b>Report.jpg</b></string>
 
 </resources>
