@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun openFragment() {
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, LoginFragment())
+            .add(R.id.fragment_container, SplashFragment())
             .addToBackStack(null)
             .commit()
     }
