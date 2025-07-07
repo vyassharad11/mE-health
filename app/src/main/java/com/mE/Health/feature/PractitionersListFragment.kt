@@ -58,7 +58,7 @@ class PractitionersListFragment : BaseFragment() {
                 }
             }
         } else {
-            binding.tvPageTitle.text = getString(R.string.list_of_medication)
+            binding.tvPageTitle.text = getString(R.string.list_of_medications)
             var recyclerAdapter = MedicationListAdapter(requireActivity())
             binding.rvAssist.adapter = recyclerAdapter
             recyclerAdapter.apply {

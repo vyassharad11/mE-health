@@ -50,7 +50,6 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
@@ -370,8 +369,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             add(MyHealthTypeModel("Allergies", "6", R.drawable.ic_allergy))
             add(MyHealthTypeModel("Immunizations", "6", R.drawable.ic_immunization))
             add(MyHealthTypeModel("Billings", "6", R.drawable.ic_billing))
-            add(MyHealthTypeModel("Imaging", "10", R.drawable.ic_imaging))
-            add(MyHealthTypeModel("Record Vaults", "6", R.drawable.ic_upload_health))
+            add(MyHealthTypeModel("Imagings", "10", R.drawable.ic_imaging))
+            add(MyHealthTypeModel("Record Vault", "6", R.drawable.ic_upload_health))
         }
         return typeList
     }
@@ -428,7 +427,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setAppointmentData() {
-        binding.tvMyHealthType.text = getString(R.string.list_of_appointment)
+        binding.tvMyHealthType.text = getString(R.string.list_of_appointments)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthAppointmentAdapter(requireActivity())
         binding.rvList.adapter = providerAdapter
@@ -464,7 +463,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setConditionData() {
-        binding.tvMyHealthType.text = getString(R.string.list_of_condition)
+        binding.tvMyHealthType.text = getString(R.string.list_of_conditions)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthConditionAdapter(requireActivity())
         binding.rvList.adapter = providerAdapter
@@ -483,7 +482,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setLabData() {
-        binding.tvMyHealthType.text = getString(R.string.list_of_lab)
+        binding.tvMyHealthType.text = getString(R.string.list_of_labs)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthLabAdapter(requireActivity())
         binding.rvList.adapter = providerAdapter
@@ -521,7 +520,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setMedicationData() {
-        binding.tvMyHealthType.text = getString(R.string.list_of_medication)
+        binding.tvMyHealthType.text = getString(R.string.list_of_medications)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthMedicationAdapter(requireActivity())
         binding.rvList.adapter = providerAdapter
@@ -538,7 +537,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             }
         }
     }
-
 
     private fun setVisitsData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_visits)
@@ -598,7 +596,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setImmunizationData() {
-        binding.tvMyHealthType.text = getString(R.string.list_of_immunization)
+        binding.tvMyHealthType.text = getString(R.string.list_of_immunizations)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthImmunizationAdapter(requireActivity())
         binding.rvList.adapter = providerAdapter
@@ -643,7 +641,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private fun setUploadDocumentData() {
         binding.rllUpload.visibility = View.VISIBLE
-        binding.tvMyHealthType.text = getString(R.string.list_of_files)
+        binding.tvMyHealthType.text = getString(R.string.list_of_file)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val practitionerAdapter = MyHealthUploadDocAdapter(requireActivity())
         binding.rvList.adapter = practitionerAdapter
@@ -662,7 +660,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setImagingData() {
-        binding.tvMyHealthType.text = getString(R.string.list_of_imaging)
+        binding.tvMyHealthType.text = getString(R.string.list_of_imagings)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val practitionerAdapter = MyHealthImagingAdapter(requireActivity())
         binding.rvList.adapter = practitionerAdapter
@@ -714,6 +712,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             javaClass.name,
                             "Gallery picturePath : $picturePath: ${file.length()}"
                         )
+
+
                         val cursor = requireActivity()!!.contentResolver
                             .query(
                                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -727,9 +727,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             uri = Uri.parse("content://media/external/images/media/$id")
                         }
                         cursor?.close()
+                        val filename = File(uri!!.path).name
                         val fragment = UserContentFragment()
                         val bundle = Bundle()
-                        bundle.putString("IMAGE_PATH", picturePath)
+                        bundle.putString("FILE_PATH", uri.toString())
+                        bundle.putString("FILE_LENGTH", getFileLength(file))
+                        bundle.putString("FILE_NAME", filename)
+                        bundle.putString("TYPE", "Image")
                         fragment.arguments = bundle
                         addFragment(
                             R.id.fragment_container,
@@ -793,17 +797,21 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             uri = Uri.parse("content://media/external/images/media/$id")
                         }
                         cursor?.close()
+                        val filename = picturePath.substring(picturePath.lastIndexOf("/") + 1)
                         val fragment = UserContentFragment()
                         val bundle = Bundle()
-                        bundle.putString("IMAGE_PATH", picturePath)
+                        bundle.putString("FILE_PATH", uri.toString())
+                        bundle.putString("FILE_LENGTH", getFileLength(file))
+                        bundle.putString("FILE_NAME", filename)
+                        bundle.putString("TYPE", "Video")
                         fragment.arguments = bundle
                         addFragment(
                             R.id.fragment_container,
-                            UserContentFragment(),
+                            fragment,
                             "UserContentFragment",
                             "MyHealthFragment"
                         )
-                        Log.i("=============", "=========videoPath: $picturePath")
+                        Log.i("=============", "=========picturePath: $picturePath")
                     }
                 } catch (e: IOException) {
                     Log.i("TAG", "Some exception $e")
@@ -830,9 +838,17 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 val name =
                     "Filename - $fileName\nFile size - $fileSizeInMB MB\nFile path - ${it.path}"
                 Log.i("================", "=====$name")
+                val filename = picturePath.substring(picturePath.lastIndexOf("/") + 1)
+                val fragment = UserContentFragment()
+                val bundle = Bundle()
+                bundle.putString("FILE_PATH", it.path)
+                bundle.putString("FILE_LENGTH", fileSizeInMB+" MB")
+                bundle.putString("FILE_NAME", fileName)
+                bundle.putString("TYPE", "Pdf")
+                fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
-                    UserContentFragment(),
+                    fragment,
                     "UserContentFragment",
                     "MyHealthFragment"
                 )
@@ -908,5 +924,18 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         )
         datePickerDialog.datePicker.minDate = startDateCalendar.timeInMillis;
         datePickerDialog.show()
+    }
+
+    private fun getFileLength(file: File): String {
+        val mb = convertToMegabytes(file)
+        return if (mb > 0) "$mb MB" else "${convertToKilobytes(file)} KB"
+    }
+
+    private fun convertToMegabytes(file: File): Long {
+        return file.length() / (1024 * 1024)
+    }
+
+    private fun convertToKilobytes(file: File): Long {
+        return file.length() / 1024
     }
 }

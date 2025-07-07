@@ -79,14 +79,14 @@
     <string name="practitioner">Practitioner</string>
     <string name="list_of_practitioner">List of Practitioner</string>
     <string name="search_allergies">Search allergies....</string>
-    <string name="list_of_appointment">List of Appointment</string>
-    <string name="list_of_condition">List of Condition</string>
-    <string name="list_of_lab">List of Lab</string>
-    <string name="list_of_medication">List of Medication</string>
+    <string name="list_of_appointments">List of Appointments</string>
+    <string name="list_of_conditions">List of Conditions</string>
+    <string name="list_of_labs">List of Labs</string>
+    <string name="list_of_medications">List of Medications</string>
     <string name="list_of_visits">List of Visits</string>
     <string name="list_of_procedures">List of Procedures</string>
     <string name="list_of_allergies">List of Allergies</string>
-    <string name="list_of_immunization">List of Immunization</string>
+    <string name="list_of_immunizations">List of Immunizations</string>
     <string name="list_of_billings">List of Billings</string>
     <string name="list_of_vitals">List of Vitals</string>
     <string name="appointment_description">Based on the data provided, here is some advice on savings ratio for your finance profile:\n\n. Understand Your Financial Goals: Start by identifying your short-term and long-term financial goals. Whether it\'s saving for a vacation, emergency fund, retirement, or any other goal, having clarity on what you are saving for will help determine your savings ratio.\n\n2. *Assess Your Current Financial Situation:* Review your income, expenses, assets, liabilities, and spending habits. Understanding your cash flow will give you a clear \n\n</string>
@@ -134,7 +134,7 @@
     <string name="plan_id">Plan ID</string>
     <string name="view_invoice">View Invoice</string>
     <string name="billing">Billing</string>
-    <string name="list_of_files">List of Files</string>
+    <string name="list_of_file">List of File</string>
     <string name="category_">Category : </string>
     <string name="upload">Upload</string>
     <string name="procedure_details">Procedure Details</string>
@@ -181,8 +181,11 @@
     <string name="allow_location_access">Allow Location Access</string>
     <string name="never">Never</string>
     <string name="while_using_app">While Using The App</string>
-    <string name="list_of_imaging">List of Imaging</string>
+    <string name="list_of_imagings">List of Imagings</string>
     <string name="imaging">Imaging</string>
     <string name="image_report">6 Image <b>Report.jpg</b></string>
+    <string name="looking_for_practitioner">Looking for Practitioner?</string>
+    <string name="practitioner_empty_description">Your practitioner timeline is just a calendar pick away!</string>
+    <string name="select_date">Select Date</string>
 
 </resources>
