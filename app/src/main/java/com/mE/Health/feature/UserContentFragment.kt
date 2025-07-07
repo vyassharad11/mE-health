@@ -50,13 +50,6 @@ class UserContentFragment : BaseFragment() {
             binding.tvImageName.text = "Name : " + bundle.getString("FILE_NAME")
             binding.tvFilterType.text = type
             val imgFile = Uri.parse(fileURI)
-            // on below line we are checking if the image file exist or not.
-//            if (imgFile.exists()) {
-//                Log.i(
-//                    "=========",
-//                    "==== : $imagePath"
-//                )
-            // on below line we are creating an image bitmap variable
             // and adding a bitmap to it from image file.
             if (type.equals("Image")) {
                 Glide.with(requireActivity())
