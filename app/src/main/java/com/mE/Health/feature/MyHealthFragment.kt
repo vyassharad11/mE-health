@@ -1,5 +1,6 @@
 package com.mE.Health.feature
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -21,6 +22,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mE.Health.R
+import com.mE.Health.data.model.Appointment
+import com.mE.Health.data.model.Condition
+import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.MedicationRequest
+import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Practitioner
 import com.mE.Health.databinding.MyHealthFragmentBinding
 import com.mE.Health.feature.adapter.ClickState
 import com.mE.Health.feature.adapter.MyHealthAllergiesAdapter
@@ -49,6 +57,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
+
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -358,19 +367,91 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun getAllMyHealthType(): ArrayList<MyHealthTypeModel> {
         val typeList: ArrayList<MyHealthTypeModel> = ArrayList()
         typeList.apply {
-            add(MyHealthTypeModel("Practitioners", "10", R.drawable.ic_practitioner))
-            add(MyHealthTypeModel("Appointments", "6", R.drawable.ic_appoinment))
-            add(MyHealthTypeModel("Conditions", "15", R.drawable.ic_conditions_my_health))
-            add(MyHealthTypeModel("Labs", "6", R.drawable.ic_labs))
-            add(MyHealthTypeModel("Vitals", "6", R.drawable.ic_vitals))
-            add(MyHealthTypeModel("Medications", "6", R.drawable.ic_medication_my_health))
-            add(MyHealthTypeModel("Visits", "6", R.drawable.ic_visits))
-            add(MyHealthTypeModel("Procedures", "6", R.drawable.ic_procedures))
-            add(MyHealthTypeModel("Allergies", "6", R.drawable.ic_allergy))
-            add(MyHealthTypeModel("Immunizations", "6", R.drawable.ic_immunization))
-            add(MyHealthTypeModel("Billings", "6", R.drawable.ic_billing))
-            add(MyHealthTypeModel("Imagings", "10", R.drawable.ic_imaging))
-            add(MyHealthTypeModel("Record Vault", "6", R.drawable.ic_upload_health))
+            add(
+                MyHealthTypeModel(
+                    "Practitioners",
+                    mockViewModel.practitionerList.value?.size.toString(),
+                    R.drawable.ic_car
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Appointments",
+                    mockViewModel.appointmentList.value?.size.toString(),
+                    R.drawable.ic_appoinment
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Conditions",
+                    mockViewModel.conditionList.value?.size.toString(),
+                    R.drawable.ic_conditions_my_health
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Labs",
+                    mockViewModel.labList.value?.size.toString(),
+                    R.drawable.ic_labs
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Vitals",
+                    mockViewModel.vitalsList.value?.size.toString(),
+                    R.drawable.ic_vitals
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Medications",
+                    mockViewModel.medicationList.value?.size.toString(),
+                    R.drawable.ic_medication_my_health
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Visits",
+                    mockViewModel.visitList.value?.size.toString(),
+                    R.drawable.ic_visits
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Procedures",
+                    mockViewModel.procedureList.value?.size.toString(),
+                    R.drawable.ic_procedures
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Allergies",
+                    mockViewModel.allergyList.value?.size.toString(),
+                    R.drawable.ic_allergy
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Immunizations",
+                    mockViewModel.immunizationList.value?.size.toString(),
+                    R.drawable.ic_immunization
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Billings",
+                    mockViewModel.claimList.value?.size.toString(),
+                    R.drawable.ic_billing
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    "Imagings",
+                    mockViewModel.claimList.value?.size.toString(),
+                    R.drawable.ic_imaging
+                )
+            )
+            add(MyHealthTypeModel("Record Vaults", "6", R.drawable.ic_upload_health))
         }
         return typeList
     }
@@ -411,10 +492,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_practitioners)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val practitionerAdapter = MyHealthPractitionerAdapter(requireActivity())
+        practitionerAdapter.itemList = mockViewModel.practitionerList.value
         binding.rvList.adapter = practitionerAdapter
         practitionerAdapter.apply {
             onItemClickListener = object : MyHealthPractitionerAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(data: Practitioner) {
+                    DetailSingleton.practitioner = data
                     addFragment(
                         R.id.fragment_container,
                         PractitionerDetailsFragment(),
@@ -430,11 +513,11 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_appointments)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthAppointmentAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.appointmentList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthAppointmentAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int, type: String) {
-
+                override fun onClicked(detail: Appointment, position: Int, type: String) {
                     when (type) {
                         Constants.READ_MORE -> {
                             openReadMoreDialog(
@@ -445,6 +528,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         }
 
                         Constants.DETAIL -> {
+                            DetailSingleton.appointment = detail
                             val fragment = AppointmentDetailsFragment()
                             val bundle = Bundle()
                             bundle.putInt("position", position)
@@ -466,10 +550,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_conditions)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthConditionAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.conditionList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthConditionAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(detail: Condition, position: Int) {
+                    DetailSingleton.condition = detail
                     addFragment(
                         R.id.fragment_container,
                         ConditionDetailsFragment(),
@@ -485,10 +571,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_labs)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthLabAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.labList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthLabAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(detail: DiagnosticReport, position: Int) {
+                    DetailSingleton.lab = detail
                     addFragment(
                         R.id.fragment_container,
                         LabDetailsFragment(),
@@ -504,10 +592,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_vitals)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val adapter = MyHealthVitalAdapter(requireActivity())
+        adapter.itemList = mockViewModel.vitalsList.value
         binding.rvList.adapter = adapter
         adapter.apply {
             onItemClickListener = object : MyHealthVitalAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(detail: Observation, position: Int) {
+                    DetailSingleton.vital = detail
                     addFragment(
                         R.id.fragment_container,
                         VitalDetailsFragment(),
@@ -523,10 +613,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_medications)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthMedicationAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.medicationList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthMedicationAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(detail: MedicationRequest, position: Int) {
+                    DetailSingleton.medication = detail
                     addFragment(
                         R.id.fragment_container,
                         MedicationDetailsFragment(),
@@ -538,10 +630,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+
     private fun setVisitsData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_visits)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthVisitsAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.visitList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthVisitsAdapter.OnClickCallback {
@@ -561,6 +655,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_procedures)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthProcedureAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.procedureList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthProcedureAdapter.OnClickCallback {
@@ -580,6 +675,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_allergies)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthAllergiesAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.allergyList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthAllergiesAdapter.OnClickCallback {
@@ -599,6 +695,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_immunizations)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthImmunizationAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.immunizationList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthImmunizationAdapter.OnClickCallback {
@@ -624,6 +721,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_billings)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthBillingsAdapter(requireActivity())
+        providerAdapter.itemList = mockViewModel.claimList.value
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthBillingsAdapter.OnClickCallback {
@@ -750,6 +848,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
 
 
+    @SuppressLint("Range")
     private val getVideoPicker =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()

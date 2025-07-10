@@ -2,50 +2,53 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mE.Health.R
-import com.mE.Health.models.ProviderDetail
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.utility.Constants
-import com.mE.Health.utility.roundview.RoundLinearLayout
-import com.mE.Health.utility.roundview.RoundTextView
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toFormattedDate
 
 class MyHealthLabAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthLabAdapter.MyViewHolder>() {
 
-    private var itemList: List<ProviderDetail> = ArrayList()
+    var itemList: List<DiagnosticReport>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(detail: DiagnosticReport, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvViewDetail: RoundTextView = itemView.findViewById(R.id.tvViewDetail)
+    inner class MyViewHolder(val binding: ItemMyHealthLabBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemMyHealthLabBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyHealthLabAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_my_health_lab, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: MyHealthLabAdapter.MyViewHolder, position: Int) {
-        holder.tvViewDetail.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.tvViewDetail,
-                position
-            )
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item: DiagnosticReport? = itemList?.get(position)
+        item?.let {
+            holder.binding.tvRecordedDate.text = it.issued?.toFormattedDate()
+            holder.binding.tvName.text = it.code_display
+            holder.binding.tvStatus.text = it.status?.capitalFirstChar()
+            holder.binding.tvViewDetail.setOnClickListener {
+                onItemClickListener?.onClicked(item, position)
+            }
         }
     }
 
@@ -58,6 +61,6 @@ class MyHealthLabAdapter(private val mContext: Context) :
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return itemList?.size ?: 0
     }
 }

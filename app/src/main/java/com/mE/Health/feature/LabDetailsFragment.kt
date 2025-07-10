@@ -5,15 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -36,7 +32,7 @@ class LabDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
         initHeader()
-        initView()
+        setDetails()
     }
 
     private fun initHeader() {
@@ -51,7 +47,22 @@ class LabDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun initView() {
+    private fun setDetails() {
+        DetailSingleton.lab?.let { detail ->
+            if (detail.performerId != null) {
+                mockViewModel.getPractitionerDetail(detail.performerId)
+            }
+            binding.apply {
+                tvLabId.text = detail.id.uppercase()
+                tvDate.text = detail.issued?.toFormattedDate()
+                tvStartDate.text = detail.effectiveDate?.toFormattedDate()
+                tvName.text = detail.code_display
+                tvStatus.text = detail.status?.capitalFirstChar()
+            }
+        }
 
+        mockViewModel.practitionerDetail.observe(viewLifecycleOwner) {
+            binding.tvPractitionerName.text = it.name
+        }
     }
 }

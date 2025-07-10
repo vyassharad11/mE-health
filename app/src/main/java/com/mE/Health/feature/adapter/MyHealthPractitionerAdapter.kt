@@ -2,61 +2,61 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mE.Health.R
-import com.mE.Health.models.ProviderDetail
+import com.mE.Health.data.model.Practitioner
+import com.mE.Health.databinding.ItemMyHealthPractitionerBinding
 import com.mE.Health.utility.Constants
-import com.mE.Health.utility.roundview.RoundLinearLayout
+import com.mE.Health.utility.extractContactInfo
 
 class MyHealthPractitionerAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthPractitionerAdapter.MyViewHolder>() {
 
-    private var itemList: List<ProviderDetail> = ArrayList()
+    var itemList: List<Practitioner>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(data: Practitioner)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
-    init {
-//        this.itemList = list
-//        this.type = tabType
+    inner class MyViewHolder(val binding: ItemMyHealthPractitionerBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemMyHealthPractitionerBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var rllDetail: RoundLinearLayout = itemView.findViewById(R.id.rllDetail)
-//        var tvMyChart: TextView = itemView.findViewById(R.id.tvMyChart)
-//        var tvName: TextView = itemView.findViewById(R.id.tvName)
-//        var tvConnect: TextView = itemView.findViewById(R.id.tvConnect)
-//        var ivReload: ImageView = itemView.findViewById(R.id.ivReload)
-    }
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        itemList?.let {
+            val practitioner = it[position]
+            holder.binding.tvName.text = practitioner.name
+            holder.binding.tvSpeciality.text = practitioner.specialty
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyHealthPractitionerAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_my_health_practitioner, parent, false)
-        return MyViewHolder(view)
-    }
+            val contactInfo = practitioner.telecom?.extractContactInfo()
+            contactInfo?.let { ci ->
+                holder.binding.tvPhone.text = ci.phone
+                holder.binding.tvEmail.text = ci.email
+            }
 
-    override fun onBindViewHolder(holder: MyHealthPractitionerAdapter.MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.itemView,
-                position
-            )
+            holder.binding.rllDetail.setOnClickListener {
+                onItemClickListener?.onClicked(practitioner)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return itemList?.size ?: 0
     }
 }

@@ -187,5 +187,7 @@
     <string name="looking_for_practitioner">Looking for Practitioner?</string>
     <string name="practitioner_empty_description">Your practitioner timeline is just a calendar pick away!</string>
     <string name="select_date">Select Date</string>
+    <string name="value_with_unit">%1$s %2$s</string>
+    <string name="start_date_with_value">Start Date: %1$s</string>
 
 </resources>

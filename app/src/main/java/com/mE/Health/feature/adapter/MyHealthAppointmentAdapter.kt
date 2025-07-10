@@ -2,85 +2,82 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mE.Health.R
-import com.mE.Health.models.ProviderDetail
+import com.mE.Health.data.model.Appointment
+import com.mE.Health.databinding.ItemMyHealthAppointmentBinding
 import com.mE.Health.utility.Constants
-import com.mE.Health.utility.roundview.RoundTextView
+import com.mE.Health.utility.openCloseTime
 
 class MyHealthAppointmentAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthAppointmentAdapter.MyViewHolder>() {
 
-    private var itemList: List<ProviderDetail> = ArrayList()
+    var itemList: List<Appointment>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int, type: String)
+        fun onClicked(detail: Appointment, position: Int, type: String)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
-    init {
-//        this.itemList = list
-//        this.type = tabType
+    inner class MyViewHolder(val binding: ItemMyHealthAppointmentBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemMyHealthAppointmentBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvReadMore: TextView = itemView.findViewById(R.id.tvReadMore)
-        var rtvStatus: RoundTextView = itemView.findViewById(R.id.rtvStatus)
-    }
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item: Appointment? = itemList?.get(position)
+        item?.let {
+            val datTimePair = openCloseTime(it.startTime, it.endTime)
+            val dateTime = "${datTimePair.first},\n${datTimePair.second}"
+            holder.binding.tvAppointmentTime.text = dateTime
+            holder.binding.tvName.text = it.practitionerName
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyHealthAppointmentAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_my_health_appointment, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: MyHealthAppointmentAdapter.MyViewHolder, position: Int) {
-//        val data = itemList[position]
-        holder.tvReadMore.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.tvReadMore, position,
-                Constants.READ_MORE
-            )
-        }
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.tvReadMore, position,
-                Constants.DETAIL
-            )
-        }
-        if (position == 1 || position == 2) {
-            holder.rtvStatus.apply {
-                text = "Booked"
-                setTextColor(ContextCompat.getColor(mContext, R.color.color_0063F7))
-                delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_1A0063F7)
+            holder.binding.tvReadMore.setOnClickListener {
+                onItemClickListener?.onClicked(
+                    item,
+                    position,
+                    Constants.READ_MORE
+                )
             }
-        } else if (position == 3) {
-            holder.rtvStatus.apply {
-                text = "Cancelled"
-                setTextColor(ContextCompat.getColor(mContext, R.color.color_F02C2C))
-                delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_1AF02C2C)
+            holder.itemView.setOnClickListener {
+                onItemClickListener?.onClicked(
+                    item,
+                    position,
+                    Constants.DETAIL
+                )
+            }
+            if (position == 1 || position == 2) {
+                holder.binding.rtvStatus.apply {
+                    text = "Booked"
+                    setTextColor(ContextCompat.getColor(mContext, R.color.color_0063F7))
+                    delegate.backgroundColor =
+                        ContextCompat.getColor(mContext, R.color.color_1A0063F7)
+                }
+            } else if (position == 3) {
+                holder.binding.rtvStatus.apply {
+                    text = "Cancelled"
+                    setTextColor(ContextCompat.getColor(mContext, R.color.color_F02C2C))
+                    delegate.backgroundColor =
+                        ContextCompat.getColor(mContext, R.color.color_1AF02C2C)
+                }
             }
         }
-
-//        if (type == Constants.CONNECTED) {
-//            holder.tvConnect.text = mContext.getString(R.string.dis_connected)
-//            holder.ivReload.visibility = View.VISIBLE
-//        } else {
-//            holder.tvConnect.text = mContext.getString(R.string.connected)
-//            holder.ivReload.visibility = View.GONE
-//        }
     }
 
     override fun getItemId(position: Int): Long {
@@ -92,6 +89,6 @@ class MyHealthAppointmentAdapter(private val mContext: Context) :
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return itemList?.size ?: 0
     }
 }

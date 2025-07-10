@@ -58,10 +58,10 @@
 
 
             <TextView
+                android:id="@+id/tvRecordedDate"
                 style="@style/textStyleRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recorded Date: 05/06/2025"
                 android:layout_marginTop="@dimen/dp_10"
                 android:textColor="@color/color_333333"
                 android:textSize="@dimen/sp_16" />

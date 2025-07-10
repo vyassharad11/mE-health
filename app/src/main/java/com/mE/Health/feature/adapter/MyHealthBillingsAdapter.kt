@@ -4,18 +4,21 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mE.Health.R
-import com.mE.Health.models.ProviderDetail
+import com.mE.Health.data.model.Claim
+import com.mE.Health.databinding.ItemMyHealthBillingsBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.toFormattedDate
 
 class MyHealthBillingsAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthBillingsAdapter.MyViewHolder>() {
 
-    private var itemList: List<ProviderDetail> = ArrayList()
+    var itemList: List<Claim>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     var type = Constants.ALL
 
     interface OnClickCallback {
@@ -25,28 +28,34 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
     var onItemClickListener: OnClickCallback? = null
 
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(val binding: ItemMyHealthBillingsBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemMyHealthBillingsBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyHealthBillingsAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_my_health_billings, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: MyHealthBillingsAdapter.MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.itemView,
-                position
-            )
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item = itemList?.get(position)
+        item?.let {
+            holder.binding.tvDate.text = item.createdDate?.toFormattedDate()
+            holder.binding.tvName.text = item.name
+            holder.binding.tvAmount.text = "${item.totalCurrency}${item.totalAmount}"
+            holder.itemView.setOnClickListener {
+                onItemClickListener?.onClicked(
+                    holder.itemView,
+                    position
+                )
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return itemList?.size ?: 0
     }
 }

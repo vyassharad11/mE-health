@@ -70,6 +70,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvDate"
                             style="@style/textStyleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -78,6 +79,7 @@
                             android:textSize="@dimen/sp_16" />
 
                         <TextView
+                            android:id="@+id/tvTime"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -146,6 +148,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tvDateTime"
                                 style="@style/textStyleRegular"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -223,6 +226,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvDrName"
                             style="@style/textStyleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -231,6 +235,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <TextView
+                            android:id="@+id/tvSpeciality"
                             style="@style/textStyleRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -276,6 +281,7 @@
                         android:textSize="@dimen/sp_17" />
 
                     <TextView
+                        android:id="@+id/tvReason"
                         style="@style/textStyleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -334,6 +340,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tvVisitDate"
                         style="@style/textStyleRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

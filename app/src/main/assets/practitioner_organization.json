@@ -1,0 +1,48 @@
+[
+  {
+    "id": "po1",
+    "practitionerId": "pract1",
+    "organizationId": "org1"
+  },
+  {
+    "id": "po2",
+    "practitionerId": "pract2",
+    "organizationId": "org1"
+  },
+  {
+    "id": "po3",
+    "practitionerId": "pract3",
+    "organizationId": "org1"
+  },
+  {
+    "id": "po4",
+    "practitionerId": "pract4",
+    "organizationId": "org2"
+  },
+  {
+    "id": "po5",
+    "practitionerId": "pract5",
+    "organizationId": "org1"
+  },
+  {
+    "id": "po6",
+    "practitionerId": "pract6",
+    "organizationId": "org2"
+  },
+  {
+    "id": "po7",
+    "practitionerId": "pract7",
+    "organizationId": "org3"
+  },
+  {
+    "id": "po8",
+    "practitionerId": "pract1",
+    "organizationId": "org2"
+  }
+,
+  {
+    "id": "po9",
+    "practitionerId": "pract1",
+    "organizationId": "org3"
+  }
+]

@@ -58,6 +58,7 @@
 
 
             <TextView
+                android:id="@+id/tvAdministeredDate"
                 style="@style/textStyleRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,7 +102,6 @@
                     android:layout_alignParentLeft="true"
                     android:paddingHorizontal="@dimen/dp_30"
                     android:paddingVertical="@dimen/dp_4"
-                    android:layout_weight="1"
                     android:text="View Details"
                     android:layout_marginRight="@dimen/dp_5"
                     android:textColor="@color/white"
@@ -113,6 +113,7 @@
                     android:id="@+id/tvViewPatient"
                     style="@style/textStyleSemiBold"
                     android:layout_width="wrap_content"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_weight="1"

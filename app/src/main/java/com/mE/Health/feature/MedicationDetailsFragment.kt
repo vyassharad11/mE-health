@@ -5,16 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
-import com.mE.Health.databinding.LabDetailFragmentBinding
+import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -37,7 +30,7 @@ class MedicationDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
         initHeader()
-        initView()
+        setDetails()
     }
 
     private fun initHeader() {
@@ -52,7 +45,9 @@ class MedicationDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun initView() {
+    private fun setDetails() {
+        DetailSingleton.medication?.let { detail ->
 
+        }
     }
 }

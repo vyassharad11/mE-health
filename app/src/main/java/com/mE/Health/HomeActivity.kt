@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Slide
+import com.mE.Health.databinding.ActivityHomeBinding
 import com.mE.Health.databinding.ActivityHomeNewBinding
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
@@ -20,6 +22,7 @@ import com.mE.Health.feature.SettingFragment
 import com.mE.Health.feature.adapter.HomeMenuAdapter
 import com.mE.Health.feature.adapter.RadioButtonListAdapter
 import com.mE.Health.models.NavMenuDTO
+import com.mE.Health.viewmodels.mockData.MockDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,13 +32,19 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityHomeNewBinding
     private var isNavActive = false
     private var navMenuAdapter: HomeMenuAdapter? = null
+    private val mockDataViewModel: MockDataViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        isNavActive = false
+
         binding = ActivityHomeNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
         (this.applicationContext as MyApplication).setCurrentActivity(this)
-        isNavActive = false
+
+        mockDataViewModel.insertPatients()
+
         openFragment(HomeFragment())
         initView()
         initNavMenu()
@@ -251,4 +260,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     fun getSideNavStatus(): Boolean {
         return isNavActive
     }
+
+
+
+
 }

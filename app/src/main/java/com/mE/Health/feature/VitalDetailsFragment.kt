@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.mE.Health.R
-import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MedicationDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
+import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.VitalDetailFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.formatIntoPrettyDate
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -54,6 +51,24 @@ class VitalDetailsFragment : BaseFragment() {
     }
 
     private fun initView() {
+        DetailSingleton.vital?.let { detail ->
+            if (detail.patientId != null) {
+                mockViewModel.getPatientDetail(detail.patientId)
+            }
+            val values = Gson().fromJson(detail.value, Value::class.java)
+            binding.apply {
+                tvName.text = detail.description
+                tvDateTime.text = detail.effectiveDate?.formatIntoPrettyDate()
+                tvStatus.text = detail.status?.capitalFirstChar()
+                tvValues.text = getString(R.string.value_with_unit, values.value, values.unit)
+                tvVitalId.text = detail.id.uppercase()
+                tvStartDate.text =
+                    getString(R.string.start_date_with_value, detail.createdAt?.toFormattedDate())
+            }
+        }
 
+        mockViewModel.patientDetail.observe(viewLifecycleOwner){
+            binding.tvPatientName.text = it.name
+        }
     }
 }

@@ -33,7 +33,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="Blood Pressure"
                     android:layout_marginTop="@dimen/dp_5"
                     android:textColor="@color/text_color_primary"
                     android:textSize="@dimen/sp_20" />

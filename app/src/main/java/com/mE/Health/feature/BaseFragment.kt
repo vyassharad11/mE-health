@@ -22,6 +22,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.transition.Slide
 import com.mE.Health.HomeActivity
 import com.mE.Health.MyApplication
@@ -29,6 +30,7 @@ import com.mE.Health.R
 import com.mE.Health.utility.BaseInterface
 import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.DialogProgress
+import com.mE.Health.viewmodels.mockData.MockDataViewModel
 import dagger.hilt.android.internal.managers.ViewComponentManager
 import org.json.JSONArray
 import org.json.JSONException
@@ -40,10 +42,12 @@ import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
 import java.util.Locale
+import kotlin.getValue
 
 
 open class BaseFragment : Fragment() {
 
+    val mockViewModel: MockDataViewModel by activityViewModels()
     var dialogProgress: DialogProgress? = null
     var dialogOK: Dialog? = null
 

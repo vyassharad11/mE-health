@@ -9,13 +9,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mE.Health.R
+import com.mE.Health.data.model.AllergyIntolerance
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.databinding.ItemMyHealthAllergiesBinding
+import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.models.ProviderDetail
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.toFormattedDate
 
 class MyHealthAllergiesAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthAllergiesAdapter.MyViewHolder>() {
 
-    private var itemList: List<ProviderDetail> = ArrayList()
+    var itemList: List<AllergyIntolerance>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     var type = Constants.ALL
 
     interface OnClickCallback {
@@ -25,25 +35,31 @@ class MyHealthAllergiesAdapter(private val mContext: Context) :
     var onItemClickListener: OnClickCallback? = null
 
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(val binding: ItemMyHealthAllergiesBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemMyHealthAllergiesBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyHealthAllergiesAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_my_health_allergies, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: MyHealthAllergiesAdapter.MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.itemView,
-                position
-            )
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item = itemList?.get(position)
+        item?.let {
+            holder.binding.tvRecordedDate.text = "Recorded Date: ${it.recordedDate?.toFormattedDate()}"
+            holder.binding.tvName.text = it.code_display
+            holder.itemView.setOnClickListener {
+                onItemClickListener?.onClicked(
+                    holder.itemView,
+                    position
+                )
+            }
         }
+
     }
 
     override fun getItemId(position: Int): Long {
@@ -55,6 +71,6 @@ class MyHealthAllergiesAdapter(private val mContext: Context) :
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return itemList?.size ?: 0
     }
 }

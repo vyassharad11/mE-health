@@ -6,16 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.mE.Health.R
+import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.AppointmentDetailFragmentBinding
-import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.openCloseTime
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -49,6 +46,26 @@ class AppointmentDetailsFragment : BaseFragment() {
         binding.toolbar.ivSetting.visibility = View.VISIBLE
         binding.toolbar.ivSetting.setOnClickListener {
 
+        }
+
+        setDetail()
+    }
+
+    private fun setDetail() {
+        DetailSingleton.appointment?.let { detail ->
+            val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)
+
+            val datTimePair = openCloseTime(detail.startTime, detail.endTime)
+            val dateTime = "${datTimePair.first},\n${datTimePair.second}"
+            binding.apply {
+                tvDrName.text = detail.practitionerName
+                tvSpeciality.text = detail.practitionerSpecialty
+                tvDateTime.text = dateTime
+                tvDate.text = datTimePair.first
+                tvTime.text = datTimePair.second
+                tvReason.text = reasonCodeObject.display
+                tvVisitDate.text = detail.createdAt?.toFormattedDate()
+            }
         }
     }
 

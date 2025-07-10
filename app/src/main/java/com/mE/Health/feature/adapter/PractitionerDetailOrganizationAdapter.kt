@@ -2,37 +2,43 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.R
-import com.mE.Health.models.AdviceDTO
+import com.mE.Health.data.model.PractitionerOrganizationWithDetails
+import com.mE.Health.databinding.ItemPractitionerOrganizationBinding
 
 class PractitionerDetailOrganizationAdapter(val context: Context) :
     RecyclerView.Adapter<PractitionerDetailOrganizationAdapter.MyViewHolder>() {
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        var ivType: ImageView = itemView.findViewById(R.id.ivType)
-    }
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): PractitionerDetailOrganizationAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_practitioner_organization, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: PractitionerDetailOrganizationAdapter.MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
+    var itemList: List<PractitionerOrganizationWithDetails>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
         }
 
+    inner class MyViewHolder(val binding: ItemPractitionerOrganizationBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemPractitionerOrganizationBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item = itemList?.get(position)
+        item?.let {
+            holder.binding.tvName.text = it.name
+        }
+        holder.itemView.setOnClickListener {
+
+        }
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return itemList?.size ?: 0
     }
 }

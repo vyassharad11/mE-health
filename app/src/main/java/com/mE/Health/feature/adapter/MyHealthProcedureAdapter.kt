@@ -10,12 +10,22 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mE.Health.R
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Procedure
+import com.mE.Health.databinding.ItemMyHealthLabBinding
+import com.mE.Health.databinding.ItemMyHealthProcedureBinding
 import com.mE.Health.models.ProviderDetail
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.roundview.RoundTextView
 
 class MyHealthProcedureAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthProcedureAdapter.MyViewHolder>() {
+
+    var itemList: List<Procedure>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     interface OnClickCallback {
         fun onClicked(view: View?, position: Int)
@@ -24,26 +34,27 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
     var onItemClickListener: OnClickCallback? = null
 
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvProcedureName: TextView = itemView.findViewById(R.id.tvProcedureName)
-        var tvProcedureStatus: RoundTextView = itemView.findViewById(R.id.tvProcedureStatus)
-    }
+    inner class MyViewHolder(val binding: ItemMyHealthProcedureBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyHealthProcedureAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_my_health_procedure, parent, false)
-        return MyViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemMyHealthProcedureBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MyHealthProcedureAdapter.MyViewHolder, position: Int) {
+        val item = itemList?.get(position)
+        item?.let {
+            holder.binding.tvProcedureName.text = it.code_display
+        }
+
         when (position) {
             1,4 -> {
-                holder.tvProcedureName.text = "Cardiac Catheterization"
-                holder.tvProcedureStatus.apply {
+                holder.binding.tvProcedureStatus.apply {
                     text = "In Progress"
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_F09C00))
                     delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_AF09C00)
@@ -51,8 +62,7 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
             }
 
             2,5 -> {
-                holder.tvProcedureName.text = "Colonoscopy"
-                holder.tvProcedureStatus.apply {
+                holder.binding.tvProcedureStatus.apply {
                     text = "Completed"
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
                     delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_A06C270)
@@ -60,16 +70,14 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
             }
 
             3,6 -> {
-                holder.tvProcedureName.text = "Hip Replacement"
-                holder.tvProcedureStatus.apply {
+                holder.binding.tvProcedureStatus.apply {
                     text = "In Progress"
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_F09C00))
                     delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_AF09C00)
                 }
             }
             else->{
-                holder.tvProcedureName.text = "Appendectomy"
-                holder.tvProcedureStatus.apply {
+                holder.binding.tvProcedureStatus.apply {
                     text = "Completed"
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
                     delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_A06C270)
@@ -86,6 +94,6 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return itemList?.size ?: 0
     }
 }

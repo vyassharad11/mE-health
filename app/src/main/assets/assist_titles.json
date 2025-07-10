@@ -1,0 +1,34 @@
+[
+  {
+    "id": "assist1",
+    "title": "Chronic Condition Detector"
+  },
+  {
+    "id": "assist2",
+    "title": "Preventive Care Advisor"
+  },
+  {
+    "id": "assist3",
+    "title": "Medication Adherence Risk Predictor"
+  },
+  {
+    "id": "assist4",
+    "title": "Social Determinants of Health (SDoH) Estimator"
+  },
+  {
+    "id": "assist5",
+    "title": "Social Determinants of Health (SDoH) Estimator"
+  },
+  {
+    "id": "assist6",
+    "title": "Polypharmacy Risk Detector"
+  },
+  {
+    "id": "assist7",
+    "title": "Gaps in Care Identifier"
+  },
+  {
+    "id": "assist8",
+    "title": "Behavioral Health Risk Estimator"
+  }
+]

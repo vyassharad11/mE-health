@@ -1,115 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginHorizontal="@dimen/dp_5"
+app:cardCornerRadius="@dimen/dp_8"
+app:cardElevation="@dimen/dp_5"
+app:cardUseCompatPadding="true">
+
+<LinearLayout
+    android:id="@+id/rllDetail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/dp_5"
-    app:cardCornerRadius="@dimen/dp_8"
-    app:cardElevation="@dimen/dp_5"
-    app:cardUseCompatPadding="true">
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/dp_10">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/dp_10"
-        android:orientation="horizontal">
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_8">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvName"
+            style="@style/textStyleSemiBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:padding="@dimen/dp_8">
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/color_333333"
+            android:textSize="@dimen/sp_14" />
 
-            <TextView
-                android:id="@+id/tvName"
-                style="@style/textStyleSemiBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
-                android:text="Dr. Ashley David"
-                android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_14" />
-
-            <TextView
-                style="@style/textStyleBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_6"
-                android:text="Gynecologist"
-                android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_12" />
-
-            <TextView
-                style="@style/textStyleRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_6"
-                android:drawableLeft="@drawable/ic_phone"
-                android:drawablePadding="@dimen/dp_20"
-                android:text="(212) 555-1234"
-                android:textColor="@color/color_6E6B78"
-                android:textSize="@dimen/sp_12" />
-
-            <TextView
-                style="@style/textStyleRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_6"
-                android:drawableLeft="@drawable/ic_mail"
-                android:drawablePadding="@dimen/dp_20"
-                android:text="info@totalcaremaintenance.com"
-                android:textColor="@color/color_6E6B78"
-                android:textSize="@dimen/sp_12" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvSpeciality"
+            style="@style/textStyleBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/dp_6"
+            android:textColor="@color/color_333333"
+            android:textSize="@dimen/sp_12" />
 
-            <com.mE.Health.utility.roundview.RoundLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp_15"
-                app:rv_backgroundColor="@color/color_FF6605"
-                app:rv_cornerRadius_TR="@dimen/dp_5">
+        <TextView
+            android:id="@+id/tvPhone"
+            style="@style/textStyleRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_6"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="@dimen/dp_20"
+            android:textColor="@color/color_6E6B78"
+            android:textSize="@dimen/sp_12" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_mail_white" />
-            </com.mE.Health.utility.roundview.RoundLinearLayout>
-
-            <com.mE.Health.utility.roundview.RoundLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp_15"
-                android:layout_marginTop="1dp"
-                app:rv_backgroundColor="@color/color_FF6605">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_social_account" />
-            </com.mE.Health.utility.roundview.RoundLinearLayout>
-
-            <com.mE.Health.utility.roundview.RoundLinearLayout
-                android:id="@+id/rllDetail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp_15"
-                android:layout_marginTop="1dp"
-                app:rv_backgroundColor="@color/color_FF6605"
-                app:rv_cornerRadius_BR="@dimen/dp_5">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_info" />
-            </com.mE.Health.utility.roundview.RoundLinearLayout>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvEmail"
+            style="@style/textStyleRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_6"
+            android:drawableLeft="@drawable/ic_mail"
+            android:drawablePadding="@dimen/dp_20"
+            android:textColor="@color/color_6E6B78"
+            android:textSize="@dimen/sp_12" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color_FF6605"
+            android:padding="@dimen/dp_15">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_mail_white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:background="@color/color_FF6605"
+            android:padding="@dimen/dp_15">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_social_account" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:background="@color/color_FF6605"
+            android:padding="@dimen/dp_15">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_info" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
 
 </androidx.cardview.widget.CardView>
