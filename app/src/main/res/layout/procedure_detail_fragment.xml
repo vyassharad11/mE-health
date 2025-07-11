@@ -56,6 +56,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Appendectomy"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:layout_toStartOf="@+id/tvStatus"
+                            android:layout_centerVertical="true"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_20" />
 
@@ -64,9 +68,10 @@
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:layout_centerVertical="true"
                             android:paddingHorizontal="@dimen/dp_20"
                             android:paddingVertical="@dimen/dp_5"
                             android:text="@string/completed"
@@ -80,6 +85,7 @@
 
 
                     <TextView
+                        android:id="@+id/tvProcedureDate"
                         style="@style/textStyleRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -128,6 +134,7 @@
                                     android:textSize="@dimen/sp_16" />
 
                                 <TextView
+                                    android:id="@+id/tvProcedureId"
                                     style="@style/textStyleMedium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -138,28 +145,31 @@
                             </RelativeLayout>
 
 
-                            <RelativeLayout
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:orientation="horizontal"
                                 android:layout_marginTop="@dimen/dp_15">
 
                                 <TextView
                                     style="@style/textStyleRegular"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:text="@string/reason"
+                                    android:layout_weight="1"
                                     android:textColor="@color/text_color_primary"
                                     android:textSize="@dimen/sp_16" />
 
                                 <TextView
+                                    android:id="@+id/tvReason"
                                     style="@style/textStyleMedium"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:text="Acute Appendicitis"
+                                    android:layout_weight="1.5"
+                                    android:text="Acute Appendicitis "
                                     android:textColor="@color/text_color_primary"
                                     android:textSize="@dimen/sp_16" />
-                            </RelativeLayout>
+                            </LinearLayout>
 
                 </LinearLayout>
 
@@ -310,6 +320,8 @@
                 android:textSize="@dimen/sp_17"
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_isRadiusHalfHeight="true" />
+
+            <include layout="@layout/bottom_view" />
 
         </LinearLayout>
 

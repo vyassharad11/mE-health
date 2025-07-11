@@ -65,11 +65,10 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvName"
+                                android:id="@+id/tvMedicationDisplay"
                                 style="@style/textStyleBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Lisinopril 10mg Active"
                                 android:textColor="@color/text_color_primary"
                                 android:textSize="@dimen/sp_18" />
 
@@ -198,6 +197,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <TextView
+                            android:id="@+id/tvMedicationId"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -260,12 +260,12 @@
                         android:textSize="@dimen/sp_18" />
 
                     <TextView
+                        android:id="@+id/tvDosageInstruction"
                         style="@style/textStyleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:lineSpacingExtra="@dimen/dp_5"
-                        android:text="Take 1 capsule by mouth 3 time daily\nFor 7 day with food"
                         android:textColor="@color/color_6E6B78"
                         android:textSize="@dimen/sp_15" />
 
@@ -355,12 +355,12 @@
                         android:textSize="@dimen/sp_18" />
 
                     <TextView
+                        android:id="@+id/tvReason"
                         style="@style/textStyleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:lineSpacingExtra="@dimen/dp_5"
-                        android:text="Upper respiratory infection\nFever "
                         android:textColor="@color/color_6E6B78"
                         android:textSize="@dimen/sp_14" />
 

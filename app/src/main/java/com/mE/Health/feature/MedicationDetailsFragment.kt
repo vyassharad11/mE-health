@@ -5,9 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.DosageInstruction
+import com.mE.Health.data.model.MedicationCode
+import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
+import com.mE.Health.utility.fromJson
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -47,7 +54,10 @@ class MedicationDetailsFragment : BaseFragment() {
 
     private fun setDetails() {
         DetailSingleton.medication?.let { detail ->
-
+            binding.tvMedicationDisplay.text = detail.medicationCode_display
+            binding.tvMedicationId.text = fromJson(detail.medicationCode, MedicationCode::class.java).code
+            binding.tvDosageInstruction.text = fromJson(detail.dosageInstruction, DosageInstruction::class.java).text
+            binding.tvReason.text = fromJson(detail.reasonCode, ReasonCode::class.java).display
         }
     }
 }

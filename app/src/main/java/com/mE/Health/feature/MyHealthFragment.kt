@@ -22,13 +22,18 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mE.Health.R
+import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Appointment
+import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Practitioner
+import com.mE.Health.data.model.Procedure
 import com.mE.Health.databinding.MyHealthFragmentBinding
 import com.mE.Health.feature.adapter.ClickState
 import com.mE.Health.feature.adapter.MyHealthAllergiesAdapter
@@ -98,7 +103,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
         binding.toolbar.ivSetting.visibility = View.VISIBLE
         binding.toolbar.ivSetting.setOnClickListener {
-
+            openSetting(requireActivity())
         }
     }
 
@@ -369,89 +374,89 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         typeList.apply {
             add(
                 MyHealthTypeModel(
-                    "Practitioners",
+                    getString(R.string.practitioners),
                     mockViewModel.practitionerList.value?.size.toString(),
                     R.drawable.ic_car
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Appointments",
+                    getString(R.string.appointments),
                     mockViewModel.appointmentList.value?.size.toString(),
                     R.drawable.ic_appoinment
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Conditions",
+                    getString(R.string.conditions),
                     mockViewModel.conditionList.value?.size.toString(),
                     R.drawable.ic_conditions_my_health
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Labs",
+                    getString(R.string.labs),
                     mockViewModel.labList.value?.size.toString(),
                     R.drawable.ic_labs
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Vitals",
+                    getString(R.string.vitals),
                     mockViewModel.vitalsList.value?.size.toString(),
                     R.drawable.ic_vitals
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Medications",
+                    getString(R.string.medications),
                     mockViewModel.medicationList.value?.size.toString(),
                     R.drawable.ic_medication_my_health
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Visits",
+                    getString(R.string.visits),
                     mockViewModel.visitList.value?.size.toString(),
                     R.drawable.ic_visits
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Procedures",
+                    getString(R.string.procedures),
                     mockViewModel.procedureList.value?.size.toString(),
                     R.drawable.ic_procedures
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Allergies",
+                    getString(R.string.allergies),
                     mockViewModel.allergyList.value?.size.toString(),
                     R.drawable.ic_allergy
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Immunizations",
+                    getString(R.string.immunizations),
                     mockViewModel.immunizationList.value?.size.toString(),
                     R.drawable.ic_immunization
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Billings",
+                    getString(R.string.billings),
                     mockViewModel.claimList.value?.size.toString(),
                     R.drawable.ic_billing
                 )
             )
             add(
                 MyHealthTypeModel(
-                    "Imagings",
+                    getString(R.string.imagings),
                     mockViewModel.claimList.value?.size.toString(),
                     R.drawable.ic_imaging
                 )
             )
-            add(MyHealthTypeModel("Record Vaults", "6", R.drawable.ic_upload_health))
+            add(MyHealthTypeModel(getString(R.string.record_vaults), "6", R.drawable.ic_upload_health))
         }
         return typeList
     }
@@ -639,7 +644,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthVisitsAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(item: Encounter?, position: Int) {
+                    DetailSingleton.visit = item
                     addFragment(
                         R.id.fragment_container,
                         VisitsDetailsFragment(),
@@ -659,7 +665,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthProcedureAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(item: Procedure?, position: Int) {
+                    DetailSingleton.procedure = item
                     addFragment(
                         R.id.fragment_container,
                         ProcedureDetailsFragment(),
@@ -679,7 +686,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthAllergiesAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(item: AllergyIntolerance?, position: Int) {
+                    DetailSingleton.allergy = item
                     addFragment(
                         R.id.fragment_container,
                         AllergiesDetailsFragment(),
@@ -699,9 +707,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthImmunizationAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int, clickState: ClickState) {
+                override fun onClicked(item: Immunization?, position: Int, clickState: ClickState) {
                     when (clickState) {
                         ClickState.DETAIL -> {
+                            DetailSingleton.immunization = item
                             addFragment(
                                 R.id.fragment_container,
                                 ImmunizationDetailsFragment(),
@@ -725,7 +734,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthBillingsAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(item: Claim?, position: Int) {
+                    DetailSingleton.claim = item
                     addFragment(
                         R.id.fragment_container,
                         BillingDetailsFragment(),
@@ -825,13 +835,15 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             uri = Uri.parse("content://media/external/images/media/$id")
                         }
                         cursor?.close()
-                        val filename = File(uri!!.path).name
+                        val fileName = File(uri!!.path).name
                         val fragment = UserContentFragment()
                         val bundle = Bundle()
-                        bundle.putString("FILE_PATH", uri.toString())
-                        bundle.putString("FILE_LENGTH", getFileLength(file))
-                        bundle.putString("FILE_NAME", filename)
-                        bundle.putString("TYPE", "Image")
+                        bundle.apply {
+                            putString(Constants.FILE_PATH, uri.toString())
+                            putString(Constants.FILE_LENGTH, getFileLength(file))
+                            putString(Constants.FILE_NAME, fileName)
+                            putString(Constants.FILE_TYPE, Constants.FILE_IMAGE)
+                        }
                         fragment.arguments = bundle
                         addFragment(
                             R.id.fragment_container,
@@ -896,13 +908,15 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             uri = Uri.parse("content://media/external/images/media/$id")
                         }
                         cursor?.close()
-                        val filename = picturePath.substring(picturePath.lastIndexOf("/") + 1)
+                        val fileName = picturePath.substring(picturePath.lastIndexOf("/") + 1)
                         val fragment = UserContentFragment()
                         val bundle = Bundle()
-                        bundle.putString("FILE_PATH", uri.toString())
-                        bundle.putString("FILE_LENGTH", getFileLength(file))
-                        bundle.putString("FILE_NAME", filename)
-                        bundle.putString("TYPE", "Video")
+                        bundle.apply {
+                            putString(Constants.FILE_PATH, it.toString())
+                            putString(Constants.FILE_LENGTH, getFileLength(file))
+                            putString(Constants.FILE_NAME, fileName)
+                            putString(Constants.FILE_TYPE, Constants.FILE_VIDEO)
+                        }
                         fragment.arguments = bundle
                         addFragment(
                             R.id.fragment_container,
@@ -919,12 +933,9 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
 
 
-    private var selectedPdfUri: Uri? = null
-
     private val pickPdfLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
-                selectedPdfUri = it
                 // Get the file information
                 val fileInfo = getFileInfo(it)
                 val fileName = fileInfo.first
@@ -937,13 +948,16 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 val name =
                     "Filename - $fileName\nFile size - $fileSizeInMB MB\nFile path - ${it.path}"
                 Log.i("================", "=====$name")
+                Log.i("================FILE_PATH", "=====${it.toString()}")
                 val filename = picturePath.substring(picturePath.lastIndexOf("/") + 1)
                 val fragment = UserContentFragment()
                 val bundle = Bundle()
-                bundle.putString("FILE_PATH", it.path)
-                bundle.putString("FILE_LENGTH", fileSizeInMB+" MB")
-                bundle.putString("FILE_NAME", fileName)
-                bundle.putString("TYPE", "Pdf")
+                bundle.apply {
+                    putString(Constants.FILE_PATH, it.toString())
+                    putString(Constants.FILE_LENGTH, "$fileSizeInMB MB")
+                    putString(Constants.FILE_NAME, fileName)
+                    putString(Constants.FILE_TYPE, Constants.FILE_DOCUMENT)
+                }
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
@@ -983,7 +997,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private var startDate = ""
     private var endDate = ""
-    val startDateCalendar = Calendar.getInstance()
+    private val startDateCalendar = Calendar.getInstance()
 
     private fun showStartDateCalendar() {
         val datePickerDialog = DatePickerDialog(

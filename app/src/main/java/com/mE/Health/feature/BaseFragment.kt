@@ -265,6 +265,11 @@ open class BaseFragment : Fragment() {
         (getActivity(context) as HomeActivity).updateSideNavStatus()
     }
 
+    fun openSetting(context: Context) {
+        (getActivity(context) as HomeActivity).openSetting()
+    }
+
+
     private fun updateSideNavMenuVisibility(mActivity: Activity) : Boolean {
         var status  = false
         val mCurrentActivity = (mActivity.applicationContext as MyApplication).getCurrentActivity()

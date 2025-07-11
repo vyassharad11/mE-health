@@ -1,22 +1,21 @@
 package com.mE.Health.feature.adapter
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mE.Health.R
-import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.databinding.ItemMyHealthImmunizationBinding
-import com.mE.Health.databinding.ItemMyHealthLabBinding
-import com.mE.Health.models.ProviderDetail
-import com.mE.Health.utility.Constants
-import com.mE.Health.utility.roundview.RoundTextView
 import com.mE.Health.utility.toFormattedDate
+
 
 enum class ClickState {
     DETAIL, VIEW_PATIENT
@@ -32,7 +31,7 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
         }
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int, clickState: ClickState)
+        fun onClicked(item: Immunization?, position: Int, clickState: ClickState)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -53,12 +52,18 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = itemList?.get(position)
         item?.let {
-            holder.binding.tvAdministeredDate.text =
-                "Administered on ${it.occurrenceDate?.toFormattedDate()}"
+            val text = "Administered on ${it.occurrenceDate?.toFormattedDate()}"
+            val spannableStringBuilder = SpannableStringBuilder(text)
+            spannableStringBuilder.setSpan(
+                ForegroundColorSpan(Color.BLACK),
+                15, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            spannableStringBuilder.setSpan(StyleSpan(Typeface.BOLD), 15, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            holder.binding.tvAdministeredDate.text = spannableStringBuilder
             holder.binding.tvName.text = it.vaccineCode_display
             holder.binding.tvViewDetails.setOnClickListener {
                 onItemClickListener?.onClicked(
-                    holder.binding.tvViewDetails,
+                    item,
                     position,
                     ClickState.DETAIL
                 )

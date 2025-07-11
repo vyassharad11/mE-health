@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.mE.Health.R
 import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.ItemMyHealthVitalBinding
 import com.mE.Health.utility.Constants
 
@@ -49,11 +52,8 @@ class MyHealthVitalAdapter(private val mContext: Context) :
                     position
                 )
             }
-
-            if (position == 1 || position == 3) {
-                holder.binding.tvName.text = "Heart Rate"
-                holder.binding.tvStatus.text = "72 bmp"
-            }
+            val data = Gson().fromJson(i.value, Value::class.java)
+            holder.binding.tvStatus.text = mContext.getString(R.string.value_with_unit, data.value, data.unit)
         }
     }
 

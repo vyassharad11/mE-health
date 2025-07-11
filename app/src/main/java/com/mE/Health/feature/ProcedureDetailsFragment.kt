@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.mE.Health.R
+import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.LabDetailFragmentBinding
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
 import com.mE.Health.databinding.MyPersonaFragmentBinding
@@ -17,6 +20,8 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -55,6 +60,20 @@ class ProcedureDetailsFragment : BaseFragment() {
     }
 
     private fun initView() {
+        DetailSingleton.procedure?.let { detail ->
+            binding.apply {
+                tvName.text = detail.code_display
+                tvProcedureDate.text = detail.performedDate?.toFormattedDate()
 
+                val statusDetail = Utilities.getVisitUIStatus(requireActivity(), detail.status ?: "")
+                tvStatus.setTextColor(statusDetail.first)
+                tvStatus.delegate.backgroundColor = statusDetail.second
+
+                val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)
+
+                tvProcedureId.text = "#${reasonCodeObject.code}"
+                tvReason.text = reasonCodeObject.display
+            }
+        }
     }
 }

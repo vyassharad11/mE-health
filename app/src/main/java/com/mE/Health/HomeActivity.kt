@@ -179,7 +179,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                     if (position == 1) {
                         updateNavMenuVisibility(View.GONE)
                         homeNavClickAction(MyPersonaFragment())
-                    }  else if (position == 2) {
+                    } else if (position == 2) {
                         updateNavMenuVisibility(View.GONE)
                         homeNavClickAction(SettingFragment())
                     } else if (position == 4) {
@@ -261,7 +261,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         return isNavActive
     }
 
-
-
-
+    fun openSetting() {
+        addFragment(SettingFragment())
+    }
 }

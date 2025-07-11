@@ -139,6 +139,7 @@ data class MedicationRequest(
     val medicationCode_system: String?,
     val medicationCode_code: String?,
     val medicationCode_display: String?,
+    val medicationCode: String?,
     val description: String?,
     val status: String?,
     val authoredOn: String?,
@@ -148,6 +149,16 @@ data class MedicationRequest(
     val encounterId: String?,
     val createdAt: String?,
     val updatedAt: String?
+)
+
+data class MedicationCode(
+    val system: String?,
+    val code: String?,
+    val display: String?
+)
+
+data class DosageInstruction(
+    val text: String?
 )
 
 @Entity(tableName = "observation")

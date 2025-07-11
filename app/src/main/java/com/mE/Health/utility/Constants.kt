@@ -21,8 +21,13 @@ object Constants {
     const val PRACTITIONER = "Practitioner"
     const val MEDICATION = "Medication"
     const val CONNECTION_URL = "connection_url"
-    const val NAV_DASHBOARD = "dashboard"
-    const val NAV_MENU = "menu"
+    const val FILE_DOCUMENT = "Document"
+    const val FILE_VIDEO = "Video"
+    const val FILE_IMAGE = "Image"
+    const val FILE_PATH = "file_path"
+    const val FILE_LENGTH = "file_length"
+    const val FILE_NAME = "file_name"
+    const val FILE_TYPE = "file_type"
 
 
     const val CODE = "code="

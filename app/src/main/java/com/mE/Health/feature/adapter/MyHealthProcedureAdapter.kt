@@ -16,7 +16,9 @@ import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.databinding.ItemMyHealthProcedureBinding
 import com.mE.Health.models.ProviderDetail
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.roundview.RoundTextView
+import com.mE.Health.utility.toFormattedDate
 
 class MyHealthProcedureAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthProcedureAdapter.MyViewHolder>() {
@@ -28,7 +30,7 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
         }
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(item: Procedure?, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -50,44 +52,16 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
         val item = itemList?.get(position)
         item?.let {
             holder.binding.tvProcedureName.text = it.code_display
-        }
+            holder.binding.tvProcedureDate.text = it.performedDate?.toFormattedDate()
 
-        when (position) {
-            1,4 -> {
-                holder.binding.tvProcedureStatus.apply {
-                    text = "In Progress"
-                    setTextColor(ContextCompat.getColor(mContext, R.color.color_F09C00))
-                    delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_AF09C00)
-                }
-            }
-
-            2,5 -> {
-                holder.binding.tvProcedureStatus.apply {
-                    text = "Completed"
-                    setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
-                    delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_A06C270)
-                }
-            }
-
-            3,6 -> {
-                holder.binding.tvProcedureStatus.apply {
-                    text = "In Progress"
-                    setTextColor(ContextCompat.getColor(mContext, R.color.color_F09C00))
-                    delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_AF09C00)
-                }
-            }
-            else->{
-                holder.binding.tvProcedureStatus.apply {
-                    text = "Completed"
-                    setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
-                    delegate.backgroundColor = ContextCompat.getColor(mContext, R.color.color_A06C270)
-                }
-            }
+            val statusDetail = Utilities.getVisitUIStatus(mContext, it.status ?: "")
+            holder.binding.tvProcedureStatus.setTextColor(statusDetail.first)
+            holder.binding.tvProcedureStatus.delegate.backgroundColor = statusDetail.second
         }
 
         holder.itemView.setOnClickListener {
             onItemClickListener?.onClicked(
-                holder.itemView,
+                item,
                 position
             )
         }

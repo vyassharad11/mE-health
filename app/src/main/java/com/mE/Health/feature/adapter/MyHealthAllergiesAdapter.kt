@@ -29,7 +29,7 @@ class MyHealthAllergiesAdapter(private val mContext: Context) :
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(item: AllergyIntolerance?, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -54,8 +54,7 @@ class MyHealthAllergiesAdapter(private val mContext: Context) :
             holder.binding.tvName.text = it.code_display
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
-                    holder.itemView,
-                    position
+                    item, position
                 )
             }
         }

@@ -22,7 +22,7 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(item: Claim?, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -45,10 +45,10 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
         item?.let {
             holder.binding.tvDate.text = item.createdDate?.toFormattedDate()
             holder.binding.tvName.text = item.name
-            holder.binding.tvAmount.text = "${item.totalCurrency}${item.totalAmount}"
+            holder.binding.tvAmount.text = "\$ ${item.totalAmount}"
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
-                    holder.itemView,
+                    item,
                     position
                 )
             }

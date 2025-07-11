@@ -62,19 +62,23 @@ class MyHealthAppointmentAdapter(private val mContext: Context) :
                     Constants.DETAIL
                 )
             }
-            if (position == 1 || position == 2) {
-                holder.binding.rtvStatus.apply {
-                    text = "Booked"
+
+            holder.binding.rtvStatus.apply {
+                if (position == 1 || position == 2) {
+                    text = mContext.getString(R.string.booked)
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_0063F7))
                     delegate.backgroundColor =
                         ContextCompat.getColor(mContext, R.color.color_1A0063F7)
-                }
-            } else if (position == 3) {
-                holder.binding.rtvStatus.apply {
-                    text = "Cancelled"
+                } else if (position == 3) {
+                    text = mContext.getString(R.string.cancelled)
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_F02C2C))
                     delegate.backgroundColor =
                         ContextCompat.getColor(mContext, R.color.color_1AF02C2C)
+                } else {
+                    text = mContext.getString(R.string.completed)
+                    setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
+                    delegate.backgroundColor =
+                        ContextCompat.getColor(mContext, R.color.color_A06C270)
                 }
             }
         }

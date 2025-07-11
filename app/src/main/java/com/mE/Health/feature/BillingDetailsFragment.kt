@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.DosageInstruction
+import com.mE.Health.data.model.Insurance
 import com.mE.Health.databinding.BillingDetailFragmentBinding
 import com.mE.Health.databinding.LabDetailFragmentBinding
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
@@ -17,6 +20,8 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.fromJson
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -58,6 +63,15 @@ class BillingDetailsFragment : BaseFragment() {
     }
 
     private fun initView() {
+        DetailSingleton.claim?.let { detail ->
+            binding.apply {
 
+                tvBillingDate.text = detail.createdDate?.toFormattedDate()
+                tvClinicName.text = detail.name
+                tvBillingAmount.text = "\$ ${detail.totalAmount}"
+
+                tvCompanyName.text = fromJson(detail.insurance, Insurance::class.java).coverage?.display
+            }
+        }
     }
 }

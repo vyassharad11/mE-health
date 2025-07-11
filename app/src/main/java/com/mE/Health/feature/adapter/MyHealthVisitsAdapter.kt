@@ -14,7 +14,10 @@ import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.databinding.ItemMyHealthVisitsBinding
 import com.mE.Health.models.ProviderDetail
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.roundview.RoundTextView
+import com.mE.Health.utility.toFormattedDate
 
 class MyHealthVisitsAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthVisitsAdapter.MyViewHolder>() {
@@ -26,7 +29,7 @@ class MyHealthVisitsAdapter(private val mContext: Context) :
         }
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(item: Encounter?, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -48,39 +51,18 @@ class MyHealthVisitsAdapter(private val mContext: Context) :
         val item = itemList?.get(position)
         item?.let {
             holder.binding.tvVisitName.text = it.type_display
+            holder.binding.tvDate.text = "Date: ${it.createdAt?.toFormattedDate()}"
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
-                    holder.itemView,
+                    item,
                     position
                 )
             }
-            when (position) {
-                1, 4 -> {
-                    holder.binding.tvVisitStatus.apply {
-                        text = "Canceled"
-                        setTextColor(ContextCompat.getColor(mContext, R.color.color_F02C2C))
-                        delegate.backgroundColor =
-                            ContextCompat.getColor(mContext, R.color.color_1AF02C2C)
-                    }
-                }
-
-                2, 5 -> {
-                    holder.binding.tvVisitStatus.apply {
-                        text = "Scheduled"
-                        setTextColor(ContextCompat.getColor(mContext, R.color.color_0063F7))
-                        delegate.backgroundColor =
-                            ContextCompat.getColor(mContext, R.color.color_1A0063F7)
-                    }
-                }
-
-                3, 6 -> {
-                    holder.binding.tvVisitStatus.apply {
-                        text = "Finished"
-                        setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
-                        delegate.backgroundColor =
-                            ContextCompat.getColor(mContext, R.color.color_A06C270)
-                    }
-                }
+            holder.binding.tvVisitStatus.apply {
+                text = it.status?.capitalFirstChar()
+                val statusDetail = Utilities.getVisitUIStatus(mContext, it.status ?: "")
+                setTextColor(statusDetail.first)
+                delegate.backgroundColor = statusDetail.second
             }
         }
     }

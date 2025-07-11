@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.AllergiesDetailFragmentBinding
 import com.mE.Health.databinding.LabDetailFragmentBinding
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
@@ -17,6 +18,10 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.openCloseTime
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -55,6 +60,22 @@ class VisitsDetailsFragment : BaseFragment() {
     }
 
     private fun initView() {
+        DetailSingleton.visit?.let { detail ->
+            binding.apply {
+                tvType.text = detail.type_display
+                tvStatus.text = detail.status
 
+                val statusDetail = Utilities.getVisitUIStatus(requireActivity(), detail.status ?: "")
+                tvStatus.setTextColor(statusDetail.first)
+                tvStatus.delegate.backgroundColor = statusDetail.second
+
+                tvDetailStatus.text = detail.status?.capitalFirstChar()
+                tvStartDate.text = detail.periodStart?.toFormattedDate()
+
+                val datTimePair = openCloseTime(detail.periodStart, detail.periodEnd)
+                tvDate.text = datTimePair.first
+                tvTime.text = datTimePair.second
+            }
+        }
     }
 }

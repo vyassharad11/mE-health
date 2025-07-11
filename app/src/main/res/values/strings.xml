@@ -189,5 +189,15 @@
     <string name="select_date">Select Date</string>
     <string name="value_with_unit">%1$s %2$s</string>
     <string name="start_date_with_value">Start Date: %1$s</string>
+    <string name="conditions">Conditions</string>
+    <string name="medications">Medications</string>
+    <string name="procedures">Procedures</string>
+    <string name="allergies">Allergies</string>
+    <string name="immunizations">Immunizations</string>
+    <string name="billings">Billings</string>
+    <string name="imagings">Imagings</string>
+    <string name="record_vaults">Record Vaults</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="not_available">Not available\n</string>
 
 </resources>

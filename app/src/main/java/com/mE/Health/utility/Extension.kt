@@ -1,5 +1,8 @@
 package com.mE.Health.utility
 
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import com.mE.Health.data.model.ContactInfo
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -87,4 +90,9 @@ fun openCloseTime(startTime: String?, endTime: String?): Pair<String, String> {
     } else {
         return Pair("","")
     }
+}
+
+@Throws(JsonSyntaxException::class)
+fun <T> fromJson(json: String?, classOfT: Class<T>): T {
+    return  Gson().fromJson(json, TypeToken.get(classOfT))
 }

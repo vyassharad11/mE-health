@@ -47,11 +47,20 @@
 
             <VideoView
                 android:id="@+id/videoView"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dp_280"
                 android:layout_height="@dimen/dp_150"
-                android:layout_marginTop="@dimen/dp_40"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_40"
                 android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/ivPdf"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_100"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_40"
+                android:visibility="gone"
+                android:src="@drawable/ic_pdf" />
 
             <TextView
                 android:id="@+id/tvImageName"
@@ -60,7 +69,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_30"
                 android:gravity="center"
-                android:text="Name: Image_20250623_173306.jpg"
                 android:textColor="@color/color_333333"
                 android:textSize="@dimen/sp_16" />
 
@@ -71,7 +79,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
                 android:gravity="center"
-                android:text="File Size: 3.72 MB"
                 android:textColor="@color/color_333333"
                 android:textSize="@dimen/sp_16" />
 
@@ -99,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="Image"
+                        android:text="image"
                         android:textColor="@color/color_9F9F9F"
                         android:textSize="@dimen/sp_16" />
 

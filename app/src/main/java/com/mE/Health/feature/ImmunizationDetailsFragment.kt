@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.ImmunizationDetailFragmentBinding
 import com.mE.Health.databinding.LabDetailFragmentBinding
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
@@ -17,6 +18,7 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -57,6 +59,14 @@ class ImmunizationDetailsFragment : BaseFragment() {
     }
 
     private fun initView() {
+        DetailSingleton.immunization?.let { detail ->
+            binding.apply {
+                tvName.text = detail.vaccineCode_display
 
+                val text = "Recorded Date: ${detail.occurrenceDate?.toFormattedDate()}"
+                tvRecordedDate.text = text
+
+            }
+        }
     }
 }
