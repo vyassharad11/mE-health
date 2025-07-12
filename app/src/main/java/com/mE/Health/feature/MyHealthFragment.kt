@@ -798,7 +798,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             requireActivity().contentResolver,
                             selectedImage
                         )
-//                    binding.ivDemo.setImageBitmap(bitmap)
                     var uri = it?.data?.data!!
                     if (uri != null) {
                         picturePath = getAbsolutePath(uri)

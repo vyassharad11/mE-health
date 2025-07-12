@@ -60,15 +60,15 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
 
-    implementation("com.google.dagger:dagger:2.56.2")
-    implementation("com.google.dagger:dagger-android-support:2.56.2")
-    kapt ("com.google.dagger:dagger-compiler:2.56.2")
-    kapt ("com.google.dagger:dagger-android-processor:2.56.2")
+    implementation("com.google.dagger:dagger:2.56.1")
+    implementation("com.google.dagger:dagger-android-support:2.56.1")
+    kapt ("com.google.dagger:dagger-compiler:2.56.1")
+    kapt ("com.google.dagger:dagger-android-processor:2.56.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1")
 
     //Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.56.2")
-    kapt("com.google.dagger:hilt-compiler:2.56.2")
+    implementation("com.google.dagger:hilt-android:2.56.1")
+    kapt("com.google.dagger:hilt-compiler:2.56.1")
 
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
