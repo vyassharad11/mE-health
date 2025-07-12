@@ -5,16 +5,11 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.transition.Slide
-import com.google.android.material.chip.Chip
 import com.mE.Health.HomeActivity
 import com.mE.Health.R
 import com.mE.Health.databinding.LoginFragmentBinding
@@ -49,10 +44,6 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         initView()
         observeResponse()
-
-        for (i in 0..5) {
-            addChipToGroup("Person $i")
-        }
     }
 
     private fun initView() {
@@ -179,17 +170,4 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
             }
             return isValid
         }
-
-
-    private fun addChipToGroup(person: String) {
-        val chip = Chip(requireActivity())
-        chip.text = person
-        chip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_tick_orange)
-        chip.isCloseIconVisible = true
-        // necessary to get single selection working
-        chip.isClickable = true
-        chip.isCheckable = false
-//        binding.chipsGroup.addView(chip as View)
-//        chip.setOnCloseIconClickListener { binding.chipsGroup.removeView(chip as View) }
-    }
 }

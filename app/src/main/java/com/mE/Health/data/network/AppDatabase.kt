@@ -11,6 +11,7 @@ import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
@@ -24,7 +25,7 @@ import com.mE.Health.data.model.Procedure
     entities = [Patient::class, Practitioner::class, Organization::class, Appointment::class,
         Claim::class, Condition::class, DiagnosticReport::class, Encounter::class,
         Immunization::class, MedicationRequest::class, Observation::class, PractitionerOrganization::class,
-        Procedure::class, AllergyIntolerance::class],
+        Procedure::class, AllergyIntolerance::class, Imaging::class],
     version = 1
 )
 @TypeConverters(Converters::class)

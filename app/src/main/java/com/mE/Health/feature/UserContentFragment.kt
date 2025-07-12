@@ -16,6 +16,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.chip.Chip
 import com.mE.Health.R
 import com.mE.Health.databinding.UserContentFragmentBinding
 import com.mE.Health.feature.adapter.UploadDocFilterAdapter
@@ -84,10 +85,19 @@ class UserContentFragment : BaseFragment() {
         }
 
         binding.tvFilterType.setOnClickListener {
-            binding.rvUploadDocFilter.visibility =
-                if (binding.rvUploadDocFilter.isVisible) View.GONE else View.VISIBLE
+            if (binding.chipsGroup.isVisible) {
+                binding.ivArrow.rotation = 180.0f
+                binding.chipsGroup.visibility = View.GONE
+            } else {
+                binding.ivArrow.rotation = 0.0f
+                binding.chipsGroup.visibility = View.VISIBLE
+            }
             binding.vwDivider.visibility =
                 if (binding.vwDivider.isVisible) View.GONE else View.VISIBLE
+        }
+
+        for (item in itemList) {
+            addChipToGroup(item.itemName)
         }
     }
 
@@ -112,6 +122,19 @@ class UserContentFragment : BaseFragment() {
         )
     }
 
+    private fun addChipToGroup(text: String) {
+        val chip = Chip(requireActivity())
+        chip.text = text
+        chip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_tick_orange)
+        chip.isCloseIconVisible = true
+        chip.isClickable = true
+        chip.isCheckable = false
+        binding.chipsGroup.addView(chip as View)
+        chip.setOnClickListener {
+            chip.isCloseIconVisible = !chip.isCloseIconVisible
+        }
+    }
+
     private fun getAllMyHealthType(): ArrayList<UploadDocItem> {
         val typeList: ArrayList<UploadDocItem> = ArrayList()
         typeList.apply {
@@ -131,7 +154,7 @@ class UserContentFragment : BaseFragment() {
         return typeList
     }
 
-    private fun showVideoView(videoUrl:Uri){
+    private fun showVideoView(videoUrl: Uri) {
         binding.videoView.visibility = View.VISIBLE
         // setting uri to video view
         binding.videoView.setVideoURI(videoUrl)

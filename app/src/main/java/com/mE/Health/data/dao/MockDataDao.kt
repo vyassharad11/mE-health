@@ -11,6 +11,7 @@ import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
@@ -66,6 +67,9 @@ interface MockDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProcedure(data: List<Procedure>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertImaging(data: List<Imaging>)
+
     @Query("SELECT * FROM patient")
     fun getAll(): List<Patient>
 
@@ -104,6 +108,9 @@ interface MockDataDao {
 
     @Query("SELECT * FROM claim")
     fun getClaim(): List<Claim>?
+
+    @Query("SELECT * FROM Imaging")
+    fun getImaging(): List<Imaging>?
 
     @Query(
         """

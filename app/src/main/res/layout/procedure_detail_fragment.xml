@@ -233,79 +233,13 @@
 
             </androidx.cardview.widget.CardView>
 
-
-            <androidx.cardview.widget.CardView
+            <include
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_60"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/dp_25"
-                app:cardElevation="@dimen/dp_5">
+                layout="@layout/layout_sync_share_button" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dp_10"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/dp_18"
-                    android:paddingVertical="@dimen/sp_14">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dp_10"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@drawable/ic_refresh" />
-
-                        <TextView
-                            style="@style/textStyleMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:gravity="center_vertical"
-                            android:text="@string/sync_data"
-                            android:textColor="@color/color_333333"
-                            android:textSize="@dimen/sp_16" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_upload_orange" />
-
-                        <TextView
-                            style="@style/textStyleMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:gravity="center_vertical"
-                            android:text="@string/share_record"
-                            android:textColor="@color/color_333333"
-                            android:textSize="@dimen/sp_16" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
 
             <com.mE.Health.utility.roundview.RoundTextView
                 android:id="@+id/tvEditMedication"
@@ -313,7 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_45"
                 android:layout_marginHorizontal="@dimen/dp_5"
-                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_20"
                 android:gravity="center"
                 android:text="@string/add_follow_up"
                 android:textColor="@color/white"

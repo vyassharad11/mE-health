@@ -10,6 +10,7 @@ import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
@@ -137,6 +138,13 @@ class MockRepository @Inject constructor(
         ) { data ->
             mockDataDao.insertProcedure(data)
         }
+
+        //Imaging
+        insertMockData<Imaging>(
+            fileName = "imaging.json"
+        ) { data ->
+            mockDataDao.insertImaging(data)
+        }
     }
 
     suspend fun getPractitionerList() = mockDataDao.getPractitionerList()
@@ -161,6 +169,8 @@ class MockRepository @Inject constructor(
     suspend fun getImmunization() = mockDataDao.getImmunization()
 
     suspend fun getClaim() = mockDataDao.getClaim()
+
+    suspend fun getImaging() = mockDataDao.getImaging()
 
     suspend fun getOrganizationsByPractitionerId(practitionerId: String) =
         mockDataDao.getOrganizationsByPractitionerId(practitionerId)

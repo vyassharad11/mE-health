@@ -10,6 +10,7 @@ import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
@@ -63,6 +64,9 @@ class MockDataViewModel @Inject constructor(
     private val _claimList = MutableLiveData<List<Claim>>()
     val claimList: LiveData<List<Claim>> = _claimList
 
+    private val _imagingList = MutableLiveData<List<Imaging>>()
+    val imagingList: LiveData<List<Imaging>> = _imagingList
+
     private val _organizationList = MutableLiveData<List<PractitionerOrganizationWithDetails>>()
     val organizationList: LiveData<List<PractitionerOrganizationWithDetails>> = _organizationList
 
@@ -106,6 +110,7 @@ class MockDataViewModel @Inject constructor(
         _allergyList.postValue(repository.getAllergy())
         _immunizationList.postValue(repository.getImmunization())
         _claimList.postValue(repository.getClaim())
+        _imagingList.postValue(repository.getImaging())
     }
 
     fun getOrganizationsByPractitionerId(id: String) {

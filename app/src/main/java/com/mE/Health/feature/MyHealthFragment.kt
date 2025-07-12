@@ -29,6 +29,7 @@ import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
@@ -452,7 +453,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             add(
                 MyHealthTypeModel(
                     getString(R.string.imagings),
-                    mockViewModel.claimList.value?.size.toString(),
+                    mockViewModel.imagingList.value?.size.toString(),
                     R.drawable.ic_imaging
                 )
             )
@@ -770,11 +771,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setImagingData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_imagings)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val practitionerAdapter = MyHealthImagingAdapter(requireActivity())
-        binding.rvList.adapter = practitionerAdapter
-        practitionerAdapter.apply {
+        val imagingAdapter = MyHealthImagingAdapter(requireActivity())
+        imagingAdapter.itemList = mockViewModel.imagingList.value
+        binding.rvList.adapter = imagingAdapter
+        imagingAdapter.apply {
             onItemClickListener = object : MyHealthImagingAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(item: Imaging?, position: Int) {
+                    DetailSingleton.imaging = item
                     addFragment(
                         R.id.fragment_container,
                         ImagingDetailsFragment(),

@@ -15,6 +15,12 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
+
+        //Chip layout style
+        <item name="colorOnSurface">@color/white</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.App.Body2</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="chipStyle">@style/Widget.App.Chip.Custom</item>
     </style>
 
     <style name="Base.Theme.MEHealth.Home" parent="Theme.Material3.DayNight.NoActionBar">
@@ -113,11 +119,26 @@
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
     </style>
 
-
-    <style name="Colors_Widget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+    <style name="Widget.App.Chip.Custom" parent="Widget.MaterialComponents.Chip.Entry">
         <item name="chipBackgroundColor">@color/white</item>
-        <item name="chipStrokeColor">@color/text_color_orange</item>
         <item name="chipStrokeWidth">1dp</item>
-        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="chipStartPadding">10dp</item>
+        <item name="chipEndPadding">10dp</item>
+        <item name="closeIconVisible">true</item>
+        <item name="closeIcon">@drawable/ic_tick_orange</item>
+        <item name="chipStrokeColor">@color/text_color_orange</item>
+        <item name="closeIconTint">@color/text_color_orange</item>
+        <item name="android:textColor">@color/text_color_orange</item>
     </style>
+
+    <style name="TextAppearance.App.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
+    </style>
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+    </style>
+
 </resources>

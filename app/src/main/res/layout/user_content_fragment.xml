@@ -111,9 +111,11 @@
                         android:textSize="@dimen/sp_16" />
 
                     <ImageView
+                        android:id="@+id/ivArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:rotation="180"
                         android:src="@drawable/ic_up_arrow" />
                 </LinearLayout>
 
@@ -123,6 +125,15 @@
                     android:layout_height="@dimen/dp_1"
                     android:background="@color/text_color_orange"
                     android:visibility="gone" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipsGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dp_10"
+                    android:visibility="gone"
+                    app:chipSpacingHorizontal="@dimen/dp_10"
+                    app:singleSelection="false"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvUploadDocFilter"

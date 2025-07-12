@@ -13,5 +13,6 @@ object DetailSingleton {
     var allergy: AllergyIntolerance? = null
     var immunization: Immunization? = null
     var claim: Claim? = null
+    var imaging: Imaging? = null
 
 }

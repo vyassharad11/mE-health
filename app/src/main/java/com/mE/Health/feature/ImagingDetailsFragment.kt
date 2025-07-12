@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.ImagingDetailFragmentBinding
 import com.mE.Health.feature.adapter.ImagingPreviewAdapter
 import com.mE.Health.feature.adapter.UploadDocFilterAdapter
 import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.BottomSheetImagingPreview
 import com.mE.Health.utility.FilterItem
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -54,13 +56,22 @@ class ImagingDetailsFragment : BaseFragment() {
     }
 
     private fun initView() {
+        DetailSingleton.imaging?.let { detail ->
+            binding.apply {
+                tvName.text = "${detail.modality_display} (${detail.modality_code})"
+                tvDescription.text = detail.description
+                tvDate.text = detail.started?.toFormattedDate()
+                tvStatus.text = detail.status
+            }
+        }
+
         binding.rvPreview.layoutManager = GridLayoutManager(requireActivity(), 2)
         val previewAdapter = ImagingPreviewAdapter(requireActivity())
         binding.rvPreview.adapter = previewAdapter
         previewAdapter.apply {
             onItemClickListener = object : ImagingPreviewAdapter.OnClickCallback {
                 override fun onClicked(view: View?, position: Int) {
-                    val bottomSheet = BottomSheetImagingPreview("Series ${position+1}")
+                    val bottomSheet = BottomSheetImagingPreview("Series ${position + 1}")
                     bottomSheet.show(
                         requireActivity().supportFragmentManager,
                         "BottomSheetImagingPreview"

@@ -273,3 +273,18 @@ data class Procedure(
     val createdAt: String?,
     val updatedAt: String?
 )
+
+@Entity(tableName = "imaging")
+data class Imaging(
+    @PrimaryKey val id: String,
+    val status: String?,
+    val modality_code: String?,
+    val modality_display: String?,
+    val started: String?,
+    val description: String?,
+    val reasonCode_display: String?,
+    val reasonCode: String?,
+    val procedureCode_display: String?,
+    val performer: String?,
+    val note: String?
+)
