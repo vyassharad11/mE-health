@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.Condition
 import com.mE.Health.databinding.ItemMyHealthConditionBinding
 
@@ -47,10 +48,14 @@ class MyHealthConditionAdapter(private val mContext: Context) :
                 )
             }
         }
-
     }
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<Condition>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

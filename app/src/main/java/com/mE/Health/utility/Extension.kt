@@ -38,7 +38,7 @@ fun String.toFormattedDate(): String {
 fun String.toDisplayDateTime(): String {
     return try {
         val zonedDateTime = ZonedDateTime.parse(this)
-        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.ENGLISH)
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, hh:mm a", Locale.ENGLISH)
         zonedDateTime.format(formatter)
     } catch (e: Exception) {
         ""

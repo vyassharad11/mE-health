@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.databinding.ItemMyHealthPractitionerBinding
+import com.mE.Health.models.CountryState
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.extractContactInfo
 
@@ -58,5 +59,10 @@ class MyHealthPractitionerAdapter(private val mContext: Context) :
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<Practitioner>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

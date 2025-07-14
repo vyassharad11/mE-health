@@ -6,41 +6,60 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.mE.Health.R
+import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Practitioner
+import com.mE.Health.data.model.Value
+import com.mE.Health.databinding.ItemPractitionersListBinding
+import com.mE.Health.databinding.ItemVitalListBinding
+import com.mE.Health.utility.Constants
 
-class PractitionersListAdapter(val context: Context) :
+class PractitionersListAdapter(val mContext: Context) :
     RecyclerView.Adapter<PractitionersListAdapter.MyViewHolder>() {
 
+
+    var itemList: List<Practitioner>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+    var type = Constants.ALL
+
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(detail: Practitioner, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        var tvAssistName: TextView = itemView.findViewById(R.id.tvAssistName)
+
+    inner class MyViewHolder(val binding: ItemPractitionersListBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemPractitionersListBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): PractitionersListAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_practitioners_list, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: PractitionersListAdapter.MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.itemView,
-                position
-            )
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item = itemList?.get(position)
+        item?.let { it ->
+            holder.binding.tvName.text = it.name
+            holder.itemView.setOnClickListener {
+                onItemClickListener?.onClicked(
+                    item,
+                    position
+                )
+            }
         }
     }
 
-
     override fun getItemCount(): Int {
-        return 5
+        return itemList?.size ?: 0
     }
 }

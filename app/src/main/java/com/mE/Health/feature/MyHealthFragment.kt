@@ -8,7 +8,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mE.Health.R
@@ -52,6 +55,7 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.MyHealthUploadDocAdapter
 import com.mE.Health.feature.adapter.MyHealthVisitsAdapter
 import com.mE.Health.feature.adapter.MyHealthVitalAdapter
+import com.mE.Health.models.CountryState
 import com.mE.Health.models.MyHealthTypeModel
 import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
@@ -76,10 +80,21 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private var firstDateSelected: Long = 0
     private var secondDateSelected: Long = 0
     private var myHealthTypeAdapter: MyHealthTypeAdapter? = null
+    private var practitionerList: List<Practitioner>? = ArrayList()
+    private var appointmentList: List<Appointment>? = ArrayList()
+    private var conditionList: List<Condition>? = ArrayList()
+    private var labList: List<DiagnosticReport>? = ArrayList()
+    private var vitalsList: List<Observation>? = ArrayList()
+    private var medicationList: List<MedicationRequest>? = ArrayList()
+    private var visitList: List<Encounter>? = ArrayList()
+    private var procedureList: List<Procedure>? = ArrayList()
+    private var allergyList: List<AllergyIntolerance>? = ArrayList()
+    private var practitionerAdapter: MyHealthPractitionerAdapter? = null
+    private var appointmentAdapter: MyHealthAppointmentAdapter? = null
+    private var conditionAdapter: MyHealthConditionAdapter? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = MyHealthFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -90,6 +105,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         setBottomNavigationVisibility(requireActivity())
         firstDateSelected = Calendar.getInstance().timeInMillis
         secondDateSelected = Calendar.getInstance().timeInMillis
+        initItemList()
         initView()
         initHeader()
     }
@@ -185,7 +201,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
 
         binding.ivSearch.setOnClickListener(this)
-        binding.ivCross.setOnClickListener(this)
+        binding.ivSearchCross.setOnClickListener(this)
         binding.ivFilter.setOnClickListener(this)
         binding.ivCalendarFilter.setOnClickListener(this)
         binding.ivDateCancel.setOnClickListener(this)
@@ -193,28 +209,125 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rllUpload.setOnClickListener(this)
         binding.cvStartData.setOnClickListener(this)
         binding.cvEndData.setOnClickListener(this)
+
+        addTextChangedListener()
+    }
+
+    private fun initItemList() {
+        practitionerList = ArrayList()
+        practitionerList = mockViewModel.practitionerList.value
+
+        appointmentList = ArrayList()
+        appointmentList = mockViewModel.appointmentList.value
+
+        conditionList = ArrayList()
+        conditionList = mockViewModel.conditionList.value
+
+        labList = ArrayList()
+        labList = mockViewModel.labList.value
+
+        vitalsList = ArrayList()
+        vitalsList = mockViewModel.vitalsList.value
+
+        medicationList = ArrayList()
+        medicationList = mockViewModel.medicationList.value
+
+        visitList = ArrayList()
+        visitList = mockViewModel.visitList.value
+
+        procedureList = ArrayList()
+        procedureList = mockViewModel.procedureList.value
+
+        allergyList = ArrayList()
+        allergyList = mockViewModel.allergyList.value
+    }
+
+    private fun addTextChangedListener() {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(char: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                onTextChangedListener(char)
+            }
+        })
+    }
+
+    private fun onTextChangedListener(char: CharSequence?) {
+        when (myHealthTypeAdapter?.selectedItem) {
+            0 -> {
+                if (char?.trim().toString().isNotEmpty()) filterPractitionerList(char?.toString()!!)
+                else practitionerAdapter?.updateList(practitionerList!!)
+            }
+            1->{
+                if (char?.trim().toString().isNotEmpty()) filterAppointmentList(char?.toString()!!)
+                else appointmentAdapter?.updateList(appointmentList!!)
+            }
+            2->{
+                if (char?.trim().toString().isNotEmpty()) filterConditionList(char?.toString()!!)
+                else conditionAdapter?.updateList(conditionList!!)
+            }
+        }
+    }
+
+    private fun filterPractitionerList(text: String) {
+        val filterDataList = ArrayList<Practitioner>()
+        for (item in practitionerList!!) {
+            if (item.name?.lowercase()
+                    ?.contains(text.lowercase()) == true || item.specialty?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterDataList.add(item)
+            }
+        }
+        practitionerAdapter?.updateList(filterDataList)
+    }
+
+    private fun filterAppointmentList(text: String) {
+        val filterList = ArrayList<Appointment>()
+        for (item in appointmentList!!) {
+            if (item.practitionerName?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        appointmentAdapter?.updateList(filterList)
+    }
+
+    private fun filterConditionList(text: String) {
+        val filterList = ArrayList<Condition>()
+        for (item in conditionList!!) {
+            if (item.code_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        conditionAdapter?.updateList(filterList)
     }
 
     private fun initFilterUI() {
         binding.rlDateLayout.visibility = View.GONE
         binding.rvFilter.visibility = View.GONE
         binding.rlSearchLayout.visibility = View.GONE
+        binding.etSearch.setText("")
         binding.ivCalendarFilter.setColorFilter(
             ContextCompat.getColor(
-                requireActivity(),
-                R.color.text_color_primary
+                requireActivity(), R.color.text_color_primary
             )
         )
         binding.ivFilter.setColorFilter(
             ContextCompat.getColor(
-                requireActivity(),
-                R.color.text_color_primary
+                requireActivity(), R.color.text_color_primary
             )
         )
         binding.ivSearch.setColorFilter(
             ContextCompat.getColor(
-                requireActivity(),
-                R.color.text_color_primary
+                requireActivity(), R.color.text_color_primary
             )
         )
 
@@ -228,18 +341,28 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 binding.rlSearchLayout.visibility = View.VISIBLE
                 binding.ivSearch.setColorFilter(
                     ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.color_FF6605
+                        requireActivity(), R.color.color_FF6605
                     )
                 )
             }
 
-            R.id.ivCross -> {
+            R.id.ivSearchCross -> {
+                when (myHealthTypeAdapter?.selectedItem) {
+                    0 -> {
+                        practitionerAdapter?.updateList(practitionerList!!)
+                    }
+                    1->{
+                        appointmentAdapter?.updateList(appointmentList!!)
+                    }
+                    2->{
+                        conditionAdapter?.updateList(conditionList!!)
+                    }
+                }
+                binding.etSearch.setText("")
                 binding.rlSearchLayout.visibility = View.GONE
                 binding.ivSearch.setColorFilter(
                     ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.text_color_primary
+                        requireActivity(), R.color.text_color_primary
                     )
                 )
             }
@@ -248,8 +371,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 binding.rlDateLayout.visibility = View.GONE
                 binding.ivCalendarFilter.setColorFilter(
                     ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.text_color_primary
+                        requireActivity(), R.color.text_color_primary
                     )
                 )
             }
@@ -264,8 +386,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     }
                 })
                 bottomSheet.show(
-                    requireActivity().supportFragmentManager,
-                    "BottomSheetFilter"
+                    requireActivity().supportFragmentManager, "BottomSheetFilter"
                 )
             }
 
@@ -274,16 +395,14 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 if (binding.rlDateCalendarLayout.isVisible) {
                     binding.ivCalendarFilter.setColorFilter(
                         ContextCompat.getColor(
-                            requireActivity(),
-                            R.color.text_color_primary
+                            requireActivity(), R.color.text_color_primary
                         )
                     )
                     binding.rlDateCalendarLayout.visibility = View.GONE
                 } else {
                     binding.ivCalendarFilter.setColorFilter(
                         ContextCompat.getColor(
-                            requireActivity(),
-                            R.color.color_FF6605
+                            requireActivity(), R.color.color_FF6605
                         )
                     )
                     binding.rlDateCalendarLayout.visibility = View.VISIBLE
@@ -340,26 +459,23 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         val picker =
             MaterialDatePicker.Builder.dateRangePicker().setTheme(R.style.CustomDatePickerTheme)
                 .setTitleText("Select Date Range")
-                .setSelection(Pair(firstDateSelected, secondDateSelected))
-                .build()
+                .setSelection(Pair(firstDateSelected, secondDateSelected)).build()
         picker.show(requireActivity().supportFragmentManager, "TAG")
         picker.addOnNegativeButtonClickListener { picker?.dismiss() }
         picker.addOnPositiveButtonClickListener {
             binding.rlDateLayout.visibility = View.VISIBLE
             binding.ivCalendarFilter.setColorFilter(
                 ContextCompat.getColor(
-                    requireActivity(),
-                    R.color.color_FF6605
+                    requireActivity(), R.color.color_FF6605
                 )
             )
             firstDateSelected = it.first
             secondDateSelected = it.second
-            binding.tvDateRange.text =
-                "Date Range : ${convertTimeToDate(firstDateSelected)} - ${
-                    convertTimeToDate(
-                        secondDateSelected
-                    )
-                }"
+            binding.tvDateRange.text = "Date Range : ${convertTimeToDate(firstDateSelected)} - ${
+                convertTimeToDate(
+                    secondDateSelected
+                )
+            }"
         }
     }
 
@@ -457,7 +573,11 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     R.drawable.ic_imaging
                 )
             )
-            add(MyHealthTypeModel(getString(R.string.record_vaults), "6", R.drawable.ic_upload_health))
+            add(
+                MyHealthTypeModel(
+                    getString(R.string.record_vaults), "6", R.drawable.ic_upload_health
+                )
+            )
         }
         return typeList
     }
@@ -467,8 +587,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvFilter.visibility = View.VISIBLE
         binding.ivFilter.setColorFilter(
             ContextCompat.getColor(
-                requireActivity(),
-                R.color.color_FF6605
+                requireActivity(), R.color.color_FF6605
             )
         )
         binding.rvFilter.layoutManager =
@@ -484,8 +603,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     if (itemList.size == 0) {
                         binding.ivFilter.setColorFilter(
                             ContextCompat.getColor(
-                                requireActivity(),
-                                R.color.text_color_primary
+                                requireActivity(), R.color.text_color_primary
                             )
                         )
                     }
@@ -497,10 +615,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setPractitionerData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_practitioners)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val practitionerAdapter = MyHealthPractitionerAdapter(requireActivity())
-        practitionerAdapter.itemList = mockViewModel.practitionerList.value
+        practitionerAdapter = MyHealthPractitionerAdapter(requireActivity())
+        practitionerAdapter?.itemList = practitionerList
         binding.rvList.adapter = practitionerAdapter
-        practitionerAdapter.apply {
+        practitionerAdapter?.apply {
             onItemClickListener = object : MyHealthPractitionerAdapter.OnClickCallback {
                 override fun onClicked(data: Practitioner) {
                     DetailSingleton.practitioner = data
@@ -518,18 +636,16 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setAppointmentData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_appointments)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthAppointmentAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.appointmentList.value
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        appointmentAdapter = MyHealthAppointmentAdapter(requireActivity())
+        appointmentAdapter?.itemList = appointmentList
+        binding.rvList.adapter = appointmentAdapter
+        appointmentAdapter?.apply {
             onItemClickListener = object : MyHealthAppointmentAdapter.OnClickCallback {
                 override fun onClicked(detail: Appointment, position: Int, type: String) {
                     when (type) {
                         Constants.READ_MORE -> {
                             openReadMoreDialog(
-                                requireActivity(),
-                                "",
-                                getString(R.string.appointment_description)
+                                requireActivity(), "", getString(R.string.appointment_description)
                             )
                         }
 
@@ -555,10 +671,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setConditionData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_conditions)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthConditionAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.conditionList.value
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        conditionAdapter = MyHealthConditionAdapter(requireActivity())
+        conditionAdapter?.itemList = conditionList
+        binding.rvList.adapter = conditionAdapter
+        conditionAdapter?.apply {
             onItemClickListener = object : MyHealthConditionAdapter.OnClickCallback {
                 override fun onClicked(detail: Condition, position: Int) {
                     DetailSingleton.condition = detail
@@ -577,7 +693,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_labs)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthLabAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.labList.value
+        providerAdapter.itemList = labList
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthLabAdapter.OnClickCallback {
@@ -598,7 +714,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_vitals)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val adapter = MyHealthVitalAdapter(requireActivity())
-        adapter.itemList = mockViewModel.vitalsList.value
+        adapter.itemList = vitalsList
         binding.rvList.adapter = adapter
         adapter.apply {
             onItemClickListener = object : MyHealthVitalAdapter.OnClickCallback {
@@ -619,7 +735,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_medications)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthMedicationAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.medicationList.value
+        providerAdapter.itemList = medicationList
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthMedicationAdapter.OnClickCallback {
@@ -641,7 +757,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.tvMyHealthType.text = getString(R.string.list_of_visits)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         val providerAdapter = MyHealthVisitsAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.visitList.value
+        providerAdapter.itemList = visitList
         binding.rvList.adapter = providerAdapter
         providerAdapter.apply {
             onItemClickListener = object : MyHealthVisitsAdapter.OnClickCallback {
@@ -789,150 +905,130 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private val getPhotoPicker =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                val selectedImage: Uri = it?.data?.data!!
-                try {
-                    val bitmap =
-                        MediaStore.Images.Media.getBitmap(
-                            requireActivity().contentResolver,
-                            selectedImage
+    private val getPhotoPicker = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val selectedImage: Uri = it?.data?.data!!
+            try {
+                val bitmap = MediaStore.Images.Media.getBitmap(
+                    requireActivity().contentResolver, selectedImage
+                )
+                var uri = it?.data?.data!!
+                if (uri != null) {
+                    picturePath = getAbsolutePath(uri)
+                    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") if (TextUtils.isEmpty(
+                            picturePath
                         )
-                    var uri = it?.data?.data!!
-                    if (uri != null) {
-                        picturePath = getAbsolutePath(uri)
-                        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-                        if (TextUtils.isEmpty(picturePath))
-                            picturePath = uri.path.toString()
-                        val file = File(picturePath)
-                        if (!file.isFile || file.length() == 0L) {
-                            Toast.makeText(
-                                activity,
-                                "gallery_pick_error",
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                            return@registerForActivityResult
-                        }
-                        filePath = picturePath
-                        Log.i(
-                            javaClass.name,
-                            "Gallery picturePath : $picturePath: ${file.length()}"
-                        )
-
-
-                        val cursor = requireActivity()!!.contentResolver
-                            .query(
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                arrayOf(MediaStore.Images.Media._ID),
-                                MediaStore.Images.Media.DATA + "=? ",
-                                arrayOf(picturePath), null
-                            )
-                        if (cursor != null && cursor.moveToFirst()) {
-                            val id =
-                                cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
-                            uri = Uri.parse("content://media/external/images/media/$id")
-                        }
-                        cursor?.close()
-                        val fileName = File(uri!!.path).name
-                        val fragment = UserContentFragment()
-                        val bundle = Bundle()
-                        bundle.apply {
-                            putString(Constants.FILE_PATH, uri.toString())
-                            putString(Constants.FILE_LENGTH, getFileLength(file))
-                            putString(Constants.FILE_NAME, fileName)
-                            putString(Constants.FILE_TYPE, Constants.FILE_IMAGE)
-                        }
-                        fragment.arguments = bundle
-                        addFragment(
-                            R.id.fragment_container,
-                            fragment,
-                            "UserContentFragment",
-                            "MyHealthFragment"
-                        )
-                        Log.i("=============", "=========picturePath: $picturePath")
+                    ) picturePath = uri.path.toString()
+                    val file = File(picturePath)
+                    if (!file.isFile || file.length() == 0L) {
+                        Toast.makeText(
+                            activity, "gallery_pick_error", Toast.LENGTH_LONG
+                        ).show()
+                        return@registerForActivityResult
                     }
-                } catch (e: IOException) {
-                    Log.i("TAG", "Some exception $e")
+                    filePath = picturePath
+                    Log.i(
+                        javaClass.name, "Gallery picturePath : $picturePath: ${file.length()}"
+                    )
+
+
+                    val cursor = requireActivity()!!.contentResolver.query(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            arrayOf(MediaStore.Images.Media._ID),
+                            MediaStore.Images.Media.DATA + "=? ",
+                            arrayOf(picturePath),
+                            null
+                        )
+                    if (cursor != null && cursor.moveToFirst()) {
+                        val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
+                        uri = Uri.parse("content://media/external/images/media/$id")
+                    }
+                    cursor?.close()
+                    val fileName = File(uri!!.path).name
+                    val fragment = UserContentFragment()
+                    val bundle = Bundle()
+                    bundle.apply {
+                        putString(Constants.FILE_PATH, uri.toString())
+                        putString(Constants.FILE_LENGTH, getFileLength(file))
+                        putString(Constants.FILE_NAME, fileName)
+                        putString(Constants.FILE_TYPE, Constants.FILE_IMAGE)
+                    }
+                    fragment.arguments = bundle
+                    addFragment(
+                        R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
+                    )
+                    Log.i("=============", "=========picturePath: $picturePath")
                 }
+            } catch (e: IOException) {
+                Log.i("TAG", "Some exception $e")
             }
         }
+    }
 
 
     @SuppressLint("Range")
-    private val getVideoPicker =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                val selectedImage: Uri = it?.data?.data!!
-                try {
-                    val bitmap =
-                        MediaStore.Images.Media.getBitmap(
-                            requireActivity().contentResolver,
-                            selectedImage
-                        )
+    private val getVideoPicker = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val selectedImage: Uri = it?.data?.data!!
+            try {
+                val bitmap = MediaStore.Images.Media.getBitmap(
+                    requireActivity().contentResolver, selectedImage
+                )
 //                    binding.ivDemo.setImageBitmap(bitmap)
-                    var uri = it?.data?.data!!
-                    if (uri != null) {
-                        picturePath = getAbsolutePath(uri)
-                        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-                        if (TextUtils.isEmpty(picturePath))
-                            picturePath = uri.path.toString()
-                        val file = File(picturePath)
-                        if (!file.isFile || file.length() == 0L) {
-                            Toast.makeText(
-                                activity,
-                                "gallery_pick_error",
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                            return@registerForActivityResult
-                        }
-                        filePath = picturePath
-                        Log.i(
-                            javaClass.name,
-                            "Gallery videoPath : $picturePath: ${file.length()}"
+                var uri = it?.data?.data!!
+                if (uri != null) {
+                    picturePath = getAbsolutePath(uri)
+                    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") if (TextUtils.isEmpty(
+                            picturePath
                         )
-                        val cursor = requireActivity()!!.contentResolver
-                            .query(
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                arrayOf(MediaStore.Images.Media._ID),
-                                MediaStore.Images.Media.DATA + "=? ",
-                                arrayOf(picturePath), null
-                            )
-                        if (cursor != null && cursor.moveToFirst()) {
-                            val id =
-                                cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
-                            uri = Uri.parse("content://media/external/images/media/$id")
-                        }
-                        cursor?.close()
-                        val fileName = picturePath.substring(picturePath.lastIndexOf("/") + 1)
-                        val fragment = UserContentFragment()
-                        val bundle = Bundle()
-                        bundle.apply {
-                            putString(Constants.FILE_PATH, it.toString())
-                            putString(Constants.FILE_LENGTH, getFileLength(file))
-                            putString(Constants.FILE_NAME, fileName)
-                            putString(Constants.FILE_TYPE, Constants.FILE_VIDEO)
-                        }
-                        fragment.arguments = bundle
-                        addFragment(
-                            R.id.fragment_container,
-                            fragment,
-                            "UserContentFragment",
-                            "MyHealthFragment"
-                        )
-                        Log.i("=============", "=========picturePath: $picturePath")
+                    ) picturePath = uri.path.toString()
+                    val file = File(picturePath)
+                    if (!file.isFile || file.length() == 0L) {
+                        Toast.makeText(
+                            activity, "gallery_pick_error", Toast.LENGTH_LONG
+                        ).show()
+                        return@registerForActivityResult
                     }
-                } catch (e: IOException) {
-                    Log.i("TAG", "Some exception $e")
+                    filePath = picturePath
+                    Log.i(
+                        javaClass.name, "Gallery videoPath : $picturePath: ${file.length()}"
+                    )
+                    val cursor = requireActivity()!!.contentResolver.query(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            arrayOf(MediaStore.Images.Media._ID),
+                            MediaStore.Images.Media.DATA + "=? ",
+                            arrayOf(picturePath),
+                            null
+                        )
+                    if (cursor != null && cursor.moveToFirst()) {
+                        val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
+                        uri = Uri.parse("content://media/external/images/media/$id")
+                    }
+                    cursor?.close()
+                    val fileName = picturePath.substring(picturePath.lastIndexOf("/") + 1)
+                    val fragment = UserContentFragment()
+                    val bundle = Bundle()
+                    bundle.apply {
+                        putString(Constants.FILE_PATH, it.toString())
+                        putString(Constants.FILE_LENGTH, getFileLength(file))
+                        putString(Constants.FILE_NAME, fileName)
+                        putString(Constants.FILE_TYPE, Constants.FILE_VIDEO)
+                    }
+                    fragment.arguments = bundle
+                    addFragment(
+                        R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
+                    )
+                    Log.i("=============", "=========picturePath: $picturePath")
                 }
+            } catch (e: IOException) {
+                Log.i("TAG", "Some exception $e")
             }
         }
+    }
 
 
     private val pickPdfLauncher =
@@ -962,10 +1058,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 }
                 fragment.arguments = bundle
                 addFragment(
-                    R.id.fragment_container,
-                    fragment,
-                    "UserContentFragment",
-                    "MyHealthFragment"
+                    R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
                 )
             } ?: run {
                 // Handle the case where no file was selected
@@ -1025,17 +1118,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         var mMonth = calendar.get(Calendar.MONTH)
         var mDay = calendar.get(Calendar.DAY_OF_MONTH)
         val datePickerDialog = DatePickerDialog(
-            requireActivity(),
-            R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
+            requireActivity(), R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
                 endDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
                 binding.tvFilterEndDate.text = endDate + "  "
                 mYear = year
                 mMonth = monthOfYear
                 mDay = dayOfMonth
-            },
-            mYear,
-            mMonth,
-            mDay
+            }, mYear, mMonth, mDay
         )
         datePickerDialog.datePicker.minDate = startDateCalendar.timeInMillis;
         datePickerDialog.show()

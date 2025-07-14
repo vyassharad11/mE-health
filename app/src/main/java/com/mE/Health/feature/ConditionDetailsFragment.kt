@@ -61,6 +61,9 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
     private fun initView() {
         binding.tvPractitionersViewAll.setOnClickListener(this)
         binding.tvMedicationViewAll.setOnClickListener(this)
+        binding.tvVitalViewAll.setOnClickListener(this)
+        binding.tvLabsViewAll.setOnClickListener(this)
+        binding.tvVisitsViewAll.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -82,6 +85,42 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
                 bundle.putString(Constants.PN_TYPE,Constants.MEDICATION)
+                fragment.arguments = bundle
+                addFragment(
+                    R.id.fragment_container,
+                    fragment,
+                    "PractitionersListFragment",
+                    "ConditionDetailsFragment"
+                )
+            }
+            R.id.tvVitalViewAll -> {
+                val fragment = PractitionersListFragment()
+                val bundle = Bundle()
+                bundle.putString(Constants.PN_TYPE,Constants.VITAL)
+                fragment.arguments = bundle
+                addFragment(
+                    R.id.fragment_container,
+                    fragment,
+                    "PractitionersListFragment",
+                    "ConditionDetailsFragment"
+                )
+            }
+             R.id.tvLabsViewAll -> {
+                val fragment = PractitionersListFragment()
+                val bundle = Bundle()
+                bundle.putString(Constants.PN_TYPE,Constants.LAB)
+                fragment.arguments = bundle
+                addFragment(
+                    R.id.fragment_container,
+                    fragment,
+                    "PractitionersListFragment",
+                    "ConditionDetailsFragment"
+                )
+            }
+             R.id.tvVisitsViewAll -> {
+                val fragment = PractitionersListFragment()
+                val bundle = Bundle()
+                bundle.putString(Constants.PN_TYPE,Constants.VISIT)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,

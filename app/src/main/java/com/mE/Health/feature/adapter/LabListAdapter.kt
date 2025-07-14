@@ -5,15 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.data.model.MedicationRequest
-import com.mE.Health.databinding.ItemMyHealthMedicationBinding
+import com.google.gson.Gson
+import com.mE.Health.R
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Value
+import com.mE.Health.databinding.ItemMyHealthVitalBinding
+import com.mE.Health.databinding.ItemVitalListBinding
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.toFormattedDate
 
-class MyHealthMedicationAdapter(private val mContext: Context) :
-    RecyclerView.Adapter<MyHealthMedicationAdapter.MyViewHolder>() {
+class LabListAdapter(private val mContext: Context) :
+    RecyclerView.Adapter<LabListAdapter.MyViewHolder>() {
 
-    var itemList: List<MedicationRequest>? = ArrayList()
+    var itemList: List<DiagnosticReport>? = ArrayList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -22,17 +27,17 @@ class MyHealthMedicationAdapter(private val mContext: Context) :
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(detail: MedicationRequest, position: Int)
+        fun onClicked(detail: DiagnosticReport, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
 
-    inner class MyViewHolder(val binding: ItemMyHealthMedicationBinding) :
+    inner class MyViewHolder(val binding: ItemVitalListBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val binding = ItemMyHealthMedicationBinding.inflate(
+        val binding = ItemVitalListBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -42,15 +47,15 @@ class MyHealthMedicationAdapter(private val mContext: Context) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = itemList?.get(position)
-        item?.let {
-            holder.binding.tvName.text = it.medicationCode_display ?: ""
-            holder.binding.tvDate.text =  "Authored: ${it.authoredOn?.toFormattedDate()}"
+        item?.let { it ->
+            holder.binding.tvName.text = it.code_display
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,
                     position
                 )
             }
+            holder.binding.tvStatus.text = it.issued?.toFormattedDate()
         }
     }
 

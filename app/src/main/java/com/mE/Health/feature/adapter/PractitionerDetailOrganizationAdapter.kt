@@ -32,6 +32,7 @@ class PractitionerDetailOrganizationAdapter(val context: Context) :
         val item = itemList?.get(position)
         item?.let {
             holder.binding.tvName.text = it.name
+            holder.binding.tvDate.text = "Start Time: 01/01/2022"
         }
         holder.itemView.setOnClickListener {
 

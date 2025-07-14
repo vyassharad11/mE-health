@@ -7,9 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.MedicationRequest
+import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Practitioner
 import com.mE.Health.databinding.PractitionersListFragmentBinding
+import com.mE.Health.feature.adapter.LabListAdapter
 import com.mE.Health.feature.adapter.MedicationListAdapter
 import com.mE.Health.feature.adapter.PractitionersListAdapter
+import com.mE.Health.feature.adapter.VisitListAdapter
+import com.mE.Health.feature.adapter.VitalListAdapter
 import com.mE.Health.utility.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,14 +48,14 @@ class PractitionersListFragment : BaseFragment() {
         val type = arguments?.getString(Constants.PN_TYPE, "")
 
         binding.rvAssist.layoutManager = LinearLayoutManager(requireActivity())
-
         if (type == Constants.PRACTITIONER) {
             binding.tvPageTitle.text = getString(R.string.list_of_practitioners)
             var recyclerAdapter = PractitionersListAdapter(requireActivity())
+            recyclerAdapter.itemList = mockViewModel.practitionerList.value
             binding.rvAssist.adapter = recyclerAdapter
             recyclerAdapter.apply {
                 onItemClickListener = object : PractitionersListAdapter.OnClickCallback {
-                    override fun onClicked(view: View?, position: Int) {
+                    override fun onClicked(item: Practitioner, position: Int) {
                         addFragment(
                             R.id.fragment_container,
                             PractitionersListDetailsFragment(),
@@ -57,13 +65,47 @@ class PractitionersListFragment : BaseFragment() {
                     }
                 }
             }
+        } else if (type == Constants.VITAL) {
+            binding.tvPageTitle.text = getString(R.string.list_of_vitals)
+            val recyclerAdapter = VitalListAdapter(requireActivity())
+            recyclerAdapter.itemList = mockViewModel.vitalsList.value
+            binding.rvAssist.adapter = recyclerAdapter
+            recyclerAdapter.apply {
+                onItemClickListener = object : VitalListAdapter.OnClickCallback {
+                    override fun onClicked(item: Observation, position: Int) {
+                    }
+                }
+            }
+        } else if (type == Constants.LAB) {
+            binding.tvPageTitle.text = getString(R.string.list_of_labs)
+            val recyclerAdapter = LabListAdapter(requireActivity())
+            recyclerAdapter.itemList = mockViewModel.labList.value
+            binding.rvAssist.adapter = recyclerAdapter
+            recyclerAdapter.apply {
+                onItemClickListener = object : LabListAdapter.OnClickCallback {
+                    override fun onClicked(item: DiagnosticReport, position: Int) {
+                    }
+                }
+            }
+        } else if (type == Constants.VISIT) {
+            binding.tvPageTitle.text = getString(R.string.list_of_visits)
+            val recyclerAdapter = VisitListAdapter(requireActivity())
+            recyclerAdapter.itemList = mockViewModel.visitList.value
+            binding.rvAssist.adapter = recyclerAdapter
+            recyclerAdapter.apply {
+                onItemClickListener = object : VisitListAdapter.OnClickCallback {
+                    override fun onClicked(item: Encounter, position: Int) {
+                    }
+                }
+            }
         } else {
             binding.tvPageTitle.text = getString(R.string.list_of_medications)
             var recyclerAdapter = MedicationListAdapter(requireActivity())
+            recyclerAdapter.itemList = mockViewModel.medicationList.value
             binding.rvAssist.adapter = recyclerAdapter
             recyclerAdapter.apply {
                 onItemClickListener = object : MedicationListAdapter.OnClickCallback {
-                    override fun onClicked(view: View?, position: Int) {
+                    override fun onClicked(item: MedicationRequest, position: Int) {
                         addFragment(
                             R.id.fragment_container,
                             PractitionersListDetailsFragment(),
