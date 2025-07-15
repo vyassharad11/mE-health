@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Slide
-import com.mE.Health.databinding.ActivityHomeBinding
 import com.mE.Health.databinding.ActivityHomeNewBinding
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
@@ -22,9 +21,9 @@ import com.mE.Health.feature.SettingFragment
 import com.mE.Health.feature.adapter.HomeMenuAdapter
 import com.mE.Health.feature.adapter.RadioButtonListAdapter
 import com.mE.Health.models.NavMenuDTO
+import com.mE.Health.viewmodels.assist.AssistViewModel
 import com.mE.Health.viewmodels.mockData.MockDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
@@ -33,6 +32,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     private var isNavActive = false
     private var navMenuAdapter: HomeMenuAdapter? = null
     private val mockDataViewModel: MockDataViewModel by viewModels()
+    private val viewModel: AssistViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

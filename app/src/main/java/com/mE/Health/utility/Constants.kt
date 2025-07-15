@@ -4,6 +4,13 @@ object Constants {
     const val BASE_URL = "https://dev-admin.meinstein.ai/"
     var token = ""
 
+    const val ASSIST_DATA_LIST = "core/assist-data-list/"
+    const val GET = "GET"
+    const val POST = "POST"
+    const val DD_MM_YYYY = "dd-MM-yyyy"
+    const val MM_DD_YYYY = "MM-dd-yyyy"
+    const val YYYY_MM_DD = "yyyy-MM-dd"
+    const val YYYY_MM_DD_T_HH_MM_SS_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
     const val USER_TYPE = "seller"
     const val PN_TYPE = "type"

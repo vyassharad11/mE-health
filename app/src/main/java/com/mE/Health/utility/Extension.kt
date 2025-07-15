@@ -4,6 +4,9 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import com.mE.Health.data.model.ContactInfo
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -56,7 +59,7 @@ fun String.toDisplayTime(): String {
     }
 }
 
-fun String.capitalFirstChar():String{
+fun String.capitalFirstChar(): String {
     val capitalized = this.replaceFirstChar {
         if (it.isLowerCase()) it.titlecase() else it.toString()
     }
@@ -88,7 +91,17 @@ fun openCloseTime(startTime: String?, endTime: String?): Pair<String, String> {
 
         return Pair(datePart, "$startTimePart - $endTimeFormatted")
     } else {
-        return Pair("","")
+        return Pair("", "")
+    }
+}
+
+fun String.dateToLocalDate(format: String? = null): LocalDate {
+    return if (format == null) {
+        // Try ISO instant or ISO offset
+        OffsetDateTime.parse(this).toLocalDate()
+    } else {
+        val formatter = DateTimeFormatter.ofPattern(format, Locale.getDefault())
+        LocalDate.parse(this, formatter)
     }
 }
 

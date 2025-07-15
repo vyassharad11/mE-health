@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Appointment
+import com.mE.Health.data.model.AssistDetailEntity
 import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
@@ -17,7 +18,6 @@ import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Patient
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.PractitionerBasicDetails
-import com.mE.Health.data.model.PractitionerOrganization
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.repository.MockRepository
@@ -83,7 +83,11 @@ class MockDataViewModel @Inject constructor(
     val patientDetail: LiveData<Patient> = _patientDetail
 
     private val _practitionerWithOrganization = MutableLiveData<PractitionerBasicDetails>()
-    val practitionerWithOrganization: LiveData<PractitionerBasicDetails> = _practitionerWithOrganization
+    val practitionerWithOrganization: LiveData<PractitionerBasicDetails> =
+        _practitionerWithOrganization
+
+    private val _assistDetailList = MutableLiveData<List<AssistDetailEntity>>()
+    val assistDetailList: LiveData<List<AssistDetailEntity>> = _assistDetailList
 
 
     init {
@@ -140,7 +144,23 @@ class MockDataViewModel @Inject constructor(
 
     fun getPractitionerWithOrganization(encounterId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _practitionerWithOrganization.postValue(repository.getPractitionerWithOrganization(encounterId))
+            _practitionerWithOrganization.postValue(
+                repository.getPractitionerWithOrganization(
+                    encounterId
+                )
+            )
+        }
+    }
+
+    fun getAssistDetailData(startDate: String, endDate: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _assistDetailList.postValue(repository.getUnifiedHealthItems(startDate, endDate))
+        }
+    }
+
+    fun insertAssistDetail(data: List<AssistDetailEntity>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertAssistDetail(data)
         }
     }
 }

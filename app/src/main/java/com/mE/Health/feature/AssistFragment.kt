@@ -5,12 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.helper.Resource
+import com.mE.Health.data.model.assist.AssistItem
 import com.mE.Health.databinding.AssistFragmentBinding
 import com.mE.Health.feature.adapter.AssistAdapter
-import com.mE.Health.feature.adapter.MyHealthPractitionerAdapter
+import com.mE.Health.utility.LoaderDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -37,14 +43,14 @@ class AssistFragment : BaseFragment() {
 
     private fun initView() {
         binding.rvAssist.layoutManager = LinearLayoutManager(requireActivity())
-        var recyclerAdapter = AssistAdapter(requireActivity(),getDummyData())
-        binding.rvAssist.adapter = recyclerAdapter
-        recyclerAdapter.apply {
+        val adapter = AssistAdapter(requireActivity())
+        binding.rvAssist.adapter = adapter
+        adapter.apply {
             onItemClickListener = object : AssistAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
-                    val fragment =  AssistDetailFragment()
+                override fun onClicked(detail: AssistItem?, position: Int) {
+                    val fragment = AssistDetailFragment()
                     val bundle = Bundle()
-                    bundle.putString("Title", getDummyData()[position])
+                    bundle.putString("Title", detail?.item)
                     fragment.arguments = bundle
                     addFragment(
                         R.id.fragment_container,
@@ -52,6 +58,35 @@ class AssistFragment : BaseFragment() {
                         "AssistDetailFragment",
                         "MyHealthFragment"
                     )
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                assistViewModel.assistList.collect { state ->
+                    when (state) {
+                        is Resource.Loading -> {
+                            LoaderDialog.show(requireContext())
+                        }
+
+                        is Resource.Success -> {
+                            LoaderDialog.hide()
+                            val data = state.data
+                            adapter.setData(data)
+                        }
+
+                        is Resource.Error -> {
+                            LoaderDialog.hide()
+                            // Show error
+                        }
+
+                        is Resource.Offline -> {
+                            LoaderDialog.hide()
+                            val data = state.data
+                            adapter.setData(data)
+                        }
+                    }
                 }
             }
         }
@@ -64,8 +99,8 @@ class AssistFragment : BaseFragment() {
         }
     }
 
-    private fun getDummyData(): ArrayList<String>{
-       return ArrayList<String>().apply {
+    private fun getDummyData(): ArrayList<String> {
+        return ArrayList<String>().apply {
             add("Chronic Condition Detector")
             add("Preventive Care Advisor")
             add("Medication Adherence Risk Predictor")

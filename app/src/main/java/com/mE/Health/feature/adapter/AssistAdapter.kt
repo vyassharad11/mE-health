@@ -4,40 +4,46 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.R
+import com.mE.Health.data.model.assist.AssistItem
+import com.mE.Health.databinding.ItemAssistBinding
 
-class AssistAdapter(val context: Context, private val list: ArrayList<String>) :
+class AssistAdapter(val context: Context) :
     RecyclerView.Adapter<AssistAdapter.MyViewHolder>() {
 
+    private var list: List<AssistItem> = emptyList()
+    fun setData(list: List<AssistItem>) {
+        this.list = list
+        notifyDataSetChanged()
+    }
+
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(detail: AssistItem?, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvAssistName: TextView = itemView.findViewById(R.id.tvAssistName)
+    inner class MyViewHolder(val binding: ItemAssistBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemAssistBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): AssistAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_assist, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: AssistAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item = list[position]
         holder.itemView.setOnClickListener {
             onItemClickListener?.onClicked(
-                holder.itemView,
+                item,
                 position
             )
         }
-        holder.tvAssistName.text = list[position]
+        holder.binding.tvAssistName.text = list[position].item
     }
 
 

@@ -89,7 +89,7 @@
                                     style="@style/textStyleMedium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="MM-DD-YYYY"
+                                    android:hint="MM-DD-YYYY"
                                     android:textColor="@color/color_333333"
                                     android:textSize="@dimen/sp_15" />
 
@@ -160,7 +160,7 @@
                                     style="@style/textStyleMedium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="MM-DD-YYYY"
+                                    android:hint="MM-DD-YYYY"
                                     android:textColor="@color/color_333333"
                                     android:textSize="@dimen/sp_15" />
 
@@ -188,29 +188,15 @@
                 tools:itemCount="1"
                 tools:listitem="@layout/item_my_health_practitioner" />
 
-            <com.mE.Health.utility.roundview.RoundTextView
-                android:id="@+id/tvApply"
-                style="@style/textStyleSemiBold"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_45"
-                android:layout_marginHorizontal="@dimen/dp_5"
-                android:layout_marginTop="@dimen/dp_40"
-                android:gravity="center"
-                android:text="@string/apply"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_17"
-                app:rv_backgroundColor="@color/color_aaaeb3"
-                app:rv_isRadiusHalfHeight="true" />
-
             <LinearLayout
                 android:id="@+id/llNoData"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_40"
                 android:gravity="center"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"

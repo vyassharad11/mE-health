@@ -63,6 +63,7 @@ class MyHealthVisitsAdapter(private val mContext: Context) :
                 val statusDetail = Utilities.getVisitUIStatus(mContext, it.status ?: "")
                 setTextColor(statusDetail.first)
                 delegate.backgroundColor = statusDetail.second
+
             }
         }
     }

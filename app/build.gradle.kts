@@ -2,8 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
-//    id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -30,14 +30,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
+
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -60,22 +62,24 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
 
-    implementation("com.google.dagger:dagger:2.56.1")
-    implementation("com.google.dagger:dagger-android-support:2.56.1")
-    kapt ("com.google.dagger:dagger-compiler:2.56.1")
-    kapt ("com.google.dagger:dagger-android-processor:2.56.1")
+    implementation("com.google.dagger:dagger:2.56.2")
+    implementation("com.google.dagger:dagger-android-support:2.56.2")
+    ksp ("com.google.dagger:dagger-compiler:2.56.2")
+    ksp ("com.google.dagger:dagger-android-processor:2.56.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1")
 
     //Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.56.1")
-    kapt("com.google.dagger:hilt-compiler:2.56.1")
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    ksp("com.google.dagger:hilt-compiler:2.56.2")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
-    implementation("androidx.room:room-runtime:2.7.2")
-    implementation("androidx.room:room-ktx:2.7.2")
-    kapt("androidx.room:room-compiler:2.7.2")
+    //Room Database
+    implementation("androidx.room:room-runtime:2.7.1")
+    implementation("androidx.room:room-ktx:2.7.1")
+    ksp("androidx.room:room-compiler:2.7.1")
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 

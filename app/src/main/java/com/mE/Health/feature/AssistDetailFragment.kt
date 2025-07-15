@@ -1,17 +1,15 @@
 package com.mE.Health.feature
 
-import android.app.DatePickerDialog
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
 import com.mE.Health.databinding.AssistDetailFragmentBinding
 import com.mE.Health.feature.adapter.AssistCategoryDetailAdapter
+import com.mE.Health.utility.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -25,6 +23,7 @@ class AssistDetailFragment : BaseFragment() {
     private lateinit var binding: AssistDetailFragmentBinding
     private var startDate = ""
     private var endDate = ""
+    private val startDateCalendar = Calendar.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,64 +54,67 @@ class AssistDetailFragment : BaseFragment() {
     private fun initView() {
         val title = arguments?.getString("Title")
         binding.tvAssistTitle.text = title
-        val startDateCalendar = Calendar.getInstance()
+        dateRangePicker()
+    }
+
+    private fun dateRangePicker() {
+        binding.cvEndData.isEnabled = false
+
         binding.cvStartData.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(
-                requireActivity(),
-                R.style.my_dialog_theme,
-                { view, year, monthOfYear, dayOfMonth ->
-                    startDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+            Utils.showDatePicker(
+                context = requireContext(),
+                calendar = startDateCalendar,
+                maxDate = System.currentTimeMillis(),
+                onDatePicked = { day, month, year ->
+                    val dd = "%02d".format(day)
+                    val mm = "%02d".format(month + 1)
+
+                    startDate = "$dd-$mm-$year"
                     binding.tvStartDate.text = startDate
-                    startDateCalendar.set(Calendar.YEAR, year)
-                    startDateCalendar.set(Calendar.MONTH, monthOfYear)
-                    startDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate))
-                        binding.tvApply.delegate.backgroundColor =
-                            ContextCompat.getColor(requireActivity(), R.color.text_color_orange)
+                    binding.tvEndDate.text = ""
+
+                    startDateCalendar.set(year, month, day)
+                    binding.cvEndData.isEnabled = true
                 },
-                startDateCalendar.get(Calendar.YEAR),
-                startDateCalendar.get(Calendar.MONTH),
-                startDateCalendar.get(Calendar.DAY_OF_MONTH)
+                onCancel = {
+                    binding.cvEndData.isEnabled = false
+                }
             )
-            datePickerDialog.show()
         }
 
         binding.cvEndData.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            var mYear = calendar.get(Calendar.YEAR)
-            var mMonth = calendar.get(Calendar.MONTH)
-            var mDay = calendar.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(
-                requireActivity(),
-                R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
-                    endDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+            Utils.showDatePicker(
+                context = requireContext(),
+                calendar = startDateCalendar,
+                minDate = startDateCalendar.timeInMillis,
+                maxDate = System.currentTimeMillis(),
+                onDatePicked = { day, month, year ->
+                    val dd = "%02d".format(day)
+                    val mm = "%02d".format(month + 1)
+
+                    endDate = "$dd-$mm-$year"
                     binding.tvEndDate.text = endDate
-                    mYear = year
-                    mMonth = monthOfYear
-                    mDay = dayOfMonth
-                    if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate))
-                        binding.tvApply.delegate.backgroundColor =
-                            ContextCompat.getColor(requireActivity(), R.color.text_color_orange)
-                },
-                mYear,
-                mMonth,
-                mDay
+
+                    mockViewModel.getAssistDetailData(startDate, endDate)
+                }
             )
-            datePickerDialog.datePicker.minDate = startDateCalendar.timeInMillis;
-            datePickerDialog.show()
         }
 
-        binding.tvApply.setOnClickListener {
-            if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate)) {
-                if (title.equals("Chronic Condition Detector")) {
-                    binding.llNoData.visibility = View.GONE
-                    binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-                    val adapter = AssistCategoryDetailAdapter(requireActivity(), title!!)
-                    binding.rvList.adapter = adapter
-                } else {
-                    binding.rvList.visibility = View.GONE
-                    binding.llNoData.visibility = View.VISIBLE
-                }
+        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
+        val adapter = AssistCategoryDetailAdapter()
+        binding.rvList.adapter = adapter
+
+        mockViewModel.assistDetailList.observe(viewLifecycleOwner) {
+            adapter.startDate = startDate
+            adapter.endDate = endDate
+            adapter.itemList = it
+            if (it.isNullOrEmpty()) {
+                binding.rvList.visibility = View.GONE
+                binding.llNoData.visibility = View.VISIBLE
+            } else {
+                binding.rvList.visibility = View.VISIBLE
+                binding.llNoData.visibility = View.GONE
+                mockViewModel.insertAssistDetail(it)
             }
         }
     }

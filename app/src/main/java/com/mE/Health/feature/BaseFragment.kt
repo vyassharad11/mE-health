@@ -30,6 +30,7 @@ import com.mE.Health.R
 import com.mE.Health.utility.BaseInterface
 import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.DialogProgress
+import com.mE.Health.viewmodels.assist.AssistViewModel
 import com.mE.Health.viewmodels.mockData.MockDataViewModel
 import dagger.hilt.android.internal.managers.ViewComponentManager
 import org.json.JSONArray
@@ -48,6 +49,7 @@ import kotlin.getValue
 open class BaseFragment : Fragment() {
 
     val mockViewModel: MockDataViewModel by activityViewModels()
+    val assistViewModel: AssistViewModel by activityViewModels()
     var dialogProgress: DialogProgress? = null
     var dialogOK: Dialog? = null
 

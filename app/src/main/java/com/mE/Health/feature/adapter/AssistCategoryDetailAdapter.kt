@@ -1,16 +1,23 @@
 package com.mE.Health.feature.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.R
+import com.mE.Health.data.model.AssistDetailEntity
+import com.mE.Health.databinding.ItemAssistDetailBinding
 
-class AssistCategoryDetailAdapter(private val mContext: Context, private val category: String) :
+class AssistCategoryDetailAdapter() :
     RecyclerView.Adapter<AssistCategoryDetailAdapter.MyViewHolder>() {
 
+    var itemList: List<AssistDetailEntity>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+    var startDate = ""
+    var endDate = ""
 
     interface OnClickCallback {
         fun onClicked(view: View?, position: Int)
@@ -18,30 +25,34 @@ class AssistCategoryDetailAdapter(private val mContext: Context, private val cat
 
     var onItemClickListener: OnClickCallback? = null
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvCategory: TextView = itemView.findViewById(R.id.tvCategory)
+    inner class MyViewHolder(val binding: ItemAssistDetailBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemAssistDetailBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): AssistCategoryDetailAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_assist_detail, parent, false)
-        return MyViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: AssistCategoryDetailAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item = itemList?.get(position)
         holder.itemView.setOnClickListener {
             onItemClickListener?.onClicked(
                 holder.itemView,
                 position
             )
         }
-        holder.tvCategory.text = category
+
+        item?.let {
+            holder.binding.tvDateRange.text = "$startDate - $endDate"
+            holder.binding.tvCategory.text = it.title
+        }
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return itemList?.size ?: 0
     }
 }

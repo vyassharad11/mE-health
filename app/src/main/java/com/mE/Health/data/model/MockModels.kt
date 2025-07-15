@@ -274,6 +274,49 @@ data class Procedure(
     val updatedAt: String?
 )
 
+@Entity(tableName = "imaging_studies")
+data class ImagingStudyEntity(
+    @PrimaryKey val id: String,
+    val status: String?,
+    val modality_system: String?,
+    val modality_code: String?,
+    val modality_display: String?,
+    val modality: String?,
+    val started: String?,
+    val description: String?,
+    val reasonCode_system: String?,
+    val reasonCode_code: String?,
+    val reasonCode_display: String?,
+    val reasonCode: String?,
+    val procedureCode_system: String?,
+    val procedureCode_code: String?,
+    val procedureCode_display: String?,
+    val procedureCode: String?,
+    val series: String?,
+    val numberOfSeries: Int?,
+    val numberOfInstances: Int?,
+    val performer: String?,
+    val note: String?,
+    val patientId: String?,
+    val encounterId: String?,
+    val conditionId: String?,
+    val procedureId: String?,
+    val appointmentId: String?,
+    val createdAt: String?,
+    val updatedAt: String?
+)
+
+// Series Item
+data class SeriesItem(
+    val uid: String?,
+    val bodySite: ReasonCode?
+)
+
+// Note
+data class Note(
+    val text: String?
+)
+
 @Entity(tableName = "imaging")
 data class Imaging(
     @PrimaryKey val id: String,

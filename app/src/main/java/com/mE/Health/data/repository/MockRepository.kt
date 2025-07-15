@@ -10,6 +10,8 @@ import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
+
+import com.mE.Health.data.model.ImagingStudyEntity
 import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
@@ -19,6 +21,12 @@ import com.mE.Health.data.model.Patient
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.PractitionerOrganization
 import com.mE.Health.data.model.Procedure
+import com.mE.Health.data.model.AssistDetailEntity
+import com.mE.Health.data.model.toAssistDetail
+import com.mE.Health.utility.Constants
+import com.mE.Health.utility.dateToLocalDate
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,6 +54,12 @@ class MockRepository @Inject constructor(
             fileName = "allergy_intolerance.json"
         ) { data ->
             mockDataDao.insertAllergyIntolerance(data)
+        }
+
+        insertMockData<ImagingStudyEntity>(
+            fileName = "imaging_study.json"
+        ) { data ->
+            mockDataDao.insertImagingStudy(data)
         }
 
         //Appointment
@@ -180,4 +194,30 @@ class MockRepository @Inject constructor(
 
     suspend fun getPractitionerWithOrganization(encounterId: String) =
         mockDataDao.getPractitionerWithOrganization(encounterId)
+
+    suspend fun insertAssistDetail(data: List<AssistDetailEntity>){
+        mockDataDao.insertAssistDetail(data)
+    }
+
+    suspend fun getUnifiedHealthItems(
+        startDate: String,
+        endDate: String
+    ): List<AssistDetailEntity> = withContext(Dispatchers.IO) {
+        val result = mutableListOf<AssistDetailEntity>()
+
+        result += mockDataDao.getVitals().map { it.toAssistDetail() }
+        result += mockDataDao.getLabs().map { it.toAssistDetail() }
+        result += mockDataDao.getConditionList().map { it.toAssistDetail() }
+        result += mockDataDao.getImagingStudyList().map { it.toAssistDetail() }
+        result
+            .filter {
+                val date = it.date
+                date != null && date.dateToLocalDate(Constants.YYYY_MM_DD_T_HH_MM_SS_Z)
+                    .isAfter(startDate.dateToLocalDate(Constants.DD_MM_YYYY))
+                        && date.dateToLocalDate(Constants.YYYY_MM_DD_T_HH_MM_SS_Z)
+                    .isBefore(endDate.dateToLocalDate(Constants.DD_MM_YYYY))
+            }
+            .sortedByDescending { it.date }
+    }
+
 }

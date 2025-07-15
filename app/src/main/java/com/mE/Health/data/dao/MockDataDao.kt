@@ -7,10 +7,12 @@ import androidx.room.Query
 import com.mE.Health.data.SqlQueries
 import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Appointment
+import com.mE.Health.data.model.AssistDetailEntity
 import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.ImagingStudyEntity
 import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
@@ -27,6 +29,9 @@ import com.mE.Health.data.model.Procedure
 interface MockDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllergyIntolerance(data: List<AllergyIntolerance>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertImagingStudy(data: List<ImagingStudyEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAppointment(data: List<Appointment>)
@@ -71,43 +76,49 @@ interface MockDataDao {
     suspend fun insertImaging(data: List<Imaging>)
 
     @Query("SELECT * FROM patient")
-    fun getAll(): List<Patient>
+    fun getPatientList(): List<Patient>
 
     @Query("SELECT * FROM practitioner")
-    fun getPractitionerList(): List<Practitioner>?
+    fun getPractitionerList(): List<Practitioner>
+
+    @Query("SELECT * FROM organization")
+    fun getOrganizationList(): List<Organization>
 
     @Query("SELECT * FROM practitioner WHERE id = :id")
     fun getPractitionerById(id: String): Practitioner?
 
     @Query("SELECT * FROM appointment")
-    fun getAppointmentList(): List<Appointment>?
+    fun getAppointmentList(): List<Appointment>
 
     @Query("SELECT * FROM condition")
-    fun getConditionList(): List<Condition>?
+    fun getConditionList(): List<Condition>
+
+    @Query("SELECT * FROM imaging_studies")
+    fun getImagingStudyList(): List<ImagingStudyEntity>
 
     @Query("SELECT * FROM diagnostic_report")
-    fun getLabs(): List<DiagnosticReport>?
+    fun getLabs(): List<DiagnosticReport>
 
     @Query("SELECT * FROM observation")
-    fun getVitals(): List<Observation>?
+    fun getVitals(): List<Observation>
 
     @Query("SELECT * FROM medication_request")
-    fun getMedicationList(): List<MedicationRequest>?
+    fun getMedicationList(): List<MedicationRequest>
 
     @Query("SELECT * FROM encounter")
-    fun getVisits(): List<Encounter>?
+    fun getVisits(): List<Encounter>
 
     @Query("SELECT * FROM procedure")
-    fun getProcedure(): List<Procedure>?
+    fun getProcedure(): List<Procedure>
 
     @Query("SELECT * FROM allergy_intolerance")
-    fun getAllergy(): List<AllergyIntolerance>?
+    fun getAllergy(): List<AllergyIntolerance>
 
     @Query("SELECT * FROM immunization")
-    fun getImmunization(): List<Immunization>?
+    fun getImmunization(): List<Immunization>
 
     @Query("SELECT * FROM claim")
-    fun getClaim(): List<Claim>?
+    fun getClaim(): List<Claim>
 
     @Query("SELECT * FROM Imaging")
     fun getImaging(): List<Imaging>?
@@ -120,18 +131,21 @@ interface MockDataDao {
         WHERE po.practitionerId = :practitionerId
     """
     )
-    suspend fun getOrganizationsByPractitionerId(practitionerId: String): List<PractitionerOrganizationWithDetails>?
+    suspend fun getOrganizationsByPractitionerId(practitionerId: String): List<PractitionerOrganizationWithDetails>
 
     @Query(SqlQueries.PRACTITIONER_WITH_ORGANIZATION)
     suspend fun getPractitionerWithOrganization(encounterId: String): PractitionerBasicDetails?
 
     @Query("SELECT * FROM appointment WHERE practitionerId = :id")
-    fun getAppointmentsByPractitionerId(id: String): List<Appointment>?
+    fun getAppointmentsByPractitionerId(id: String): List<Appointment>
 
     @Query("SELECT * FROM encounter WHERE practitionerId = :id")
-    fun getVisits(id: String): List<Encounter>?
+    fun getVisits(id: String): List<Encounter>
 
     @Query("SELECT * FROM patient WHERE id = :id")
     fun getPatientDetail(id: String): Patient?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAssistDetail(data: List<AssistDetailEntity>)
 
 }

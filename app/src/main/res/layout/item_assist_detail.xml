@@ -35,10 +35,10 @@
                     android:textSize="@dimen/sp_14" />
 
                 <TextView
+                    android:id="@+id/tvDateRange"
                     style="@style/textStyleRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2000-2020"
                     android:layout_marginLeft="@dimen/dp_3"
                     android:textColor="@color/color_6E6B78"
                     android:textSize="@dimen/sp_12" />
@@ -84,6 +84,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical">
