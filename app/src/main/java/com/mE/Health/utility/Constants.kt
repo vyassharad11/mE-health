@@ -1,5 +1,8 @@
 package com.mE.Health.utility
 
+import java.text.SimpleDateFormat
+import java.util.Locale
+
 object Constants {
     const val BASE_URL = "https://dev-admin.meinstein.ai/"
     var token = ""
@@ -30,6 +33,7 @@ object Constants {
     const val VITAL = "Vital"
     const val LAB = "Lab"
     const val VISIT = "Visit"
+    const val APPOINTMENT = "Appointment"
     const val CONNECTION_URL = "connection_url"
     const val FILE_DOCUMENT = "Document"
     const val FILE_VIDEO = "Video"
@@ -38,7 +42,7 @@ object Constants {
     const val FILE_LENGTH = "file_length"
     const val FILE_NAME = "file_name"
     const val FILE_TYPE = "file_type"
-
+    val DD_MM_YYYY_FORMATE = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
 
     const val CODE = "code="
     const val BASE_URL_AUTH = "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/"

@@ -4,12 +4,15 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import com.mE.Health.data.model.ContactInfo
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 fun String.extractContactInfo(): ContactInfo {
@@ -108,4 +111,24 @@ fun String.dateToLocalDate(format: String? = null): LocalDate {
 @Throws(JsonSyntaxException::class)
 fun <T> fromJson(json: String?, classOfT: Class<T>): T {
     return  Gson().fromJson(json, TypeToken.get(classOfT))
+}
+
+fun String.toFormateCalendar(format: String,sdf: SimpleDateFormat): Calendar {
+    return try {
+        val zonedDateTime = ZonedDateTime.parse(this)
+        val formatter = DateTimeFormatter.ofPattern(format, Locale.ENGLISH)
+        zonedDateTime.format(formatter).getCalendarFromString(sdf)
+    } catch (e: Exception) {
+        Calendar.getInstance()
+    }
+}
+
+fun String.getCalendarFromString(sdf: SimpleDateFormat): Calendar {
+    val calendar = Calendar.getInstance()
+    try {
+        calendar.time = sdf.parse(this)!!
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return calendar
 }

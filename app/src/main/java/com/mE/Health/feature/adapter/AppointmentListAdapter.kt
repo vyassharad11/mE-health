@@ -2,33 +2,43 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.data.model.Condition
-import com.mE.Health.databinding.ItemMyHealthConditionBinding
+import com.google.gson.Gson
+import com.mE.Health.R
+import com.mE.Health.data.model.Appointment
+import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Value
+import com.mE.Health.databinding.ItemMyHealthVitalBinding
+import com.mE.Health.databinding.ItemVitalListBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.toFormattedDate
 
-class MyHealthConditionAdapter(private val mContext: Context) :
-    RecyclerView.Adapter<MyHealthConditionAdapter.MyViewHolder>() {
+class AppointmentListAdapter(private val mContext: Context) :
+    RecyclerView.Adapter<AppointmentListAdapter.MyViewHolder>() {
 
-    var itemList: List<Condition>? = ArrayList()
+    var itemList: List<Appointment>? = ArrayList()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
+    var type = Constants.ALL
+
     interface OnClickCallback {
-        fun onClicked(detail: Condition, position: Int)
+        fun onClicked(detail: Appointment, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
 
-    inner class MyViewHolder(val binding: ItemMyHealthConditionBinding) :
+    inner class MyViewHolder(val binding: ItemVitalListBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val binding = ItemMyHealthConditionBinding.inflate(
+        val binding = ItemVitalListBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -37,25 +47,20 @@ class MyHealthConditionAdapter(private val mContext: Context) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val item: Condition? = itemList?.get(position)
-        item?.let {
-            holder.binding.tvConditionName.text = it.code_display
-            holder.binding.tvDate.text =  it.recordedDate?.toFormattedDate()
+        val item = itemList?.get(position)
+        item?.let { it ->
+            holder.binding.tvName.text = it.practitionerName
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,
                     position
                 )
             }
+            holder.binding.tvStatus.text = it.practitionerSpecialty
         }
     }
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
-    }
-
-    fun updateList(list: List<Condition>) {
-        this.itemList = list
-        notifyDataSetChanged()
     }
 }

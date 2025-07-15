@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.utility.Constants
@@ -52,15 +53,12 @@ class MyHealthLabAdapter(private val mContext: Context) :
         }
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
-
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<DiagnosticReport>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

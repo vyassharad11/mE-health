@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.mE.Health.R
 import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Procedure
 import com.mE.Health.databinding.ItemMyHealthAllergiesBinding
 import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.models.ProviderDetail
@@ -61,15 +62,12 @@ class MyHealthAllergiesAdapter(private val mContext: Context) :
 
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
-
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<AllergyIntolerance>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

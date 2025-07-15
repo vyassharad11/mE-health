@@ -15,6 +15,7 @@ import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.extractContactInfo
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 @AndroidEntryPoint
-class PractitionerDetailsFragment : BaseFragment() {
+class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: PractitionerDetailsFragmentBinding
 
@@ -85,6 +86,9 @@ class PractitionerDetailsFragment : BaseFragment() {
         val organizationAdapter = PractitionerDetailOrganizationAdapter(requireActivity())
         organizationAdapter.itemList = itemList
         binding.rvOrganization.adapter = organizationAdapter
+
+        binding.tvAppointmentViewAll.setOnClickListener(this)
+        binding.tvVisitViewAll.setOnClickListener(this)
     }
 
     private fun setAppointmentData(list: List<Appointment>?) {
@@ -101,5 +105,34 @@ class PractitionerDetailsFragment : BaseFragment() {
         val adapter = PractitionerVisitAdapter(requireActivity())
         adapter.itemList = list
         binding.rvVisits.adapter = adapter
+    }
+
+    override fun onClick(view: View?) {
+        when(view?.id) {
+            R.id.tvAppointmentViewAll -> {
+                val fragment = PractitionersListFragment()
+                val bundle = Bundle()
+                bundle.putString(Constants.PN_TYPE, Constants.APPOINTMENT)
+                fragment.arguments = bundle
+                addFragment(
+                    R.id.fragment_container,
+                    fragment,
+                    "PractitionersListFragment",
+                    "PractitionerDetailsFragment"
+                )
+            }
+            R.id.tvVisitViewAll -> {
+                val fragment = PractitionersListFragment()
+                val bundle = Bundle()
+                bundle.putString(Constants.PN_TYPE, Constants.VISIT)
+                fragment.arguments = bundle
+                addFragment(
+                    R.id.fragment_container,
+                    fragment,
+                    "PractitionersListFragment",
+                    "PractitionerDetailsFragment"
+                )
+            }
+        }
     }
 }

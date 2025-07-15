@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mE.Health.R
 import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.databinding.ItemMyHealthProcedureBinding
@@ -69,5 +70,10 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<Procedure>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

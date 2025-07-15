@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.databinding.PractitionersListFragmentBinding
+import com.mE.Health.feature.adapter.AppointmentListAdapter
 import com.mE.Health.feature.adapter.LabListAdapter
 import com.mE.Health.feature.adapter.MedicationListAdapter
 import com.mE.Health.feature.adapter.PractitionersListAdapter
@@ -30,8 +32,7 @@ class PractitionersListFragment : BaseFragment() {
     private lateinit var binding: PractitionersListFragmentBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = PractitionersListFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -95,6 +96,17 @@ class PractitionersListFragment : BaseFragment() {
             recyclerAdapter.apply {
                 onItemClickListener = object : VisitListAdapter.OnClickCallback {
                     override fun onClicked(item: Encounter, position: Int) {
+                    }
+                }
+            }
+        } else if (type == Constants.APPOINTMENT) {
+            binding.tvPageTitle.text = getString(R.string.list_of_appointments)
+            val recyclerAdapter = AppointmentListAdapter(requireActivity())
+            recyclerAdapter.itemList = mockViewModel.appointmentList.value
+            binding.rvAssist.adapter = recyclerAdapter
+            recyclerAdapter.apply {
+                onItemClickListener = object : AppointmentListAdapter.OnClickCallback {
+                    override fun onClicked(item: Appointment, position: Int) {
                     }
                 }
             }

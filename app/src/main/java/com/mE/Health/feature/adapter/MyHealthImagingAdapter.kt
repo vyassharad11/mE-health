@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Imaging
 import com.mE.Health.databinding.ItemMyHealthImagingBinding
 import com.mE.Health.utility.toFormattedDate
@@ -57,5 +58,10 @@ class MyHealthImagingAdapter(private val mContext: Context) :
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<Imaging>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

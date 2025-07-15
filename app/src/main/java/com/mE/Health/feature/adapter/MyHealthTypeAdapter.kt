@@ -14,7 +14,6 @@ import com.mE.Health.R
 import com.mE.Health.models.MyHealthTypeModel
 import com.mE.Health.utility.roundview.RoundLinearLayout
 
-
 class MyHealthTypeAdapter(private val mContext: Context,
      private val itemList: List<MyHealthTypeModel>) :
     RecyclerView.Adapter<MyHealthTypeAdapter.MyViewHolder>() {

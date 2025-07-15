@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.data.model.Claim
+import com.mE.Health.data.model.Immunization
 import com.mE.Health.databinding.ItemMyHealthBillingsBinding
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.toFormattedDate
@@ -57,5 +58,10 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<Claim>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

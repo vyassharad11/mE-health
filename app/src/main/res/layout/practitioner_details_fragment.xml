@@ -332,6 +332,7 @@
                     android:textSize="@dimen/sp_22" />
 
                 <com.mE.Health.utility.roundview.RoundTextView
+                    android:id="@+id/tvAppointmentViewAll"
                     style="@style/textStyleSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -378,6 +379,7 @@
                     android:textSize="@dimen/sp_22" />
 
                 <com.mE.Health.utility.roundview.RoundTextView
+                    android:id="@+id/tvVisitViewAll"
                     style="@style/textStyleSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

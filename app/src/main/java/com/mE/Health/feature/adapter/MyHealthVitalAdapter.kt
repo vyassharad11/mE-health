@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.mE.Health.R
+import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.ItemMyHealthVitalBinding
@@ -59,5 +60,10 @@ class MyHealthVitalAdapter(private val mContext: Context) :
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<Observation>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

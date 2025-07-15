@@ -19,6 +19,24 @@ import javax.inject.Singleton
 class AuthenticationModule {
 
     @Provides
+    fun providesOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor) =
+        OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+//            .addInterceptor(bearerInterceptor)
+//            .addNetworkInterceptor(requestHeaderInterceptor)
+            .addNetworkInterceptor(httpLoggingInterceptor)
+            .addInterceptor { chain ->
+                val newRequest = chain.request().newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                    .build()
+                chain.proceed(newRequest)
+            }
+            .build()
+
+    @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
@@ -29,8 +47,8 @@ class AuthenticationModule {
 
     @Singleton
     @Provides
-    fun providesLoginAPI(): APIService {
-        return Retrofit.Builder().baseUrl(Constants.BASE_URL)
+    fun providesLoginAPI(client: OkHttpClient): APIService {
+        return Retrofit.Builder().client(client).baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(APIService::class.java)
     }

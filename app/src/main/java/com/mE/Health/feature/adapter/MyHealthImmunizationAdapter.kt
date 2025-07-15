@@ -12,6 +12,7 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.databinding.ItemMyHealthImmunizationBinding
 import com.mE.Health.utility.toFormattedDate
@@ -71,15 +72,12 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
         }
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
-
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<Immunization>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

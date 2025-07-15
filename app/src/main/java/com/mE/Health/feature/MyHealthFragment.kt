@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mE.Health.R
@@ -55,15 +54,20 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.MyHealthUploadDocAdapter
 import com.mE.Health.feature.adapter.MyHealthVisitsAdapter
 import com.mE.Health.feature.adapter.MyHealthVitalAdapter
-import com.mE.Health.models.CountryState
 import com.mE.Health.models.MyHealthTypeModel
 import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.FilterItem
+import com.mE.Health.utility.getCalendarFromString
+import com.mE.Health.utility.toDisplayDateTime
+import com.mE.Health.utility.toFormateCalendar
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -89,9 +93,21 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private var visitList: List<Encounter>? = ArrayList()
     private var procedureList: List<Procedure>? = ArrayList()
     private var allergyList: List<AllergyIntolerance>? = ArrayList()
+    private var immunizationList: List<Immunization>? = ArrayList()
+    private var billingList: List<Claim>? = ArrayList()
+    private var imagingList: List<Imaging>? = ArrayList()
     private var practitionerAdapter: MyHealthPractitionerAdapter? = null
     private var appointmentAdapter: MyHealthAppointmentAdapter? = null
     private var conditionAdapter: MyHealthConditionAdapter? = null
+    private var labAdapter: MyHealthLabAdapter? = null
+    private var vitalAdapter: MyHealthVitalAdapter? = null
+    private var medicationAdapter: MyHealthMedicationAdapter? = null
+    private var visitsAdapter: MyHealthVisitsAdapter? = null
+    private var procedureAdapter: MyHealthProcedureAdapter? = null
+    private var allergiesAdapter: MyHealthAllergiesAdapter? = null
+    private var immunizationAdapter: MyHealthImmunizationAdapter? = null
+    private var billingsAdapter: MyHealthBillingsAdapter? = null
+    private var imagingAdapter: MyHealthImagingAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -108,6 +124,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         initItemList()
         initView()
         initHeader()
+        addTextChangedListener()
     }
 
     private fun initHeader() {
@@ -139,10 +156,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     myHealthTypeAdapter?.notifyDataSetChanged()
                     getFilterList()
                     initFilterUI()
-                    binding.rllUpload.visibility = View.GONE
-                    binding.rlDateCalendarLayout.visibility = View.GONE
-                    firstDateSelected = Calendar.getInstance().timeInMillis
-                    secondDateSelected = Calendar.getInstance().timeInMillis
                     when (position) {
                         0 -> {
                             setPractitionerData()
@@ -209,8 +222,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rllUpload.setOnClickListener(this)
         binding.cvStartData.setOnClickListener(this)
         binding.cvEndData.setOnClickListener(this)
-
-        addTextChangedListener()
     }
 
     private fun initItemList() {
@@ -240,6 +251,15 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
         allergyList = ArrayList()
         allergyList = mockViewModel.allergyList.value
+
+        immunizationList = ArrayList()
+        immunizationList = mockViewModel.immunizationList.value
+
+        billingList = ArrayList()
+        billingList = mockViewModel.claimList.value
+
+        imagingList = ArrayList()
+        imagingList = mockViewModel.imagingList.value
     }
 
     private fun addTextChangedListener() {
@@ -259,31 +279,74 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun onTextChangedListener(char: CharSequence?) {
         when (myHealthTypeAdapter?.selectedItem) {
             0 -> {
-                if (char?.trim().toString().isNotEmpty()) filterPractitionerList(char?.toString()!!)
-                else practitionerAdapter?.updateList(practitionerList!!)
+                filterPractitionerList(char?.toString()!!)
             }
-            1->{
+
+            1 -> {
                 if (char?.trim().toString().isNotEmpty()) filterAppointmentList(char?.toString()!!)
                 else appointmentAdapter?.updateList(appointmentList!!)
             }
-            2->{
+
+            2 -> {
                 if (char?.trim().toString().isNotEmpty()) filterConditionList(char?.toString()!!)
                 else conditionAdapter?.updateList(conditionList!!)
+            }
+
+            3 -> {
+                if (char?.trim().toString().isNotEmpty()) filterLabList(char?.toString()!!)
+                else labAdapter?.updateList(labList!!)
+            }
+
+            4 -> {
+                if (char?.trim().toString().isNotEmpty()) filterVitalList(char?.toString()!!)
+                else vitalAdapter?.updateList(vitalsList!!)
+            }
+
+            5 -> {
+                if (char?.trim().toString().isNotEmpty()) filterMedicationList(char?.toString()!!)
+                else medicationAdapter?.updateList(medicationList!!)
+            }
+
+            6 -> {
+                if (char?.trim().toString().isNotEmpty()) filterVisitList(char?.toString()!!)
+                else visitsAdapter?.updateList(visitList!!)
+            }
+
+            7 -> {
+                if (char?.trim().toString().isNotEmpty()) filterProcedureList(char?.toString()!!)
+                else procedureAdapter?.updateList(procedureList!!)
+            }
+
+            8 -> {
+                if (char?.trim().toString().isNotEmpty()) filterAllergyList(char?.toString()!!)
+                else allergiesAdapter?.updateList(allergyList!!)
+            }
+
+            9 -> {
+                if (char?.trim().toString().isNotEmpty()) filterImmunizationList(char?.toString()!!)
+                else immunizationAdapter?.updateList(immunizationList!!)
+            }
+
+            10 -> {
+                if (char?.trim().toString().isNotEmpty()) filterBillingList(char?.toString()!!)
+                else billingsAdapter?.updateList(billingList!!)
+            }
+
+            11 -> {
+                if (char?.trim().toString().isNotEmpty()) filterImagingList(char?.toString()!!)
+                else imagingAdapter?.updateList(imagingList!!)
             }
         }
     }
 
-    private fun filterPractitionerList(text: String) {
-        val filterDataList = ArrayList<Practitioner>()
-        for (item in practitionerList!!) {
-            if (item.name?.lowercase()
-                    ?.contains(text.lowercase()) == true || item.specialty?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterDataList.add(item)
-            }
+    private fun filterPractitionerList(char: String) {
+        (if (char.trim().isNotEmpty()) practitionerList?.filter { item ->
+            item.name?.lowercase()!!.contains(char.lowercase())
+        } else practitionerList!!)?.let {
+            practitionerAdapter?.updateList(
+                it
+            )
         }
-        practitionerAdapter?.updateList(filterDataList)
     }
 
     private fun filterAppointmentList(text: String) {
@@ -310,6 +373,117 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         conditionAdapter?.updateList(filterList)
     }
 
+    private fun filterLabList(text: String) {
+        val filterList = ArrayList<DiagnosticReport>()
+        for (item in labList!!) {
+            if (item.code_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        labAdapter?.updateList(filterList)
+    }
+
+    private fun filterVitalList(text: String) {
+        val filterList = ArrayList<Observation>()
+        for (item in vitalsList!!) {
+            if (item.code_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        vitalAdapter?.updateList(filterList)
+    }
+
+
+    private fun filterMedicationList(text: String) {
+        val filterList = ArrayList<MedicationRequest>()
+        for (item in medicationList!!) {
+            if (item.medicationCode_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        medicationAdapter?.updateList(filterList)
+    }
+
+    private fun filterVisitList(text: String) {
+        val filterList = ArrayList<Encounter>()
+        for (item in visitList!!) {
+            if (item.type_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        visitsAdapter?.updateList(filterList)
+    }
+
+
+    private fun filterProcedureList(text: String) {
+        val filterList = ArrayList<Procedure>()
+        for (item in procedureList!!) {
+            if (item.code_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        procedureAdapter?.updateList(filterList)
+    }
+
+    private fun filterAllergyList(text: String) {
+        val filterList = ArrayList<AllergyIntolerance>()
+        for (item in allergyList!!) {
+            if (item.code_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        allergiesAdapter?.updateList(filterList)
+    }
+
+    private fun filterImmunizationList(text: String) {
+        val filterList = ArrayList<Immunization>()
+        for (item in immunizationList!!) {
+            if (item.vaccineCode_display?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        immunizationAdapter?.updateList(filterList)
+    }
+
+    private fun filterBillingList(text: String) {
+        val filterList = ArrayList<Claim>()
+        for (item in billingList!!) {
+            if (item.name?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        billingsAdapter?.updateList(filterList)
+    }
+
+    private fun filterImagingList(text: String) {
+        val filterList = ArrayList<Imaging>()
+        for (item in imagingList!!) {
+            if (item.modality_display?.lowercase()
+                    ?.contains(text.lowercase()) == true || item.description?.lowercase()
+                    ?.contains(text.lowercase()) == true
+            ) {
+                filterList.add(item)
+            }
+        }
+        imagingAdapter?.updateList(filterList)
+    }
+
     private fun initFilterUI() {
         binding.rlDateLayout.visibility = View.GONE
         binding.rvFilter.visibility = View.GONE
@@ -330,9 +504,16 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 requireActivity(), R.color.text_color_primary
             )
         )
+        binding.tvFilterStartDate.text = getString(R.string.dd_mm_yyyy)
+        binding.tvFilterEndDate.text = getString(R.string.dd_mm_yyyy)
+        firstDateSelected = Calendar.getInstance().timeInMillis
+        secondDateSelected = Calendar.getInstance().timeInMillis
+        startDate = ""
+        endDate = ""
+        binding.rllUpload.visibility = View.GONE
+        binding.rlDateCalendarLayout.visibility = View.GONE
 
-        binding.tvFilterStartDate.text = "MM-DD-YYYY"
-        binding.tvFilterEndDate.text = "MM-DD-YYYY"
+        filterStartDateCalendar = Calendar.getInstance()
     }
 
     override fun onClick(v: View?) {
@@ -347,17 +528,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.ivSearchCross -> {
-                when (myHealthTypeAdapter?.selectedItem) {
-                    0 -> {
-                        practitionerAdapter?.updateList(practitionerList!!)
-                    }
-                    1->{
-                        appointmentAdapter?.updateList(appointmentList!!)
-                    }
-                    2->{
-                        conditionAdapter?.updateList(conditionList!!)
-                    }
-                }
                 binding.etSearch.setText("")
                 binding.rlSearchLayout.visibility = View.GONE
                 binding.ivSearch.setColorFilter(
@@ -368,12 +538,17 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.ivDateCancel -> {
+                setCalendarFilterVisibility()
+                binding.tvFilterStartDate.text = getString(R.string.dd_mm_yyyy)
+                binding.tvFilterEndDate.text = getString(R.string.dd_mm_yyyy)
                 binding.rlDateLayout.visibility = View.GONE
                 binding.ivCalendarFilter.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity(), R.color.text_color_primary
                     )
                 )
+                filterStartDateCalendar = Calendar.getInstance()
+                setFilterWithDateRange(false)
             }
 
             R.id.ivFilter -> {
@@ -392,21 +567,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
             R.id.ivCalendarFilter -> {
 //                openDateRangePicker()
-                if (binding.rlDateCalendarLayout.isVisible) {
-                    binding.ivCalendarFilter.setColorFilter(
-                        ContextCompat.getColor(
-                            requireActivity(), R.color.text_color_primary
-                        )
-                    )
-                    binding.rlDateCalendarLayout.visibility = View.GONE
-                } else {
-                    binding.ivCalendarFilter.setColorFilter(
-                        ContextCompat.getColor(
-                            requireActivity(), R.color.color_FF6605
-                        )
-                    )
-                    binding.rlDateCalendarLayout.visibility = View.VISIBLE
-                }
+                setCalendarFilterVisibility()
             }
 
             R.id.ivFileUpload, R.id.rllUpload -> {
@@ -453,6 +614,24 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             add(FilterItem("Cancelled", false))
         }
         return filterList
+    }
+
+    private fun setCalendarFilterVisibility() {
+        if (binding.rlDateCalendarLayout.isVisible) {
+            binding.ivCalendarFilter.setColorFilter(
+                ContextCompat.getColor(
+                    requireActivity(), R.color.text_color_primary
+                )
+            )
+            binding.rlDateCalendarLayout.visibility = View.GONE
+        } else {
+            binding.ivCalendarFilter.setColorFilter(
+                ContextCompat.getColor(
+                    requireActivity(), R.color.color_FF6605
+                )
+            )
+            binding.rlDateCalendarLayout.visibility = View.VISIBLE
+        }
     }
 
     private fun openDateRangePicker() {
@@ -692,10 +871,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setLabData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_labs)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthLabAdapter(requireActivity())
-        providerAdapter.itemList = labList
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        labAdapter = MyHealthLabAdapter(requireActivity())
+        labAdapter?.itemList = labList
+        binding.rvList.adapter = labAdapter
+        labAdapter?.apply {
             onItemClickListener = object : MyHealthLabAdapter.OnClickCallback {
                 override fun onClicked(detail: DiagnosticReport, position: Int) {
                     DetailSingleton.lab = detail
@@ -713,10 +892,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setVitalData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_vitals)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val adapter = MyHealthVitalAdapter(requireActivity())
-        adapter.itemList = vitalsList
-        binding.rvList.adapter = adapter
-        adapter.apply {
+        vitalAdapter = MyHealthVitalAdapter(requireActivity())
+        vitalAdapter?.itemList = vitalsList
+        binding.rvList.adapter = vitalAdapter
+        vitalAdapter?.apply {
             onItemClickListener = object : MyHealthVitalAdapter.OnClickCallback {
                 override fun onClicked(detail: Observation, position: Int) {
                     DetailSingleton.vital = detail
@@ -734,10 +913,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setMedicationData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_medications)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthMedicationAdapter(requireActivity())
-        providerAdapter.itemList = medicationList
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        medicationAdapter = MyHealthMedicationAdapter(requireActivity())
+        medicationAdapter?.itemList = medicationList
+        binding.rvList.adapter = medicationAdapter
+        medicationAdapter?.apply {
             onItemClickListener = object : MyHealthMedicationAdapter.OnClickCallback {
                 override fun onClicked(detail: MedicationRequest, position: Int) {
                     DetailSingleton.medication = detail
@@ -756,10 +935,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setVisitsData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_visits)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthVisitsAdapter(requireActivity())
-        providerAdapter.itemList = visitList
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        visitsAdapter = MyHealthVisitsAdapter(requireActivity())
+        visitsAdapter?.itemList = visitList
+        binding.rvList.adapter = visitsAdapter
+        visitsAdapter?.apply {
             onItemClickListener = object : MyHealthVisitsAdapter.OnClickCallback {
                 override fun onClicked(item: Encounter?, position: Int) {
                     DetailSingleton.visit = item
@@ -777,10 +956,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setProceduresData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_procedures)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthProcedureAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.procedureList.value
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        procedureAdapter = MyHealthProcedureAdapter(requireActivity())
+        procedureAdapter?.itemList = procedureList
+        binding.rvList.adapter = procedureAdapter
+        procedureAdapter?.apply {
             onItemClickListener = object : MyHealthProcedureAdapter.OnClickCallback {
                 override fun onClicked(item: Procedure?, position: Int) {
                     DetailSingleton.procedure = item
@@ -798,10 +977,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setAllergiesData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_allergies)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthAllergiesAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.allergyList.value
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        allergiesAdapter = MyHealthAllergiesAdapter(requireActivity())
+        allergiesAdapter?.itemList = allergyList
+        binding.rvList.adapter = allergiesAdapter
+        allergiesAdapter?.apply {
             onItemClickListener = object : MyHealthAllergiesAdapter.OnClickCallback {
                 override fun onClicked(item: AllergyIntolerance?, position: Int) {
                     DetailSingleton.allergy = item
@@ -819,10 +998,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setImmunizationData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_immunizations)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthImmunizationAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.immunizationList.value
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        immunizationAdapter = MyHealthImmunizationAdapter(requireActivity())
+        immunizationAdapter?.itemList = immunizationList
+        binding.rvList.adapter = immunizationAdapter
+        immunizationAdapter?.apply {
             onItemClickListener = object : MyHealthImmunizationAdapter.OnClickCallback {
                 override fun onClicked(item: Immunization?, position: Int, clickState: ClickState) {
                     when (clickState) {
@@ -846,10 +1025,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setBillingData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_billings)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val providerAdapter = MyHealthBillingsAdapter(requireActivity())
-        providerAdapter.itemList = mockViewModel.claimList.value
-        binding.rvList.adapter = providerAdapter
-        providerAdapter.apply {
+        billingsAdapter = MyHealthBillingsAdapter(requireActivity())
+        billingsAdapter?.itemList = billingList
+        binding.rvList.adapter = billingsAdapter
+        billingsAdapter?.apply {
             onItemClickListener = object : MyHealthBillingsAdapter.OnClickCallback {
                 override fun onClicked(item: Claim?, position: Int) {
                     DetailSingleton.claim = item
@@ -887,10 +1066,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setImagingData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_imagings)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val imagingAdapter = MyHealthImagingAdapter(requireActivity())
-        imagingAdapter.itemList = mockViewModel.imagingList.value
+        imagingAdapter = MyHealthImagingAdapter(requireActivity())
+        imagingAdapter?.itemList = imagingList
         binding.rvList.adapter = imagingAdapter
-        imagingAdapter.apply {
+        imagingAdapter?.apply {
             onItemClickListener = object : MyHealthImagingAdapter.OnClickCallback {
                 override fun onClicked(item: Imaging?, position: Int) {
                     DetailSingleton.imaging = item
@@ -935,12 +1114,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
 
                     val cursor = requireActivity()!!.contentResolver.query(
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            arrayOf(MediaStore.Images.Media._ID),
-                            MediaStore.Images.Media.DATA + "=? ",
-                            arrayOf(picturePath),
-                            null
-                        )
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        arrayOf(MediaStore.Images.Media._ID),
+                        MediaStore.Images.Media.DATA + "=? ",
+                        arrayOf(picturePath),
+                        null
+                    )
                     if (cursor != null && cursor.moveToFirst()) {
                         val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
                         uri = Uri.parse("content://media/external/images/media/$id")
@@ -998,12 +1177,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         javaClass.name, "Gallery videoPath : $picturePath: ${file.length()}"
                     )
                     val cursor = requireActivity()!!.contentResolver.query(
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            arrayOf(MediaStore.Images.Media._ID),
-                            MediaStore.Images.Media.DATA + "=? ",
-                            arrayOf(picturePath),
-                            null
-                        )
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        arrayOf(MediaStore.Images.Media._ID),
+                        MediaStore.Images.Media.DATA + "=? ",
+                        arrayOf(picturePath),
+                        null
+                    )
                     if (cursor != null && cursor.moveToFirst()) {
                         val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
                         uri = Uri.parse("content://media/external/images/media/$id")
@@ -1092,7 +1271,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private var startDate = ""
     private var endDate = ""
-    private val startDateCalendar = Calendar.getInstance()
+    private var filterStartDateCalendar = Calendar.getInstance()
+    private var filterEndDateCalendar = Calendar.getInstance()
 
     private fun showStartDateCalendar() {
         val datePickerDialog = DatePickerDialog(
@@ -1101,33 +1281,131 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             { view, year, monthOfYear, dayOfMonth ->
                 startDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
                 binding.tvFilterStartDate.text = startDate + "  "
-                startDateCalendar.set(Calendar.YEAR, year)
-                startDateCalendar.set(Calendar.MONTH, monthOfYear)
-                startDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                filterStartDateCalendar.set(Calendar.YEAR, year)
+                filterStartDateCalendar.set(Calendar.MONTH, monthOfYear)
+                filterStartDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                if (filterStartDateCalendar > filterEndDateCalendar) {
+                    endDate = ""
+                    filterEndDateCalendar = Calendar.getInstance()
+                    binding.tvFilterEndDate.text = getString(R.string.dd_mm_yyyy)
+                }
+                setDateRange()
             },
-            startDateCalendar.get(Calendar.YEAR),
-            startDateCalendar.get(Calendar.MONTH),
-            startDateCalendar.get(Calendar.DAY_OF_MONTH)
+            filterStartDateCalendar.get(Calendar.YEAR),
+            filterStartDateCalendar.get(Calendar.MONTH),
+            filterStartDateCalendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
     }
 
     private fun showEndDateCalendar() {
-        val calendar = Calendar.getInstance()
-        var mYear = calendar.get(Calendar.YEAR)
-        var mMonth = calendar.get(Calendar.MONTH)
-        var mDay = calendar.get(Calendar.DAY_OF_MONTH)
         val datePickerDialog = DatePickerDialog(
             requireActivity(), R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
                 endDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
                 binding.tvFilterEndDate.text = endDate + "  "
-                mYear = year
-                mMonth = monthOfYear
-                mDay = dayOfMonth
-            }, mYear, mMonth, mDay
+                filterEndDateCalendar.set(Calendar.YEAR, year)
+                filterEndDateCalendar.set(Calendar.MONTH, monthOfYear)
+                filterEndDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                setDateRange()
+            },
+            filterEndDateCalendar.get(Calendar.YEAR),
+            filterEndDateCalendar.get(Calendar.MONTH),
+            filterEndDateCalendar.get(Calendar.DAY_OF_MONTH)
         )
-        datePickerDialog.datePicker.minDate = startDateCalendar.timeInMillis;
+        datePickerDialog.datePicker.minDate = filterStartDateCalendar.timeInMillis
         datePickerDialog.show()
+    }
+
+    private fun setDateRange() {
+        if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate)) {
+            binding.tvDateRange.text = "Date Range : $startDate - $endDate"
+            binding.rlDateLayout.visibility = View.VISIBLE
+            setFilterWithDateRange(true)
+        }
+    }
+
+    private fun setFilterWithDateRange(isFilterList: Boolean) {
+        val startDateCalendar =
+            startDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
+        val endDateCalendar =
+            endDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
+
+        when (myHealthTypeAdapter?.selectedItem) {
+            0 -> {
+                setPractitionerDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            1 -> {
+                setAppointmentDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            2 -> {
+                setConditionDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+        }
+    }
+
+    private fun setPractitionerDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        practitionerAdapter?.updateList(
+            if (isFilterList) practitionerList!!.filter { item ->
+                val dateCalendar = item.createdAt?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else practitionerList!!
+        )
+    }
+
+    private fun setAppointmentDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        appointmentAdapter?.updateList(
+            if (isFilterList) appointmentList!!.filter { item ->
+                val dateCalendar = item.startTime?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else appointmentList!!
+        )
+    }
+
+    private fun setConditionDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        conditionAdapter?.updateList(
+            if (isFilterList) conditionList!!.filter { item ->
+                val dateCalendar = item.recordedDate?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else conditionList!!
+        )
+    }
+
+    private fun isDateRangeAvailable(
+        dateCalendar: Calendar,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ): Boolean {
+        return (dateCalendar.timeInMillis >= startCalendar.timeInMillis &&
+                dateCalendar.timeInMillis <= endCalendar.timeInMillis)
     }
 
     private fun getFileLength(file: File): String {

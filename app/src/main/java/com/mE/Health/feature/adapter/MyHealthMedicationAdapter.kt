@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.databinding.ItemMyHealthMedicationBinding
 import com.mE.Health.utility.Constants
@@ -56,5 +57,10 @@ class MyHealthMedicationAdapter(private val mContext: Context) :
 
     override fun getItemCount(): Int {
         return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<MedicationRequest>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

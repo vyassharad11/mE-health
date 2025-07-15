@@ -199,5 +199,6 @@
     <string name="record_vaults">Record Vaults</string>
     <string name="cancelled">Cancelled</string>
     <string name="not_available">Not available\n</string>
+    <string name="dd_mm_yyyy">DD-MM-YYYY</string>
 
 </resources>
