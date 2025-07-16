@@ -9,6 +9,7 @@ import com.mE.Health.R
 import com.mE.Health.data.model.Appointment
 import com.mE.Health.databinding.ItemMyHealthAppointmentBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 
 class MyHealthAppointmentAdapter(private val mContext: Context) :
@@ -64,18 +65,23 @@ class MyHealthAppointmentAdapter(private val mContext: Context) :
             }
 
             holder.binding.rtvStatus.apply {
-                if (position == 1 || position == 2) {
+                if (it.status?.lowercase() == mContext.getString(R.string.booked).lowercase()) {
                     text = mContext.getString(R.string.booked)
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_0063F7))
                     delegate.backgroundColor =
                         ContextCompat.getColor(mContext, R.color.color_1A0063F7)
-                } else if (position == 3) {
+                } else if (it.status?.lowercase() == mContext.getString(R.string.completed).lowercase()) {
+                    text = mContext.getString(R.string.completed)
+                    setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
+                    delegate.backgroundColor =
+                        ContextCompat.getColor(mContext, R.color.color_A06C270)
+                } else if (it.status?.lowercase() == mContext.getString(R.string.cancelled).lowercase()) {
                     text = mContext.getString(R.string.cancelled)
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_F02C2C))
                     delegate.backgroundColor =
                         ContextCompat.getColor(mContext, R.color.color_1AF02C2C)
                 } else {
-                    text = mContext.getString(R.string.completed)
+                    text = it.status?.capitalFirstChar()
                     setTextColor(ContextCompat.getColor(mContext, R.color.color_06C270))
                     delegate.backgroundColor =
                         ContextCompat.getColor(mContext, R.color.color_A06C270)

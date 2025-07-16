@@ -12,6 +12,7 @@ import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.ItemMyHealthVitalBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.toFormattedDate
 
 class MyHealthVitalAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthVitalAdapter.MyViewHolder>() {
@@ -47,6 +48,7 @@ class MyHealthVitalAdapter(private val mContext: Context) :
         val item = itemList?.get(position)
         item?.let { i ->
             holder.binding.tvName.text = i.code_display
+            holder.binding.tvDate.text = i.effectiveDate?.toFormattedDate()
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,

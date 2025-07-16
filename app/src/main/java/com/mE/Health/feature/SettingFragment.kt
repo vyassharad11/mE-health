@@ -4,17 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
-import com.mE.Health.databinding.AdviceListFragmentBinding
 import com.mE.Health.databinding.SettingFragmentBinding
-import com.mE.Health.feature.adapter.AdviceAdapter
-import com.mE.Health.utility.AdviceFilterItem
-import com.mE.Health.utility.BottomSheetAdviceFilter
-import com.mE.Health.utility.BottomSheetFilter
-import com.mE.Health.utility.FilterItem
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -22,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 @AndroidEntryPoint
-class SettingFragment : BaseFragment() {
+class SettingFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: SettingFragmentBinding
 
@@ -63,6 +55,8 @@ class SettingFragment : BaseFragment() {
                 binding.ivVideoToggle.setImageResource(R.drawable.toggle_on)
             }
         }
+
+        binding.cvHealthCare.setOnClickListener(this)
     }
 
 
@@ -73,6 +67,13 @@ class SettingFragment : BaseFragment() {
         }
         binding.toolbar.tvTitle.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+    }
+
+    override fun onClick(view: View?) {
+        when(view?.id){
+            R.id.cvHealthCare->{
+            }
         }
     }
 }

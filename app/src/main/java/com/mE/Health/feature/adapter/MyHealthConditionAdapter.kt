@@ -3,10 +3,14 @@ package com.mE.Health.feature.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.mE.Health.R
 import com.mE.Health.data.model.Condition
 import com.mE.Health.databinding.ItemMyHealthConditionBinding
+import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toFormattedDate
+import java.util.Locale
 
 class MyHealthConditionAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthConditionAdapter.MyViewHolder>() {
@@ -46,6 +50,51 @@ class MyHealthConditionAdapter(private val mContext: Context) :
                     item,
                     position
                 )
+            }
+            holder.binding.tvStatus.apply {
+                text = it.clinicalStatus?.capitalFirstChar()
+                when (it.clinicalStatus?.lowercase(Locale.ROOT)) {
+                    "active" -> {
+                        setTextColor(
+                            ContextCompat.getColor(
+                                mContext,
+                                R.color.color_06C270
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(mContext, R.color.color_A06C270)
+                    }
+                    "resolved" -> {
+                        setTextColor(
+                            ContextCompat.getColor(
+                                mContext,
+                                R.color.color_8A38F5
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(mContext, R.color.color_1A8A38F5)
+                    }
+                    "inactive" ->  {
+                        setTextColor(
+                            ContextCompat.getColor(
+                                mContext,
+                                R.color.color_F02C2C
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(mContext, R.color.color_1AF02C2C)
+                    }
+                    else -> {
+                        setTextColor(
+                            ContextCompat.getColor(
+                                mContext,
+                                R.color.color_06C270
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(mContext, R.color.color_A06C270)
+                    }
+                }
             }
         }
     }

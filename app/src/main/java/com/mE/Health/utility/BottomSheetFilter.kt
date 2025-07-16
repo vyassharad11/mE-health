@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mE.Health.R
+import com.mE.Health.data.model.Practitioner
 import com.mE.Health.feature.adapter.BottomSheetFilterAdapter
 import com.mE.Health.utility.roundview.RoundLinearLayout
 import com.mE.Health.utility.roundview.RoundTextView
@@ -16,9 +17,15 @@ import com.mE.Health.utility.roundview.RoundTextView
 
 data class FilterItem(val name: String, var isChecked: Boolean = false)
 
-class BottomSheetFilter(val filterList: ArrayList<FilterItem>) : BottomSheetDialogFragment() {
+class BottomSheetFilter(val list: ArrayList<FilterItem>) : BottomSheetDialogFragment() {
 
     private var onCompleteListener: OnCompleteListener? = null
+    private var itemList = ArrayList<FilterItem>()
+
+    init {
+        itemList = ArrayList<FilterItem>()
+        itemList.addAll(list)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +41,10 @@ class BottomSheetFilter(val filterList: ArrayList<FilterItem>) : BottomSheetDial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme) /* hack to make background transparent */
+        setStyle(
+            BottomSheetDialogFragment.STYLE_NORMAL,
+            R.style.CustomBottomSheetDialogTheme
+        ) /* hack to make background transparent */
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,18 +52,18 @@ class BottomSheetFilter(val filterList: ArrayList<FilterItem>) : BottomSheetDial
         val rvList = view.findViewById<RecyclerView>(R.id.rvBottomSheetFilter)
         val tvApply = view.findViewById<RoundTextView>(R.id.tvApply)
         val rllCancel = view.findViewById<RoundLinearLayout>(R.id.rllCancel)
-        val listAdapter = BottomSheetFilterAdapter(requireActivity(), filterList)
+        val listAdapter = BottomSheetFilterAdapter(requireActivity(), itemList)
         rvList.layoutManager = LinearLayoutManager(requireActivity())
         rvList.adapter = listAdapter
         listAdapter.apply {
             onItemClickListener = object : BottomSheetFilterAdapter.OnClickCallback {
                 override fun onClicked(view: View?, position: Int) {
-                    filterList[position].isChecked = !filterList[position].isChecked
+                    itemList[position].isChecked = !itemList[position].isChecked
                     notifyItemChanged(position)
                 }
             }
             tvApply.setOnClickListener {
-                onCompleteListener?.onComplete(filterList)
+                onCompleteListener?.onComplete(itemList)
                 dismiss()
             }
             rllCancel.setOnClickListener {

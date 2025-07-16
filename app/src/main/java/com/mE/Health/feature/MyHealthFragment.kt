@@ -58,16 +58,13 @@ import com.mE.Health.models.MyHealthTypeModel
 import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.FilterItem
+import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.getCalendarFromString
-import com.mE.Health.utility.toDisplayDateTime
 import com.mE.Health.utility.toFormateCalendar
-import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -125,6 +122,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         initView()
         initHeader()
         addTextChangedListener()
+        getStatusFilterList()
     }
 
     private fun initHeader() {
@@ -143,7 +141,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private fun initView() {
         setPractitionerData()
-        getFilterList()
         binding.rvType.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         myHealthTypeAdapter = MyHealthTypeAdapter(requireActivity(), getAllMyHealthType())
@@ -154,7 +151,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     if (myHealthTypeAdapter?.selectedItem == position) return
                     myHealthTypeAdapter?.selectedItem = position
                     myHealthTypeAdapter?.notifyDataSetChanged()
-                    getFilterList()
                     initFilterUI()
                     when (position) {
                         0 -> {
@@ -514,6 +510,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rlDateCalendarLayout.visibility = View.GONE
 
         filterStartDateCalendar = Calendar.getInstance()
+
+        getStatusFilterList()
+
+//        setFilterWithDateRange(false)
     }
 
     override fun onClick(v: View?) {
@@ -553,10 +553,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
             R.id.ivFilter -> {
                 val bottomSheet = BottomSheetFilter(filterList)
+//                bottomSheet.itemList = filterList
                 bottomSheet.setOnCompleteListener(object : BottomSheetFilter.OnCompleteListener {
-                    override fun onComplete(filterItem: ArrayList<FilterItem>) {
-                        var filterItemList: ArrayList<String> = ArrayList()
-                        for (item in filterItem) if (item.isChecked) filterItemList.add(item.name)
+                    override fun onComplete(itemList: ArrayList<FilterItem>) {
+                        val filterItemList: ArrayList<String> = ArrayList()
+                        filterList = itemList
+                        for (item in itemList) if (item.isChecked) filterItemList.add(item.name)
                         showFilterData(filterItemList)
                     }
                 })
@@ -766,7 +768,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvFilter.visibility = View.VISIBLE
         binding.ivFilter.setColorFilter(
             ContextCompat.getColor(
-                requireActivity(), R.color.color_FF6605
+                requireActivity(),if (itemList.size>0)  R.color.color_FF6605 else R.color.text_color_primary
             )
         )
         binding.rvFilter.layoutManager =
@@ -778,6 +780,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 override fun onClicked(view: View?, position: Int) {
                     filterList[position].isChecked = false
                     itemList.removeAt(position)
+                    applyStatusFilter(itemList)
                     notifyDataSetChanged()
                     if (itemList.size == 0) {
                         binding.ivFilter.setColorFilter(
@@ -787,6 +790,36 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         )
                     }
                 }
+            }
+        }
+
+        applyStatusFilter(itemList)
+    }
+
+    private fun applyStatusFilter(itemList: ArrayList<String>) {
+        when (myHealthTypeAdapter?.selectedItem) {
+            1 -> {
+                val list = ArrayList<Appointment>()
+                for (filterText in itemList) {
+                    list.addAll(appointmentList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                appointmentAdapter?.updateList(if (list.size > 0) list else appointmentList!!)
+            }
+
+            2 -> {
+                val list = ArrayList<Condition>()
+                for (filterText in itemList) {
+                    list.addAll(conditionList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
+                }
+                conditionAdapter?.updateList(if (list.size > 0) list else conditionList!!)
+            }
+
+            3 -> {
+                val list = ArrayList<DiagnosticReport>()
+                for (filterText in itemList) {
+                    list.addAll(labList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                labAdapter?.updateList(if (list.size > 0) list else labList!!)
             }
         }
     }
@@ -1348,6 +1381,60 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     isFilterList, startDateCalendar, endDateCalendar
                 )
             }
+
+            3 -> {
+                setLabDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            4 -> {
+                setVitalDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            5 -> {
+                setMedicationDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            6 -> {
+                setVisitDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            7 -> {
+                setProcedureDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            8 -> {
+                setAllergyDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            9 -> {
+                setImmunizationDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            10 -> {
+                setBillingDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
+
+            11 -> {
+                setImagingDateRangeFilter(
+                    isFilterList, startDateCalendar, endDateCalendar
+                )
+            }
         }
     }
 
@@ -1399,6 +1486,150 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         )
     }
 
+    private fun setLabDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        labAdapter?.updateList(
+            if (isFilterList) labList!!.filter { item ->
+                val dateCalendar = item.issued?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else labList!!
+        )
+    }
+
+    private fun setVitalDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        vitalAdapter?.updateList(
+            if (isFilterList) vitalsList!!.filter { item ->
+                val dateCalendar = item.effectiveDate?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else vitalsList!!
+        )
+    }
+
+    private fun setMedicationDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        medicationAdapter?.updateList(
+            if (isFilterList) medicationList!!.filter { item ->
+                val dateCalendar = item.authoredOn?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else medicationList!!
+        )
+    }
+
+    private fun setVisitDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        visitsAdapter?.updateList(
+            if (isFilterList) visitList!!.filter { item ->
+                val dateCalendar = item.createdAt?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else visitList!!
+        )
+    }
+
+    private fun setProcedureDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        procedureAdapter?.updateList(
+            if (isFilterList) procedureList!!.filter { item ->
+                val dateCalendar = item.performedDate?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else procedureList!!
+        )
+    }
+
+    private fun setAllergyDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        allergiesAdapter?.updateList(
+            if (isFilterList) allergyList!!.filter { item ->
+                val dateCalendar = item.recordedDate?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else allergyList!!
+        )
+    }
+
+    private fun setImmunizationDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        immunizationAdapter?.updateList(
+            if (isFilterList) immunizationList!!.filter { item ->
+                val dateCalendar = item.occurrenceDate?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else immunizationList!!
+        )
+    }
+
+    private fun setBillingDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        billingsAdapter?.updateList(
+            if (isFilterList) billingList!!.filter { item ->
+                val dateCalendar = item.createdDate?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else billingList!!
+        )
+    }
+
+    private fun setImagingDateRangeFilter(
+        isFilterList: Boolean,
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ) {
+        imagingAdapter?.updateList(
+            if (isFilterList) imagingList!!.filter { item ->
+                val dateCalendar = item.started?.toFormateCalendar(
+                    "dd-MM-yyyy",
+                    Constants.DD_MM_YYYY_FORMATE
+                )
+                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+            } else imagingList!!
+        )
+    }
+
     private fun isDateRangeAvailable(
         dateCalendar: Calendar,
         startCalendar: Calendar,
@@ -1406,6 +1637,37 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     ): Boolean {
         return (dateCalendar.timeInMillis >= startCalendar.timeInMillis &&
                 dateCalendar.timeInMillis <= endCalendar.timeInMillis)
+    }
+
+    private fun getStatusFilterList() {
+        filterList = ArrayList()
+        when (myHealthTypeAdapter?.selectedItem) {
+            1 -> {
+                for (item in appointmentList!!) {
+                    if (filterList.none { it.name.lowercase() == item.status?.lowercase() }) {
+                        filterList.add(FilterItem(item.status?.capitalFirstChar()!!, false))
+                    }
+                }
+            }
+
+            2 -> {
+                for (item in conditionList!!) {
+                    if (filterList.none { it.name.lowercase() == item.clinicalStatus?.lowercase() }) {
+                        filterList.add(FilterItem(item.clinicalStatus?.capitalFirstChar()!!, false))
+                    }
+                }
+            }
+           3 -> {
+                for (item in labList!!) {
+                    if (filterList.none { it.name.lowercase() == item.status?.lowercase() }) {
+                        filterList.add(FilterItem(item.status?.capitalFirstChar()!!, false))
+                    }
+                }
+            }
+            else->{
+                filterList = getFilterList()
+            }
+        }
     }
 
     private fun getFileLength(file: File): String {

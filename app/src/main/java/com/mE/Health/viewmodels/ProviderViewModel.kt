@@ -56,7 +56,7 @@ class ProviderViewModel @Inject constructor(
             val response = if (type == Constants.STATE) repository.providerStateList(
                 search,
                 state
-            ) else repository.providerCountryList(search, state)
+            ) else repository.providerCountryList("", "")
             response.let { response ->
                 if (response.isSuccessful) {
                     if (response.body() != null) {

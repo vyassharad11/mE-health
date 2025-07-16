@@ -47,11 +47,13 @@ class AppointmentDetailsFragment : BaseFragment() {
         binding.toolbar.ivSetting.setOnClickListener {
 
         }
-
-        setDetail()
     }
 
     private fun setDetail() {
+
+    }
+
+    private fun initView() {
         DetailSingleton.appointment?.let { detail ->
             val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)
 
@@ -65,39 +67,100 @@ class AppointmentDetailsFragment : BaseFragment() {
                 tvTime.text = datTimePair.second
                 tvReason.text = reasonCodeObject.display
                 tvVisitDate.text = detail.createdAt?.toFormattedDate()
-            }
-        }
-    }
 
-    private fun initView() {
-        val bundle = arguments
-        var type = 0
-        if (bundle != null) {
-            type = bundle.getInt("position", 0)
-        }
-        if (type == 1 || type == 2) {
-            binding.rtvStatus.apply {
-                text = "Booked"
-                setTextColor(ContextCompat.getColor(requireActivity(), R.color.color_0063F7))
-                delegate.backgroundColor =
-                    ContextCompat.getColor(requireActivity(), R.color.color_1A0063F7)
-            }
-
-            binding.rtvVisitStatus.apply {
-                text = "Booked"
-                setTextColor(ContextCompat.getColor(requireActivity(), R.color.color_0063F7))
-                delegate.backgroundColor =
-                    ContextCompat.getColor(requireActivity(), R.color.color_1A0063F7)
-            }
-
-            binding.tvEditAppointment.visibility = View.VISIBLE
-            binding.tvCancelAppointment.visibility = View.VISIBLE
-        } else if (type == 3) {
-            binding.rtvStatus.apply {
-                text = "Cancelled"
-                setTextColor(ContextCompat.getColor(requireActivity(), R.color.color_F02C2C))
-                delegate.backgroundColor =
-                    ContextCompat.getColor(requireActivity(), R.color.color_1AF02C2C)
+                if (detail.status?.lowercase() == getString(R.string.booked).lowercase()) {
+                    binding.rtvStatus.apply {
+                        text = getString(R.string.booked)
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_0063F7
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_1A0063F7)
+                    }
+                    binding.rtvVisitStatus.apply {
+                        text = getString(R.string.booked)
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_0063F7
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_1A0063F7)
+                    }
+                } else if (detail.status?.lowercase() == getString(R.string.completed).lowercase()) {
+                    binding.rtvStatus.apply {
+                        text = getString(R.string.completed)
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_06C270
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
+                    }
+                    binding.rtvVisitStatus.apply {
+                        text = getString(R.string.completed)
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_06C270
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
+                    }
+                } else if (detail.status?.lowercase() == getString(R.string.cancelled).lowercase()) {
+                    binding.rtvStatus.apply {
+                        text = getString(R.string.cancelled)
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_F02C2C
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_1AF02C2C)
+                    }
+                    binding.rtvVisitStatus.apply {
+                        text = getString(R.string.cancelled)
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_F02C2C
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_1AF02C2C)
+                    }
+                } else {
+                    binding.rtvStatus.apply {
+                        text = detail.status
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_06C270
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
+                    }
+                    binding.rtvVisitStatus.apply {
+                        text = detail.status
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.color_06C270
+                            )
+                        )
+                        delegate.backgroundColor =
+                            ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
+                    }
+                }
             }
         }
     }

@@ -44,6 +44,8 @@
     <color name="divider_color">#1A333333</color>
     <color name="color_9F9F9F">#9F9F9F</color>
     <color name="color_808080">#808080</color>
+    <color name="color_8A38F5">#8A38F5</color>
+    <color name="color_1A8A38F5">#1A8A38F5</color>
 
 
 </resources>
