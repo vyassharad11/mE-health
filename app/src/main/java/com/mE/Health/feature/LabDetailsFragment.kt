@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.LabDetailFragmentBinding
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -56,44 +55,15 @@ class LabDetailsFragment : BaseFragment() {
             }
             binding.apply {
                 tvLabId.text = detail.id.uppercase()
-                tvDate.text = detail.issued?.toFormattedDate()
-                tvStartDate.text = detail.effectiveDate?.toFormattedDate()
+                tvDate.text = detail.issued?.toDisplayDate()
+                tvStartDate.text = detail.effectiveDate?.toDisplayDate()
                 tvName.text = detail.code_display
 
                 tvStatus.apply {
                     text = detail.status?.capitalFirstChar()
-                    when (detail.status?.lowercase(Locale.ROOT)) {
-                        "active","final" -> {
-                            setTextColor(
-                                ContextCompat.getColor(
-                                    requireActivity(),
-                                    R.color.color_06C270
-                                )
-                            )
-                            delegate.backgroundColor =
-                                ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
-                        }
-                        "preliminary" -> {
-                            setTextColor(
-                                ContextCompat.getColor(
-                                    requireActivity(),
-                                    R.color.color_F09C00
-                                )
-                            )
-                            delegate.backgroundColor =
-                                ContextCompat.getColor(requireActivity(), R.color.color_AF09C00)
-                        }
-                        else -> {
-                            setTextColor(
-                                ContextCompat.getColor(
-                                    requireActivity(),
-                                    R.color.color_06C270
-                                )
-                            )
-                            delegate.backgroundColor =
-                                ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
-                        }
-                    }
+                    val statusDetail = Utilities.getLabUIStatus(requireActivity(), detail.status ?: "")
+                    setTextColor(statusDetail.first)
+                    delegate.backgroundColor = statusDetail.second
                 }
             }
         }

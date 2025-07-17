@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -12,10 +11,11 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.databinding.ItemMyHealthImmunizationBinding
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 
 
 enum class ClickState {
@@ -53,7 +53,7 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = itemList?.get(position)
         item?.let {
-            val text = "Administered on ${it.occurrenceDate?.toFormattedDate()}"
+            val text = "Administered on ${it.occurrenceDate?.toDisplayDate()}"
             val spannableStringBuilder = SpannableStringBuilder(text)
             spannableStringBuilder.setSpan(
                 ForegroundColorSpan(Color.BLACK),
@@ -68,6 +68,11 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
                     position,
                     ClickState.DETAIL
                 )
+            }
+            holder.binding.tvStatus.text = it.status?.capitalFirstChar()
+            Utilities.getProcedureUIStatus(mContext, it.status ?: "").let {
+                holder.binding.tvStatus.setTextColor(it.first)
+                holder.binding.tvStatus.delegate.backgroundColor = it.second
             }
         }
     }

@@ -2,23 +2,13 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.R
-import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
-import com.mE.Health.data.model.MedicationRequest
-import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.databinding.ItemMyHealthVisitsBinding
-import com.mE.Health.models.ProviderDetail
-import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
-import com.mE.Health.utility.roundview.RoundTextView
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.toDisplayDate
 
 class MyHealthVisitsAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthVisitsAdapter.MyViewHolder>() {
@@ -52,7 +42,7 @@ class MyHealthVisitsAdapter(private val mContext: Context) :
         val item = itemList?.get(position)
         item?.let {
             holder.binding.tvVisitName.text = it.type_display
-            holder.binding.tvDate.text = "Date: ${it.createdAt?.toFormattedDate()}"
+            holder.binding.tvDate.text = "Date: ${it.createdAt?.toDisplayDate()}"
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,

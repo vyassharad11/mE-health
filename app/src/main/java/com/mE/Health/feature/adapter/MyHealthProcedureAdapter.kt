@@ -2,24 +2,13 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mE.Health.R
-import com.mE.Health.data.model.DiagnosticReport
-import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.Procedure
-import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.databinding.ItemMyHealthProcedureBinding
-import com.mE.Health.models.ProviderDetail
-import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
-import com.mE.Health.utility.roundview.RoundTextView
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 
 class MyHealthProcedureAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthProcedureAdapter.MyViewHolder>() {
@@ -53,11 +42,14 @@ class MyHealthProcedureAdapter(private val mContext: Context) :
         val item = itemList?.get(position)
         item?.let {
             holder.binding.tvProcedureName.text = it.code_display
-            holder.binding.tvProcedureDate.text = it.performedDate?.toFormattedDate()
+            holder.binding.tvProcedureDate.text = it.performedDate?.toDisplayDate()
 
-            val statusDetail = Utilities.getVisitUIStatus(mContext, it.status ?: "")
-            holder.binding.tvProcedureStatus.setTextColor(statusDetail.first)
-            holder.binding.tvProcedureStatus.delegate.backgroundColor = statusDetail.second
+            val statusDetail = Utilities.getProcedureUIStatus(mContext, it.status ?: "")
+            holder.binding.tvProcedureStatus.apply {
+                text = it.status?.capitalFirstChar()
+                setTextColor(statusDetail.first)
+                delegate.backgroundColor = statusDetail.second
+            }
         }
 
         holder.itemView.setOnClickListener {

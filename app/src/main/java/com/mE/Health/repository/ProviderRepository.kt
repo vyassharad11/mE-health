@@ -15,4 +15,6 @@ class ProviderRepository @Inject constructor(
 
     suspend fun providerCountryList(search:String,country:String) = apiService.providerCountryList(appSession.token,country,search)
 
+    suspend fun providerList() = apiService.providerList(appSession.token)
+
 }

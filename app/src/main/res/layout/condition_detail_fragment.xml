@@ -358,7 +358,7 @@
                             style="@style/textStyleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="11 Jun 2025"
+                            android:text="01/15/2025"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_16" />
 
@@ -626,7 +626,7 @@
                             style="@style/textStyleRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Authored: 05/06/2025"
+                            android:text="Authored: 05/16/2025"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_14" />
                     </LinearLayout>

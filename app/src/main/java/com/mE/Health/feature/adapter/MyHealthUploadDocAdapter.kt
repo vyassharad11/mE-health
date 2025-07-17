@@ -47,14 +47,14 @@ class MyHealthUploadDocAdapter(private val mContext: Context) :
             1 -> {
                 holder.tvName.text = "Report4.mp4"
                 holder.tvCategory.text = "Appointment"
-                holder.tvDateTime.text = "${position + 1} days ago"
+//                holder.tvDateTime.text = "${position + 1} days ago"
                 holder.ivFileType.setImageResource(R.drawable.ic_pdf_eye_icon)
             }
 
             2 -> {
                 holder.tvName.text = "Report.jpg"
                 holder.tvCategory.text = "Labs"
-                holder.tvDateTime.text = "${position + 1} days ago"
+//                holder.tvDateTime.text = "${position + 1} days ago"
             }
 
             else -> {

@@ -1,6 +1,7 @@
 package com.mE.Health.utility
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.feature.adapter.BottomSheetFilterAdapter
@@ -23,8 +25,7 @@ class BottomSheetFilter(val list: ArrayList<FilterItem>) : BottomSheetDialogFrag
     private var itemList = ArrayList<FilterItem>()
 
     init {
-        itemList = ArrayList<FilterItem>()
-        itemList.addAll(list)
+        this.itemList = list
     }
 
     override fun onCreateView(
@@ -69,6 +70,7 @@ class BottomSheetFilter(val list: ArrayList<FilterItem>) : BottomSheetDialogFrag
             rllCancel.setOnClickListener {
                 dismiss()
             }
+
         }
     }
 

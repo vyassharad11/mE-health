@@ -2,21 +2,14 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mE.Health.R
 import com.mE.Health.data.model.AllergyIntolerance
-import com.mE.Health.data.model.DiagnosticReport
-import com.mE.Health.data.model.Procedure
 import com.mE.Health.databinding.ItemMyHealthAllergiesBinding
-import com.mE.Health.databinding.ItemMyHealthLabBinding
-import com.mE.Health.models.ProviderDetail
 import com.mE.Health.utility.Constants
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 
 class MyHealthAllergiesAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthAllergiesAdapter.MyViewHolder>() {
@@ -51,12 +44,17 @@ class MyHealthAllergiesAdapter(private val mContext: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = itemList?.get(position)
         item?.let {
-            holder.binding.tvRecordedDate.text = "Recorded Date: ${it.recordedDate?.toFormattedDate()}"
+            holder.binding.tvRecordedDate.text = "Recorded Date: ${it.recordedDate?.toDisplayDate()}"
             holder.binding.tvName.text = it.code_display
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item, position
                 )
+            }
+            holder.binding.tvStatus.text = it.clinicalStatus?.capitalFirstChar()
+            Utilities.getLabUIStatus(mContext, it.clinicalStatus ?: "").let {
+                holder.binding.tvStatus.setTextColor(it.first)
+                holder.binding.tvStatus.delegate.backgroundColor = it.second
             }
         }
 

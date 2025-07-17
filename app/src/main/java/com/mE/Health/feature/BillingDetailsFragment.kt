@@ -5,23 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
-import com.mE.Health.data.model.DosageInstruction
 import com.mE.Health.data.model.Insurance
 import com.mE.Health.databinding.BillingDetailFragmentBinding
-import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MedicationDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.databinding.VitalDetailFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.fromJson
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -66,11 +57,19 @@ class BillingDetailsFragment : BaseFragment() {
         DetailSingleton.claim?.let { detail ->
             binding.apply {
 
-                tvBillingDate.text = detail.createdDate?.toFormattedDate()
+                tvBillingDate.text = detail.createdDate?.toDisplayDate()
                 tvClinicName.text = detail.name
                 tvBillingAmount.text = "\$ ${detail.totalAmount}"
 
-                tvCompanyName.text = fromJson(detail.insurance, Insurance::class.java).coverage?.display
+                tvCompanyName.text =
+                    fromJson(detail.insurance, Insurance::class.java).coverage?.display
+                Utilities.getVisitUIStatus(requireActivity(), detail.status ?: "").let {
+                    tvStatus.apply {
+                        text = detail.status?.capitalFirstChar()
+                        setTextColor(it.first)
+                        delegate.backgroundColor = it.second
+                    }
+                }
             }
         }
     }

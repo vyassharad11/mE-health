@@ -14,7 +14,10 @@ import com.mE.Health.data.model.DosageInstruction
 import com.mE.Health.data.model.MedicationCode
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.fromJson
+import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -55,9 +58,18 @@ class MedicationDetailsFragment : BaseFragment() {
     private fun setDetails() {
         DetailSingleton.medication?.let { detail ->
             binding.tvMedicationDisplay.text = detail.medicationCode_display
-            binding.tvMedicationId.text = fromJson(detail.medicationCode, MedicationCode::class.java).code
-            binding.tvDosageInstruction.text = fromJson(detail.dosageInstruction, DosageInstruction::class.java).text
+            binding.tvMedicationId.text =
+                fromJson(detail.medicationCode, MedicationCode::class.java).code
+            binding.tvDosageInstruction.text =
+                fromJson(detail.dosageInstruction, DosageInstruction::class.java).text
             binding.tvReason.text = fromJson(detail.reasonCode, ReasonCode::class.java).display
+            binding.tvDate.text = detail.authoredOn?.toDisplayDate()
+            binding.tvStatus.apply {
+                text = detail.status?.capitalFirstChar()
+                val statusDetail = Utilities.getLabUIStatus(requireActivity(), detail.status ?: "")
+                setTextColor(statusDetail.first)
+                delegate.backgroundColor = statusDetail.second
+            }
         }
     }
 }

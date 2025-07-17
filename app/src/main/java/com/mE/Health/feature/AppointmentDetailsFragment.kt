@@ -11,7 +11,9 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.AppointmentDetailFragmentBinding
+import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
+import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,7 +68,7 @@ class AppointmentDetailsFragment : BaseFragment() {
                 tvDate.text = datTimePair.first
                 tvTime.text = datTimePair.second
                 tvReason.text = reasonCodeObject.display
-                tvVisitDate.text = detail.createdAt?.toFormattedDate()
+                tvVisitDate.text = detail.createdAt?.toDisplayDate()
 
                 if (detail.status?.lowercase() == getString(R.string.booked).lowercase()) {
                     binding.rtvStatus.apply {
@@ -139,7 +141,7 @@ class AppointmentDetailsFragment : BaseFragment() {
                     }
                 } else {
                     binding.rtvStatus.apply {
-                        text = detail.status
+                        text = detail.status?.capitalFirstChar()
                         setTextColor(
                             ContextCompat.getColor(
                                 requireActivity(),

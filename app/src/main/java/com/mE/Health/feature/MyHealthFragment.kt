@@ -553,7 +553,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
             R.id.ivFilter -> {
                 val bottomSheet = BottomSheetFilter(filterList)
-//                bottomSheet.itemList = filterList
                 bottomSheet.setOnCompleteListener(object : BottomSheetFilter.OnCompleteListener {
                     override fun onComplete(itemList: ArrayList<FilterItem>) {
                         val filterItemList: ArrayList<String> = ArrayList()
@@ -768,7 +767,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvFilter.visibility = View.VISIBLE
         binding.ivFilter.setColorFilter(
             ContextCompat.getColor(
-                requireActivity(),if (itemList.size>0)  R.color.color_FF6605 else R.color.text_color_primary
+                requireActivity(),
+                if (itemList.size > 0) R.color.color_FF6605 else R.color.text_color_primary
             )
         )
         binding.rvFilter.layoutManager =
@@ -796,33 +796,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         applyStatusFilter(itemList)
     }
 
-    private fun applyStatusFilter(itemList: ArrayList<String>) {
-        when (myHealthTypeAdapter?.selectedItem) {
-            1 -> {
-                val list = ArrayList<Appointment>()
-                for (filterText in itemList) {
-                    list.addAll(appointmentList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                appointmentAdapter?.updateList(if (list.size > 0) list else appointmentList!!)
-            }
-
-            2 -> {
-                val list = ArrayList<Condition>()
-                for (filterText in itemList) {
-                    list.addAll(conditionList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
-                }
-                conditionAdapter?.updateList(if (list.size > 0) list else conditionList!!)
-            }
-
-            3 -> {
-                val list = ArrayList<DiagnosticReport>()
-                for (filterText in itemList) {
-                    list.addAll(labList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                labAdapter?.updateList(if (list.size > 0) list else labList!!)
-            }
-        }
-    }
 
     private fun setPractitionerData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_practitioners)
@@ -1639,34 +1612,154 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 dateCalendar.timeInMillis <= endCalendar.timeInMillis)
     }
 
+    private fun applyStatusFilter(itemList: ArrayList<String>) {
+        when (myHealthTypeAdapter?.selectedItem) {
+            1 -> {
+                val list = ArrayList<Appointment>()
+                for (filterText in itemList) {
+                    list.addAll(appointmentList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                appointmentAdapter?.updateList(if (list.size > 0) list else appointmentList!!)
+            }
+
+            2 -> {
+                val list = ArrayList<Condition>()
+                for (filterText in itemList) {
+                    list.addAll(conditionList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
+                }
+                conditionAdapter?.updateList(if (list.size > 0) list else conditionList!!)
+            }
+
+            3 -> {
+                val list = ArrayList<DiagnosticReport>()
+                for (filterText in itemList) {
+                    list.addAll(labList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                labAdapter?.updateList(if (list.size > 0) list else labList!!)
+            }
+
+            4 -> {
+                val list = ArrayList<Observation>()
+                for (filterText in itemList) {
+                    list.addAll(vitalsList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                vitalAdapter?.updateList(if (list.size > 0) list else vitalsList!!)
+            }
+
+            5 -> {
+                val list = ArrayList<MedicationRequest>()
+                for (filterText in itemList) {
+                    list.addAll(medicationList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                medicationAdapter?.updateList(if (list.size > 0) list else medicationList!!)
+            }
+
+            6 -> {
+                val list = ArrayList<Encounter>()
+                for (filterText in itemList) {
+                    list.addAll(visitList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                visitsAdapter?.updateList(if (list.size > 0) list else visitList!!)
+            }
+
+            7 -> {
+                val list = ArrayList<Procedure>()
+                for (filterText in itemList) {
+                    list.addAll(procedureList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                procedureAdapter?.updateList(if (list.size > 0) list else procedureList!!)
+            }
+
+            8 -> {
+                val list = ArrayList<AllergyIntolerance>()
+                for (filterText in itemList) {
+                    list.addAll(allergyList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
+                }
+                allergiesAdapter?.updateList(if (list.size > 0) list else allergyList!!)
+            }
+
+            9 -> {
+                val list = ArrayList<Immunization>()
+                for (filterText in itemList) {
+                    list.addAll(immunizationList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                immunizationAdapter?.updateList(if (list.size > 0) list else immunizationList!!)
+            }
+
+            10 -> {
+                val list = ArrayList<Claim>()
+                for (filterText in itemList) {
+                    list.addAll(billingList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                billingsAdapter?.updateList(if (list.size > 0) list else billingList!!)
+            }
+
+            11 -> {
+                val list = ArrayList<Imaging>()
+                for (filterText in itemList) {
+                    list.addAll(imagingList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                imagingAdapter?.updateList(if (list.size > 0) list else imagingList!!)
+            }
+        }
+    }
+
     private fun getStatusFilterList() {
         filterList = ArrayList()
         when (myHealthTypeAdapter?.selectedItem) {
             1 -> {
-                for (item in appointmentList!!) {
-                    if (filterList.none { it.name.lowercase() == item.status?.lowercase() }) {
-                        filterList.add(FilterItem(item.status?.capitalFirstChar()!!, false))
-                    }
-                }
+                for (item in appointmentList!!) item.status?.let { updateFilterList(it) }
             }
 
             2 -> {
-                for (item in conditionList!!) {
-                    if (filterList.none { it.name.lowercase() == item.clinicalStatus?.lowercase() }) {
-                        filterList.add(FilterItem(item.clinicalStatus?.capitalFirstChar()!!, false))
-                    }
-                }
+                for (item in conditionList!!) item.clinicalStatus?.let { updateFilterList(it) }
             }
-           3 -> {
-                for (item in labList!!) {
-                    if (filterList.none { it.name.lowercase() == item.status?.lowercase() }) {
-                        filterList.add(FilterItem(item.status?.capitalFirstChar()!!, false))
-                    }
-                }
+
+            3 -> {
+                for (item in labList!!) item.status?.let { updateFilterList(it) }
             }
-            else->{
+
+            4 -> {
+                for (item in vitalsList!!) item.status?.let { updateFilterList(it) }
+            }
+
+            5 -> {
+                for (item in medicationList!!) item.status?.let { updateFilterList(it) }
+            }
+
+            6 -> {
+                for (item in visitList!!) item.status?.let { updateFilterList(it) }
+            }
+
+            7 -> {
+                for (item in procedureList!!) item.status?.let { updateFilterList(it) }
+            }
+
+            8 -> {
+                for (item in allergyList!!) item.clinicalStatus?.let { updateFilterList(it) }
+            }
+
+            9 -> {
+                for (item in immunizationList!!) item.status?.let { updateFilterList(it) }
+            }
+
+            10 -> {
+                for (item in billingList!!) item.status?.let { updateFilterList(it) }
+            }
+
+            11 -> {
+                for (item in imagingList!!) item.status?.let { updateFilterList(it) }
+            }
+
+            else -> {
                 filterList = getFilterList()
             }
+        }
+    }
+
+    private fun updateFilterList(status: String) {
+        if (filterList.none { it.name.lowercase() == status.lowercase() }) {
+            FilterItem(status.capitalFirstChar(), false).let { filterList.add(it) }
         }
     }
 

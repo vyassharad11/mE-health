@@ -59,12 +59,6 @@ class HomeFragment : BaseFragment() {
             (requireActivity() as HomeActivity).updateMenu(View.GONE)
             refreshBottomMenu(requireActivity())
             updateSideNavStatus(requireActivity())
-            replaceFragment(
-                R.id.fragment_container,
-                ConnectProviderFragment(),
-                "ConnectProviderFragment",
-                "HomeFragment"
-            )
         }
     }
 

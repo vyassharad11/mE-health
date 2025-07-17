@@ -10,11 +10,10 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.ImagingDetailFragmentBinding
 import com.mE.Health.feature.adapter.ImagingPreviewAdapter
-import com.mE.Health.feature.adapter.UploadDocFilterAdapter
-import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.BottomSheetImagingPreview
-import com.mE.Health.utility.FilterItem
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -60,8 +59,15 @@ class ImagingDetailsFragment : BaseFragment() {
             binding.apply {
                 tvName.text = "${detail.modality_display} (${detail.modality_code})"
                 tvDescription.text = detail.description
-                tvDate.text = detail.started?.toFormattedDate()
+                tvDate.text = detail.started?.toDisplayDate()
                 tvStatus.text = detail.status
+
+                val statusDetail = Utilities.getLabUIStatus(requireActivity(), detail.status ?: "")
+                tvStatus.apply {
+                    text = detail.status?.capitalFirstChar()
+                    setTextColor(statusDetail.first)
+                    delegate.backgroundColor = statusDetail.second
+                }
             }
         }
 

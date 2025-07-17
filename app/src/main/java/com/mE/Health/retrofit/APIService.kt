@@ -34,4 +34,10 @@ interface APIService {
         @Query("country") state: String,
         @Query("search") search: String
     ): Response<ProviderData>
+
+
+    @GET("api/health/practices/")
+    suspend fun providerList(
+        @Header("Authorization") authorization: String
+    ): Response<ProviderData>
 }

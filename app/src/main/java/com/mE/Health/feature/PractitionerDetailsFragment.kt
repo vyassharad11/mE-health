@@ -17,6 +17,8 @@ import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.extractContactInfo
+import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -65,6 +67,8 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
                 binding.tvPhone.text = ci.phone
                 binding.tvEmail.text = ci.email
             }
+            binding.tvStartDate.text = it.createdAt?.toDisplayDate()
+            binding.tvEndDate.text = it.createdAt?.toDisplayDate()
         }
 
         mockViewModel.organizationList.observe(viewLifecycleOwner) {

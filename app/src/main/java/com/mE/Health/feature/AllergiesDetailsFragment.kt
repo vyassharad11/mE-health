@@ -17,6 +17,9 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,9 +63,13 @@ class AllergiesDetailsFragment : BaseFragment() {
     private fun initView() {
         DetailSingleton.allergy?.let { detail ->
             binding.apply {
-                tvRecordedDate.text = detail.recordedDate?.toFormattedDate()
+                tvRecordedDate.text = detail.recordedDate?.toDisplayDate()
                 tvName.text = detail.code_display
-                tvStatus.text = detail.clinicalStatus
+                Utilities.getLabUIStatus(requireActivity(), detail.clinicalStatus ?: "").let {
+                    tvStatus.text = detail.clinicalStatus?.capitalFirstChar()
+                    tvStatus.setTextColor(it.first)
+                    tvStatus.delegate.backgroundColor = it.second
+                }
             }
         }
     }

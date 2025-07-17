@@ -21,6 +21,7 @@ import com.mE.Health.feature.adapter.PractitionerVisitAdapter
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
+import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -70,7 +71,7 @@ class VisitsDetailsFragment : BaseFragment() {
                 tvStatus.delegate.backgroundColor = statusDetail.second
 
                 tvDetailStatus.text = detail.status?.capitalFirstChar()
-                tvStartDate.text = detail.periodStart?.toFormattedDate()
+                tvStartDate.text = detail.periodStart?.toDisplayDate()
 
                 val datTimePair = openCloseTime(detail.periodStart, detail.periodEnd)
                 tvDate.text = datTimePair.first

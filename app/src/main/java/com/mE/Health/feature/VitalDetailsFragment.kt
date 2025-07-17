@@ -12,6 +12,7 @@ import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.VitalDetailFragmentBinding
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.formatIntoPrettyDate
+import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -63,7 +64,7 @@ class VitalDetailsFragment : BaseFragment() {
                 tvValues.text = getString(R.string.value_with_unit, values.value, values.unit)
                 tvVitalId.text = detail.id.uppercase()
                 tvStartDate.text =
-                    getString(R.string.start_date_with_value, detail.createdAt?.toFormattedDate())
+                    getString(R.string.start_date_with_value, detail.createdAt?.toDisplayDate())
             }
         }
 

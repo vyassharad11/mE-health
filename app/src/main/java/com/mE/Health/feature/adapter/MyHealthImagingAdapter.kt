@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Imaging
 import com.mE.Health.databinding.ItemMyHealthImagingBinding
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormattedDate
 
 class MyHealthImagingAdapter(private val mContext: Context) :
@@ -44,8 +47,14 @@ class MyHealthImagingAdapter(private val mContext: Context) :
             holder.binding.apply {
                 tvName.text = "${item.modality_display} (${item.modality_code})"
                 tvDescription.text = item.description
-                tvDate.text = item.started?.toFormattedDate()
+                tvDate.text = item.started?.toDisplayDate()
                 tvStatus.text = item.status
+            }
+            val statusDetail = Utilities.getLabUIStatus(mContext, it.status ?: "")
+            holder.binding.tvStatus.apply {
+                text = it.status?.capitalFirstChar()
+                setTextColor(statusDetail.first)
+                delegate.backgroundColor = statusDetail.second
             }
         }
         holder.itemView.setOnClickListener {

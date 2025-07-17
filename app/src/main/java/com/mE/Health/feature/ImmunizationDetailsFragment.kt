@@ -5,20 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.ImmunizationDetailFragmentBinding
-import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MedicationDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.databinding.VitalDetailFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -63,9 +55,13 @@ class ImmunizationDetailsFragment : BaseFragment() {
             binding.apply {
                 tvName.text = detail.vaccineCode_display
 
-                val text = "Recorded Date: ${detail.occurrenceDate?.toFormattedDate()}"
+                val text = "Recorded Date: ${detail.occurrenceDate?.toDisplayDate()}"
                 tvRecordedDate.text = text
-
+                tvStatus.text = detail.status?.capitalFirstChar()
+                Utilities.getProcedureUIStatus(requireActivity(), detail.status ?: "").let {
+                    tvStatus.setTextColor(it.first)
+                    tvStatus.delegate.backgroundColor = it.second
+                }
             }
         }
     }

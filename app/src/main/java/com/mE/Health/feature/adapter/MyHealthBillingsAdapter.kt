@@ -9,6 +9,9 @@ import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.databinding.ItemMyHealthBillingsBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormattedDate
 
 class MyHealthBillingsAdapter(private val mContext: Context) :
@@ -44,7 +47,7 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = itemList?.get(position)
         item?.let {
-            holder.binding.tvDate.text = item.createdDate?.toFormattedDate()
+            holder.binding.tvDate.text = item.createdDate?.toDisplayDate()
             holder.binding.tvName.text = item.name
             holder.binding.tvAmount.text = "\$ ${item.totalAmount}"
             holder.itemView.setOnClickListener {
@@ -52,6 +55,12 @@ class MyHealthBillingsAdapter(private val mContext: Context) :
                     item,
                     position
                 )
+            }
+            val statusDetail = Utilities.getVisitUIStatus(mContext, it.status ?: "")
+            holder.binding.tvStatus.apply {
+                text = it.status?.capitalFirstChar()
+                setTextColor(statusDetail.first)
+                delegate.backgroundColor = statusDetail.second
             }
         }
     }

@@ -71,8 +71,14 @@ class SettingFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view?.id){
-            R.id.cvHealthCare->{
+        when (view?.id) {
+            R.id.cvHealthCare -> {
+                addFragment(
+                    R.id.fragment_container,
+                    ConnectProviderFragment(),
+                    "ConnectProviderFragment",
+                    "HomeFragment"
+                )
             }
         }
     }

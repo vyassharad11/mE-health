@@ -9,7 +9,7 @@ import com.mE.Health.R
 import com.mE.Health.data.model.Condition
 import com.mE.Health.databinding.ItemMyHealthConditionBinding
 import com.mE.Health.utility.capitalFirstChar
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.toDisplayDate
 import java.util.Locale
 
 class MyHealthConditionAdapter(private val mContext: Context) :
@@ -44,7 +44,7 @@ class MyHealthConditionAdapter(private val mContext: Context) :
         val item: Condition? = itemList?.get(position)
         item?.let {
             holder.binding.tvConditionName.text = it.code_display
-            holder.binding.tvDate.text =  it.recordedDate?.toFormattedDate()
+            holder.binding.tvDate.text =  it.recordedDate?.toDisplayDate()
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,

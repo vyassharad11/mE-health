@@ -41,10 +41,21 @@ fun String.toFormattedDate(): String {
     }
 }
 
+fun String.toDisplayDate(): String {
+    return try {
+        val zonedDateTime = ZonedDateTime.parse(this)
+        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+        zonedDateTime.format(formatter)
+    } catch (e: Exception) {
+        // In case the date string is not in expected format
+        ""
+    }
+}
+
 fun String.toDisplayDateTime(): String {
     return try {
         val zonedDateTime = ZonedDateTime.parse(this)
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, hh:mm a", Locale.ENGLISH)
+        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy, hh:mm a", Locale.ENGLISH)
         zonedDateTime.format(formatter)
     } catch (e: Exception) {
         ""
@@ -73,7 +84,7 @@ fun String.formatIntoPrettyDate(): String {
     val zonedDateTime = ZonedDateTime.parse(this)
     val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault())
 
-    val outputFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy 'at' hh:mm a")
+    val outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mm a")
 
     return localDateTime.format(outputFormatter)
 }

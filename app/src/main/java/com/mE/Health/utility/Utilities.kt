@@ -7,19 +7,28 @@ import com.mE.Health.R
 object Utilities {
 
     fun getVisitUIStatus(mContext: Context,status:String): Pair<Int, Int> {
-        return when (status) {
-            "finished" -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270))
-            "planned" ->  Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00))
+        return when (status.lowercase()) {
+            "finished","completed","active" -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270))
+            "planned","in progress","paid" ->  Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00))
             "scheduled" ->  Pair(ContextCompat.getColor(mContext, R.color.color_0063F7),ContextCompat.getColor(mContext, R.color.color_1A0063F7))
-            "Canceled" -> Pair(ContextCompat.getColor(mContext, R.color.color_F02C2C),ContextCompat.getColor(mContext, R.color.color_1AF02C2C))
+            "canceled" -> Pair(ContextCompat.getColor(mContext, R.color.color_F02C2C),ContextCompat.getColor(mContext, R.color.color_1AF02C2C))
             else -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270)) // Default case
         }
     }
 
     fun getProcedureUIStatus(mContext: Context,status:String): Pair<Int, Int> {
-        return when (status) {
+        return when (status.lowercase()) {
             "completed" -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270))
-            "Pending" ->  Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00))
+            "pending" ->  Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00))
+            "in progress" ->  Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00))
+            else -> Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00)) // Default case
+        }
+    }
+
+    fun getLabUIStatus(mContext: Context,status:String): Pair<Int, Int> {
+        return when (status.lowercase()) {
+            "active","final" -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270))
+            "preliminary" ->  Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00))
             else -> Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00)) // Default case
         }
     }

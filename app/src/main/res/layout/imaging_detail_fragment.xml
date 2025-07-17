@@ -225,7 +225,7 @@
                             style="@style/textStyleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="11 Jun 2025"
+                            android:text="11/15/2025"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_16" />
 

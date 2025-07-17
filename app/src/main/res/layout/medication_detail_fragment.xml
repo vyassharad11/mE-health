@@ -82,6 +82,7 @@
                                 android:textSize="@dimen/sp_14" />
 
                             <TextView
+                                android:id="@+id/tvDate"
                                 style="@style/textStyleRegular"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

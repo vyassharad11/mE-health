@@ -2,14 +2,14 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.databinding.ItemMyHealthMedicationBinding
 import com.mE.Health.utility.Constants
-import com.mE.Health.utility.toFormattedDate
+import com.mE.Health.utility.Utilities
+import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.toDisplayDate
 
 class MyHealthMedicationAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthMedicationAdapter.MyViewHolder>() {
@@ -45,7 +45,13 @@ class MyHealthMedicationAdapter(private val mContext: Context) :
         val item = itemList?.get(position)
         item?.let {
             holder.binding.tvName.text = it.medicationCode_display ?: ""
-            holder.binding.tvDate.text =  "Authored: ${it.authoredOn?.toFormattedDate()}"
+            holder.binding.tvDate.text =  "Authored: ${it.authoredOn?.toDisplayDate()}"
+            holder.binding.tvStatus.apply {
+                text = it.status?.capitalFirstChar()
+                val statusDetail = Utilities.getLabUIStatus(mContext, it.status ?: "")
+                setTextColor(statusDetail.first)
+                delegate.backgroundColor = statusDetail.second
+            }
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,

@@ -50,14 +50,9 @@ class ProviderViewModel @Inject constructor(
         }
     }
 
-    fun providerList(type: String, search: String, state: String) {
+    fun providerList() {
         viewModelScope.launch(Dispatchers.IO) {
-            _providerData.postValue(NetworkResult.Loading())
-            val response = if (type == Constants.STATE) repository.providerStateList(
-                search,
-                state
-            ) else repository.providerCountryList("", "")
-            response.let { response ->
+            repository.providerList().let { response ->
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         _providerData.postValue(NetworkResult.Success(response.body()))
