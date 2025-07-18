@@ -130,6 +130,9 @@ interface MockDataDao {
     @Query("SELECT * FROM provider_items")
     fun getProviderListItem(): List<ProviderDTO>
 
+    @Query("UPDATE provider_items SET isRecent=:status WHERE id LIKE :itemId")
+    fun updateProviderStatus(status:Boolean,itemId:String)
+
     @Query(
         """
         SELECT o.id, o.name, o.telecom, o.address

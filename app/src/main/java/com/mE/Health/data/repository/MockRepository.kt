@@ -188,6 +188,8 @@ class MockRepository @Inject constructor(
 
     suspend fun getProviderItems() = mockDataDao.getProviderListItem()
 
+    suspend fun updateProviderStatus(status:Boolean,id:String) = mockDataDao.updateProviderStatus(status,id)
+
     suspend fun getOrganizationsByPractitionerId(practitionerId: String) =
         mockDataDao.getOrganizationsByPractitionerId(practitionerId)
 

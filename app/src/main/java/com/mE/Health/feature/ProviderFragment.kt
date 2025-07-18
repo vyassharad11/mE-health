@@ -12,13 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
-import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.ProviderDTO
 import com.mE.Health.databinding.ProviderFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthConditionAdapter
 import com.mE.Health.feature.adapter.ProviderAdapter
-import com.mE.Health.models.ProviderDetail
 import com.mE.Health.retrofit.NetworkResult
 import com.mE.Health.utility.Constants
 import com.mE.Health.viewmodels.ProviderViewModel
@@ -61,15 +58,15 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
         binding.tvRecent.setOnClickListener(this)
         binding.tvConnected.setOnClickListener(this)
 
-
         providerList = ArrayList()
         providerList = DetailSingleton.providerDetailList!!
         binding.rvAssist.layoutManager = LinearLayoutManager(requireActivity())
         providerAdapter = ProviderAdapter(requireActivity(),Constants.ALL, providerList)
         binding.rvAssist.adapter = providerAdapter
         providerAdapter.onItemClickListener = object : ProviderAdapter.OnClickCallback {
-                override fun onClicked(type: String, position: Int) {
-
+                override fun onClicked(detail: ProviderDTO, position: Int) {
+                    providerList[position].isRecent = true
+                    viewModel.updateUserProviderAction(true,detail.id)
                 }
             }
 
@@ -87,7 +84,6 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
             }
         })
     }
-
 
     private fun initHeader(title: String) {
         binding.toolbar.tvTitle.text = title
@@ -111,7 +107,8 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
                 providerAdapter.type = Constants.RECENT
                 refreshButton()
                 updateButton(binding.tvRecent)
-                providerAdapter.updateListWithTab( ArrayList<ProviderDTO>(), Constants.RECENT)
+                val list = providerList.filter { it.isRecent  }
+                providerAdapter.updateListWithTab( list, Constants.RECENT)
             }
 
             R.id.tvConnected -> {

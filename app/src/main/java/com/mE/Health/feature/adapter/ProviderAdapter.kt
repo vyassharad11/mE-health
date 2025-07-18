@@ -20,7 +20,7 @@ class ProviderAdapter(private val mContext: Context,private val tabType: String,
     private var itemList: List<ProviderDTO> = ArrayList()
     var type = Constants.ALL
     interface OnClickCallback {
-        fun onClicked(type: String, position: Int)
+        fun onClicked(detail: ProviderDTO, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -55,7 +55,7 @@ class ProviderAdapter(private val mContext: Context,private val tabType: String,
         holder.tvName.text = data.practice_name
         holder.itemView.setOnClickListener {
             onItemClickListener?.onClicked(
-                type,
+                data,
                 position
             )
         }

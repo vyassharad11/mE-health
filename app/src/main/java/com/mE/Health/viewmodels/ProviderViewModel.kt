@@ -82,4 +82,10 @@ class ProviderViewModel @Inject constructor(
             _providerList.postValue(mockRepository.getProviderItems())
         }
     }
+
+    fun updateUserProviderAction(status: Boolean, id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mockRepository.updateProviderStatus(status, id)
+        }
+    }
 }
