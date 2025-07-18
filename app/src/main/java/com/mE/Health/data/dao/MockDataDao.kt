@@ -24,6 +24,7 @@ import com.mE.Health.data.model.PractitionerBasicDetails
 import com.mE.Health.data.model.PractitionerOrganization
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
 import com.mE.Health.data.model.Procedure
+import com.mE.Health.data.model.ProviderDTO
 
 @Dao
 interface MockDataDao {
@@ -75,6 +76,9 @@ interface MockDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertImaging(data: List<Imaging>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProviderData(items: List<ProviderDTO>)
+
     @Query("SELECT * FROM patient")
     fun getPatientList(): List<Patient>
 
@@ -122,6 +126,9 @@ interface MockDataDao {
 
     @Query("SELECT * FROM Imaging")
     fun getImaging(): List<Imaging>?
+
+    @Query("SELECT * FROM provider_items")
+    fun getProviderListItem(): List<ProviderDTO>
 
     @Query(
         """

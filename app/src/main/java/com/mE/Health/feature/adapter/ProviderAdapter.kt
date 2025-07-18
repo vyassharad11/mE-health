@@ -9,14 +9,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mE.Health.R
+import com.mE.Health.data.model.Condition
+import com.mE.Health.data.model.ProviderDTO
 import com.mE.Health.models.ProviderDetail
 import com.mE.Health.utility.Constants
 
-class ProviderAdapter(private val mContext: Context,private val tabType: String, private val list: List<ProviderDetail>) :
+class ProviderAdapter(private val mContext: Context,private val tabType: String, private val list: List<ProviderDTO>) :
     RecyclerView.Adapter<ProviderAdapter.MyViewHolder>() {
 
-    private var itemList: List<ProviderDetail> = ArrayList()
+    private var itemList: List<ProviderDTO> = ArrayList()
     var type = Constants.ALL
+    interface OnClickCallback {
+        fun onClicked(type: String, position: Int)
+    }
+
+    var onItemClickListener: OnClickCallback? = null
 
     init {
         this.itemList = list
@@ -42,11 +49,16 @@ class ProviderAdapter(private val mContext: Context,private val tabType: String,
 
     override fun onBindViewHolder(holder: ProviderAdapter.MyViewHolder, position: Int) {
         val data = itemList[position]
-//        Glide.with(mContext)
-//            .load(data.logoUrl)
-//            .into(holder.ivLogo)
-        holder.tvName.text = data.practiceName
-
+        Glide.with(mContext)
+            .load(data.logo_url)
+            .into(holder.ivLogo)
+        holder.tvName.text = data.practice_name
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.onClicked(
+                type,
+                position
+            )
+        }
         if (type == Constants.CONNECTED) {
             holder.tvConnect.text = mContext.getString(R.string.dis_connected)
             holder.ivReload.visibility = View.VISIBLE
@@ -68,12 +80,12 @@ class ProviderAdapter(private val mContext: Context,private val tabType: String,
         return itemList.size
     }
 
-    fun updateList(list: List<ProviderDetail>) {
+    fun updateList(list: List<ProviderDTO>) {
         this.itemList = list
         notifyDataSetChanged()
     }
 
-    fun updateListWithTab(list: List<ProviderDetail>, type: String) {
+    fun updateListWithTab(list: List<ProviderDTO>, type: String) {
         this.type = type
         this.itemList = list
         notifyDataSetChanged()

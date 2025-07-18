@@ -256,6 +256,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
         imagingList = ArrayList()
         imagingList = mockViewModel.imagingList.value
+
+//        Log.i("===============","=========:${mockViewModel.providerList.value?.size}")
     }
 
     private fun addTextChangedListener() {
@@ -1285,7 +1287,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             requireActivity(),
             R.style.my_dialog_theme,
             { view, year, monthOfYear, dayOfMonth ->
-                startDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+                startDate = (monthOfYear + 1).toString() + "-" + dayOfMonth.toString() + "-" + year
                 binding.tvFilterStartDate.text = startDate + "  "
                 filterStartDateCalendar.set(Calendar.YEAR, year)
                 filterStartDateCalendar.set(Calendar.MONTH, monthOfYear)
@@ -1307,7 +1309,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun showEndDateCalendar() {
         val datePickerDialog = DatePickerDialog(
             requireActivity(), R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
-                endDate = dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+                endDate = (monthOfYear + 1).toString() + "-" + dayOfMonth.toString() + "-" + year
                 binding.tvFilterEndDate.text = endDate + "  "
                 filterEndDateCalendar.set(Calendar.YEAR, year)
                 filterEndDateCalendar.set(Calendar.MONTH, monthOfYear)

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mE.Health.data.helper.Resource
 import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.AssistDetailEntity
@@ -20,15 +21,25 @@ import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.PractitionerBasicDetails
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
 import com.mE.Health.data.model.Procedure
+import com.mE.Health.data.model.ProviderDTO
+import com.mE.Health.data.model.ProviderResponse
+import com.mE.Health.data.model.assist.AssistItem
 import com.mE.Health.data.repository.MockRepository
+import com.mE.Health.models.ProviderData
+import com.mE.Health.repository.ProviderRepository
+import com.mE.Health.retrofit.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MockDataViewModel @Inject constructor(
-    private val repository: MockRepository
+    private val repository: MockRepository,
+    private val providerRepository: ProviderRepository,
+    private val mockRepository: MockRepository
 ) : ViewModel() {
 
     private val _practitionerList = MutableLiveData<List<Practitioner>>()
@@ -88,6 +99,9 @@ class MockDataViewModel @Inject constructor(
 
     private val _assistDetailList = MutableLiveData<List<AssistDetailEntity>>()
     val assistDetailList: LiveData<List<AssistDetailEntity>> = _assistDetailList
+
+    private val _providerList = MutableLiveData<List<ProviderDTO>>()
+    val providerList: LiveData<List<ProviderDTO>> = _providerList
 
 
     init {
@@ -161,6 +175,19 @@ class MockDataViewModel @Inject constructor(
     fun insertAssistDetail(data: List<AssistDetailEntity>) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAssistDetail(data)
+        }
+    }
+
+    fun fetchRemoteData() {
+        viewModelScope.launch {
+            providerRepository.providerList()
+        }
+    }
+
+
+    fun getProviderList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _providerList.postValue(mockRepository.getProviderItems())
         }
     }
 }

@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mE.Health.data.model.ProviderDTO
+import com.mE.Health.data.repository.MockRepository
 import com.mE.Health.models.CountryStateData
 import com.mE.Health.models.ProviderData
 import com.mE.Health.repository.ProviderRepository
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProviderViewModel @Inject constructor(
-    private val repository: ProviderRepository
+    private val repository: ProviderRepository,
+    private val mockRepository: MockRepository
 ) :
     ViewModel() {
 
@@ -31,6 +34,9 @@ class ProviderViewModel @Inject constructor(
         get() {
             return _providerData
         }
+
+    private val _providerList = MutableLiveData<List<ProviderDTO>>()
+    val providerList: LiveData<List<ProviderDTO>> = _providerList
 
 
     fun stateList() {
@@ -50,9 +56,14 @@ class ProviderViewModel @Inject constructor(
         }
     }
 
-    fun providerList() {
+    fun providerList(type: String, search: String, state: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.providerList().let { response ->
+            _providerData.postValue(NetworkResult.Loading())
+            val response = if (type == Constants.STATE) repository.providerStateList(
+                search,
+                state
+            ) else repository.providerCountryList("", "")
+            response.let { response ->
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         _providerData.postValue(NetworkResult.Success(response.body()))
@@ -63,6 +74,12 @@ class ProviderViewModel @Inject constructor(
                     _providerData.postValue(NetworkResult.Error(response.message()))
                 }
             }
+        }
+    }
+
+    fun getProviderList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _providerList.postValue(mockRepository.getProviderItems())
         }
     }
 }

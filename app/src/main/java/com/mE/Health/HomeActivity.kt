@@ -32,7 +32,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     private var isNavActive = false
     private var navMenuAdapter: HomeMenuAdapter? = null
     private val mockDataViewModel: MockDataViewModel by viewModels()
-    private val viewModel: AssistViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +41,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityHomeNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
         (this.applicationContext as MyApplication).setCurrentActivity(this)
-
+        observeResponse()
         mockDataViewModel.insertPatients()
+        mockDataViewModel.getProviderList()
 
         openFragment(HomeFragment())
         initView()
@@ -263,5 +263,13 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     fun openSetting() {
         addFragment(SettingFragment())
+    }
+
+    private fun observeResponse() {
+        mockDataViewModel.providerList.observe(this) { providerList ->
+            if (providerList.isEmpty()) {
+                mockDataViewModel.fetchRemoteData()
+            }
+        }
     }
 }

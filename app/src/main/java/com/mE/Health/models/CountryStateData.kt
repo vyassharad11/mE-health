@@ -2,6 +2,7 @@ package com.mE.Health.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.mE.Health.data.model.ProviderDTO
 
 data class CountryStateData(
     @SerializedName("message")
@@ -31,5 +32,6 @@ data class CountryState(
     @SerializedName("logo")
     var logo: String? = null,
     @SerializedName("country_logo")
-    var countryLogo: Int? = null
+    var countryLogo: Int? = null,
+    var stateList: List<ProviderDTO>? = null
 )

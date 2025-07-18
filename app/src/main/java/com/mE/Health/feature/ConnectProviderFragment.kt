@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.Condition
+import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.ConnectProviderFragmentBinding
 import com.mE.Health.feature.adapter.CountryStateListAdapter
 import com.mE.Health.models.CountryState
@@ -28,7 +30,7 @@ class ConnectProviderFragment : BaseFragment() {
     private lateinit var binding: ConnectProviderFragmentBinding
     private val viewModel: ProviderViewModel by viewModels()
     private lateinit var listAdapter: CountryStateListAdapter
-    private lateinit var countryStateList : ArrayList<CountryState>
+    private lateinit var countryStateList: ArrayList<CountryState>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,29 +54,28 @@ class ConnectProviderFragment : BaseFragment() {
             )
             return
         }
-//        viewModel.stateList()
+        viewModel.getProviderList()
     }
 
     private fun initView() {
         countryStateList = ArrayList()
-        setDummyData()
         binding.rvAssist.layoutManager = GridLayoutManager(requireActivity(), 2)
         listAdapter = CountryStateListAdapter(requireActivity(), countryStateList)
         binding.rvAssist.adapter = listAdapter
         listAdapter.apply {
-            onItemClickListener =  object : CountryStateListAdapter.OnClickCallback {
+            onItemClickListener = object : CountryStateListAdapter.OnClickCallback {
                 override fun onClicked(view: View?, data: CountryState) {
                     val bundle = Bundle()
-                    if (!data.country.isNullOrEmpty()){
-                        bundle.putString(Constants.PN_TYPE,Constants.COUNTRY)
-                        bundle.putString(Constants.PN_NAME,data.country)
+                    if (!data.country.isNullOrEmpty()) {
+//                        bundle.putString(Constants.PN_TYPE, Constants.COUNTRY)
+                        bundle.putString(Constants.PN_NAME, data.country)
                     } else {
-                        bundle.putString(Constants.PN_TYPE,Constants.STATE)
-                        bundle.putString(Constants.PN_NAME,data.state)
+//                        bundle.putString(Constants.PN_TYPE, Constants.STATE)
+                        bundle.putString(Constants.PN_NAME, data.state)
                     }
                     val fragment = ProviderFragment()
                     fragment.arguments = bundle
-
+                    DetailSingleton.providerDetailList = data.stateList as ArrayList
                     addFragment(
                         R.id.fragment_container,
                         fragment,
@@ -94,7 +95,7 @@ class ConnectProviderFragment : BaseFragment() {
             override fun afterTextChanged(s: Editable) {
                 if (s.trim().toString().isNotEmpty())
                     filterData(s.toString())
-                else  listAdapter.updateList(countryStateList)
+                else listAdapter.updateList(countryStateList)
             }
         })
     }
@@ -140,7 +141,6 @@ class ConnectProviderFragment : BaseFragment() {
                         }
                     }
                     listAdapter.updateList(countryStateList)
-
                 }
 
                 else -> {
@@ -149,16 +149,19 @@ class ConnectProviderFragment : BaseFragment() {
                 }
             }
         }
-    }
 
-    private fun setDummyData(){
-       countryStateList.apply {
-           add(CountryState(country = "Abkhazia", count = "26",countryLogo = R.drawable.dummy_abkhazia))
-           add(CountryState(country = "Cuba", count = "10",countryLogo = R.drawable.dummy_cuba))
-           add(CountryState(country = "Malaysia", count = "31",countryLogo = R.drawable.dummy_malaysia))
-           add(CountryState(country = "Massachusetts", count = "54",countryLogo = R.drawable.dummy_massachusetts))
-           add(CountryState(country = "United Kingdom", count = "300",countryLogo = R.drawable.dummy_uk))
-           add(CountryState(country = "Zimbabwe", count = "9",countryLogo = R.drawable.dummy_zimbabwe))
-       }
+        viewModel.providerList.observe(requireActivity()) {
+            it.groupBy { it.state }.forEach {
+                countryStateList.add(
+                    CountryState(
+                        state = it.key,
+                        count = it.value.size.toString(),
+                        stateList = it.value,
+                        logo = it.value[0].logo_url
+                    )
+                )
+            }
+            listAdapter.updateList(countryStateList)
+        }
     }
 }

@@ -12,7 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.Condition
+import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.ProviderDTO
 import com.mE.Health.databinding.ProviderFragmentBinding
+import com.mE.Health.feature.adapter.MyHealthConditionAdapter
 import com.mE.Health.feature.adapter.ProviderAdapter
 import com.mE.Health.models.ProviderDetail
 import com.mE.Health.retrofit.NetworkResult
@@ -30,9 +34,9 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
     private lateinit var binding: ProviderFragmentBinding
     private val viewModel: ProviderViewModel by viewModels()
     private lateinit var providerAdapter: ProviderAdapter
-    private lateinit var providerList: ArrayList<ProviderDetail>
-    private lateinit var providerRecentList: ArrayList<ProviderDetail>
-    private lateinit var providerConnectedList: ArrayList<ProviderDetail>
+    private lateinit var providerList: ArrayList<ProviderDTO>
+    private lateinit var providerRecentList: ArrayList<ProviderDTO>
+    private lateinit var providerConnectedList: ArrayList<ProviderDTO>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,26 +50,28 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
         initView()
-//        observeResponse()
+        observeResponse()
     }
 
     private fun initView() {
         val bundle = arguments
-        val type = bundle?.getString(Constants.PN_TYPE, "")
         val name = bundle?.getString(Constants.PN_NAME, "")
-//        viewModel.providerList(type!!, "", name!!)
         initHeader(name!!)
-
         binding.tvAll.setOnClickListener(this)
         binding.tvRecent.setOnClickListener(this)
         binding.tvConnected.setOnClickListener(this)
 
 
         providerList = ArrayList()
-        setDummyData()
+        providerList = DetailSingleton.providerDetailList!!
         binding.rvAssist.layoutManager = LinearLayoutManager(requireActivity())
         providerAdapter = ProviderAdapter(requireActivity(),Constants.ALL, providerList)
         binding.rvAssist.adapter = providerAdapter
+        providerAdapter.onItemClickListener = object : ProviderAdapter.OnClickCallback {
+                override fun onClicked(type: String, position: Int) {
+
+                }
+            }
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -93,21 +99,27 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvAll -> {
+                binding.etSearch.setText("")
+                providerAdapter.type = Constants.ALL
                 refreshButton()
                 updateButton(binding.tvAll)
                 providerAdapter.updateListWithTab(providerList, Constants.ALL)
             }
 
             R.id.tvRecent -> {
+                binding.etSearch.setText("")
+                providerAdapter.type = Constants.RECENT
                 refreshButton()
                 updateButton(binding.tvRecent)
-                providerAdapter.updateListWithTab(if (providerList.size>4)providerList.subList(0,4) else ArrayList<ProviderDetail>(), Constants.RECENT)
+                providerAdapter.updateListWithTab( ArrayList<ProviderDTO>(), Constants.RECENT)
             }
 
             R.id.tvConnected -> {
+                binding.etSearch.setText("")
+                providerAdapter.type = Constants.CONNECTED
                 refreshButton()
                 updateButton(binding.tvConnected)
-                providerAdapter.updateListWithTab(if (providerList.size>4)providerList.subList(0,3) else ArrayList<ProviderDetail>(), Constants.CONNECTED)
+                providerAdapter.updateListWithTab( ArrayList<ProviderDTO>(), Constants.CONNECTED)
             }
         }
     }
@@ -129,7 +141,7 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
                     hideProgressDialog()
                     if (it.data?.data != null) {
                         if (it.data.data != null) {
-                            providerList.addAll(it.data?.data!!)
+//                            providerList.addAll(it.data?.data!!)
                         }
                     }
                     providerAdapter.updateList(providerList)
@@ -144,26 +156,26 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun filterData(text: String) {
-        val filterDataList = ArrayList<ProviderDetail>()
+        val filterDataList = ArrayList<ProviderDTO>()
         for (item in getTabList()) {
-            val name = item.practiceName
-            if (name?.lowercase()?.contains(text.lowercase())!!) {
+            val name = item.practice_name
+            if (name.lowercase().contains(text.lowercase())) {
                 filterDataList.add(item)
             }
         }
         providerAdapter.updateList(filterDataList)
     }
 
-    private fun getTabList() : ArrayList<ProviderDetail>{
+    private fun getTabList() : ArrayList<ProviderDTO>{
         return when (providerAdapter.type) {
             Constants.ALL -> {
                 providerList
             }
             Constants.RECENT -> {
-                providerRecentList
+                ArrayList<ProviderDTO>()
             }
             else -> {
-                providerConnectedList
+                ArrayList<ProviderDTO>()
             }
         }
     }
@@ -206,28 +218,5 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
                 R.color.color_333333
             )
         )
-    }
-
-    private fun setDummyData(){
-        providerList.apply {
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cambridge University Hospitals"))
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cambridge University Hospitals"))
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cambridge University Hospitals"))
-            add(ProviderDetail(practiceName ="Cambridge University Hospitals"))
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cleveland Clinic London"))
-            add(ProviderDetail(practiceName ="Cambridge University Hospitals"))
-        }
-
-        providerRecentList = ArrayList()
-        providerConnectedList = ArrayList()
-        providerRecentList.addAll(providerList.subList(0,4))
-        providerConnectedList.addAll(providerList.subList(0,3))
     }
 }

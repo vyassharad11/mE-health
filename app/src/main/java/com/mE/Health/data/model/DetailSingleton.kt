@@ -14,5 +14,6 @@ object DetailSingleton {
     var immunization: Immunization? = null
     var claim: Claim? = null
     var imaging: Imaging? = null
+    var providerDetailList: ArrayList<ProviderDTO>? =null
 
 }

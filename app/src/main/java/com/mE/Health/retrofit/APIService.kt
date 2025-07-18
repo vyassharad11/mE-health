@@ -1,5 +1,6 @@
 package com.mE.Health.retrofit
 
+import com.mE.Health.data.model.ProviderResponse
 import com.mE.Health.models.CountryStateData
 import com.mE.Health.models.LoginRequest
 import com.mE.Health.models.ProviderData
@@ -39,5 +40,5 @@ interface APIService {
     @GET("api/health/practices/")
     suspend fun providerList(
         @Header("Authorization") authorization: String
-    ): Response<ProviderData>
+    ): Response<ProviderResponse>
 }

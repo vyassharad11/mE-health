@@ -52,14 +52,14 @@ class CountryStateListAdapter(private val mContext: Context, private val list: L
                 data
             )
         }
-//        Glide.with(mContext)
-//            .load(data.logo)
-//            .circleCrop()
-//            .into(holder.ivType)
+        Glide.with(mContext)
+            .load(data.logo)
+            .circleCrop()
+            .into(holder.ivType)
 
         holder.tvName.text = data.country ?: data.state
         holder.tvCount.text = data.count
-        holder.ivType.setImageResource(data.countryLogo!!)
+//        holder.ivType.setImageResource(data.countryLogo!!)
     }
 
     override fun getItemId(position: Int): Long {
