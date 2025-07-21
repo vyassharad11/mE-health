@@ -93,6 +93,7 @@
                 app:rv_strokeWidth="@dimen/dp_1">
 
                 <LinearLayout
+                    android:id="@+id/llFilterType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

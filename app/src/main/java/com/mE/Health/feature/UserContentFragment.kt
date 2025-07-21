@@ -84,7 +84,7 @@ class UserContentFragment : BaseFragment() {
             }
         }
 
-        binding.tvFilterType.setOnClickListener {
+        binding.llFilterType.setOnClickListener {
             if (binding.chipsGroup.isVisible) {
                 binding.ivArrow.rotation = 180.0f
                 binding.chipsGroup.visibility = View.GONE

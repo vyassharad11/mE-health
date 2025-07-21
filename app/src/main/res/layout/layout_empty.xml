@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/llEmptyLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp_20"
     android:orientation="vertical"
     android:visibility="gone"
-    android:layout_marginTop="@dimen/dp_10"
     tools:ignore="MissingDefaultResource">
 
     <ImageView
@@ -43,8 +43,6 @@
     <com.mE.Health.utility.roundview.RoundTextView
         android:id="@+id/tvSelectDate"
         style="@style/textStyleSemiBold"
-        app:rv_backgroundColor="@color/color_FF6605"
-        app:rv_isRadiusHalfHeight="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45"
         android:layout_marginHorizontal="5dp"
@@ -52,6 +50,9 @@
         android:gravity="center"
         android:text="@string/select_date"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_17" />
+        android:textSize="@dimen/sp_17"
+        android:visibility="gone"
+        app:rv_backgroundColor="@color/color_FF6605"
+        app:rv_isRadiusHalfHeight="true" />
 
 </LinearLayout>

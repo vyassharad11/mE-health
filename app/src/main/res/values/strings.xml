@@ -87,7 +87,7 @@
     <string name="list_of_procedures">List of Procedures</string>
     <string name="list_of_allergies">List of Allergies</string>
     <string name="list_of_immunizations">List of Immunizations</string>
-    <string name="list_of_billings">List of Billings</string>
+    <string name="list_of_billings">List of Billing</string>
     <string name="list_of_vitals">List of Vitals</string>
     <string name="appointment_description">Based on the data provided, here is some advice on savings ratio for your finance profile:\n\n. Understand Your Financial Goals: Start by identifying your short-term and long-term financial goals. Whether it\'s saving for a vacation, emergency fund, retirement, or any other goal, having clarity on what you are saving for will help determine your savings ratio.\n\n2. *Assess Your Current Financial Situation:* Review your income, expenses, assets, liabilities, and spending habits. Understanding your cash flow will give you a clear \n\n</string>
     <string name="detail">Details</string>
@@ -181,7 +181,7 @@
     <string name="allow_location_access">Allow Location Access</string>
     <string name="never">Never</string>
     <string name="while_using_app">While Using The App</string>
-    <string name="list_of_imagings">List of Imagings</string>
+    <string name="list_of_imagings">List of Imaging</string>
     <string name="imaging">Imaging</string>
     <string name="image_report">6 Image <b>Report.jpg</b></string>
     <string name="looking_for_practitioner">Looking for Practitioner?</string>
@@ -194,11 +194,15 @@
     <string name="procedures">Procedures</string>
     <string name="allergies">Allergies</string>
     <string name="immunizations">Immunizations</string>
-    <string name="billings">Billings</string>
-    <string name="imagings">Imagings</string>
+    <string name="billings">Billing</string>
+    <string name="imagings">Imaging</string>
     <string name="record_vaults">Record Vaults</string>
     <string name="cancelled">Cancelled</string>
     <string name="not_available">Not available\n</string>
     <string name="dd_mm_yyyy">MM-DD-YYYY</string>
+
+    <string name="practitioner_no_record_title">No records found in this range.</string>
+    <string name="practitioner_no_record_description">Maybe your body was just busy being awesome.</string>
+
 
 </resources>

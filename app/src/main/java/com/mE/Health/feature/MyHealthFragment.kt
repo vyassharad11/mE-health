@@ -335,6 +335,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 else imagingAdapter?.updateList(imagingList!!)
             }
         }
+        setNoRecordData()
     }
 
     private fun filterPractitionerList(char: String) {
@@ -514,7 +515,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         filterStartDateCalendar = Calendar.getInstance()
 
         getStatusFilterList()
-
+        setNoRecordData()
 //        setFilterWithDateRange(false)
     }
 
@@ -1411,6 +1412,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 )
             }
         }
+
+        setNoRecordData()
     }
 
     private fun setPractitionerDateRangeFilter(
@@ -1776,5 +1779,33 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private fun convertToKilobytes(file: File): Long {
         return file.length() / 1024
+    }
+
+    private fun setNoRecordLayout() {
+        binding.emptyLayout.apply {
+            llEmptyLayout.visibility = View.VISIBLE
+            ivEmptyType.setImageResource(R.drawable.practitioner_no_record)
+            tvEmptyTitle.text = getString(R.string.practitioner_no_record_title)
+            tvEmptyDescription.text = getString(R.string.practitioner_no_record_description)
+        }
+    }
+
+
+    private fun setNoRecordData() {
+        binding.emptyLayout.llEmptyLayout.visibility = View.GONE
+        when (myHealthTypeAdapter?.selectedItem) {
+            0 -> if (practitionerAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            1 -> if (appointmentAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            2 -> if (conditionAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            3 -> if (labAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            4 -> if (visitsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            5 -> if (medicationAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            6 -> if (visitsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            7 -> if (procedureAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            8 -> if (allergiesAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            9 -> if (immunizationAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            10 -> if (billingsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            11 -> if (imagingAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+        }
     }
 }

@@ -107,8 +107,9 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
                 providerAdapter.type = Constants.RECENT
                 refreshButton()
                 updateButton(binding.tvRecent)
-                val list = providerList.filter { it.isRecent  }
-                providerAdapter.updateListWithTab( list, Constants.RECENT)
+                providerRecentList = ArrayList()
+                providerRecentList = providerList.filter { it.isRecent  } as ArrayList<ProviderDTO>
+                providerAdapter.updateListWithTab( providerRecentList, Constants.RECENT)
             }
 
             R.id.tvConnected -> {
