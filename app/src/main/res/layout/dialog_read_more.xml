@@ -28,22 +28,26 @@
         android:textSize="@dimen/sp_14"
         tools:ignore="UnusedAttribute" />
 
-    <TextView
-        android:id="@+id/tvMessage"
-        style="@style/textStyleSemiBold"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:lineSpacingMultiplier="1.1"
-        android:minHeight="80dp"
-        android:lineSpacingExtra="@dimen/dp_5"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/dp_18"
-        android:text="@string/ai_assistant_read_more"
-        android:scrollbars="vertical"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_14"
-        tools:ignore="UnusedAttribute" />
+        android:layout_height="350dp">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            style="@style/textStyleSemiBold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:lineSpacingMultiplier="1.1"
+            android:paddingHorizontal="@dimen/dp_18"
+            android:scrollbars="vertical"
+            android:text="@string/ai_assistant_read_more"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="UnusedAttribute" />
+    </ScrollView>
+
 
     <View
         android:layout_width="match_parent"

@@ -23,8 +23,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_height="wrap_content">
+                android:visibility="gone">
 
                 <TextView
                     style="@style/textStyleBold"
@@ -84,17 +85,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <com.mE.Health.utility.roundview.RoundLinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="@dimen/dp_12"
                 android:gravity="center"
+                android:padding="@dimen/dp_12"
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_cornerRadius_TR="@dimen/dp_5">
 
@@ -109,8 +110,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_1"
                 android:layout_weight="1"
-                android:padding="@dimen/dp_12"
                 android:gravity="center"
+                android:padding="@dimen/dp_12"
                 app:rv_backgroundColor="@color/color_FF6605">
 
                 <ImageView

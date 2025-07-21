@@ -51,6 +51,8 @@ class AssistFragment : BaseFragment() {
                     val fragment = AssistDetailFragment()
                     val bundle = Bundle()
                     bundle.putString("Title", detail?.item)
+                    bundle.putString("AssistId", detail?.id)
+                    bundle.putInt("DaysFrequency", detail?.frequency_in_days ?: 0)
                     fragment.arguments = bundle
                     addFragment(
                         R.id.fragment_container,

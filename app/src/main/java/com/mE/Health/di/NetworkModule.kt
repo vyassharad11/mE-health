@@ -6,13 +6,16 @@ import com.mE.Health.data.helper.NetworkStatusProvider
 import com.mE.Health.data.repository.AssistRepository
 import com.mE.Health.retrofit.LoginAPI
 import com.mE.Health.retrofit.assist.AssistApiService
+import com.mE.Health.utility.AppSession
 import com.mE.Health.utility.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -24,10 +27,11 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun providesRetrofit(baseUrl: String): Retrofit =
+    fun providesRetrofit(baseUrl: String, httpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
             .build()
 
     @Singleton
@@ -44,10 +48,11 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideAssistRepository(
+        appSession: AppSession,
         apiService: AssistApiService,
         myItemDao: AssistDao,
         networkStatusProvider: NetworkStatusProvider
     ): AssistRepository {
-        return AssistRepository(apiService, myItemDao, networkStatusProvider)
+        return AssistRepository(appSession, apiService, myItemDao, networkStatusProvider)
     }
 }

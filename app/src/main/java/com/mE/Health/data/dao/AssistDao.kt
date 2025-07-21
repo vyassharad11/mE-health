@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.mE.Health.data.model.advice.AdviceInteraction
+import com.mE.Health.data.model.apiResponse.ChatResponse
 import com.mE.Health.data.model.assist.AssistItem
 
 @Dao
@@ -13,4 +15,10 @@ interface AssistDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<AssistItem>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAdvice(items: List<AdviceInteraction>)
+
+    @Query("SELECT * FROM adviceinteraction")
+    suspend fun getAdviceList(): List<AdviceInteraction>
 }

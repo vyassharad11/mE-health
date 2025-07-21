@@ -64,11 +64,11 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
         providerAdapter = ProviderAdapter(requireActivity(),Constants.ALL, providerList)
         binding.rvAssist.adapter = providerAdapter
         providerAdapter.onItemClickListener = object : ProviderAdapter.OnClickCallback {
-                override fun onClicked(detail: ProviderDTO, position: Int) {
-                    providerList[position].isRecent = true
-                    viewModel.updateUserProviderAction(true,detail.id)
-                }
+            override fun onClicked(detail: ProviderDTO, position: Int) {
+                providerList[position].isRecent = true
+                viewModel.updateUserProviderAction(true,detail.id)
             }
+        }
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {

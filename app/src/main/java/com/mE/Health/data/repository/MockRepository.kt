@@ -6,13 +6,13 @@ import com.google.gson.reflect.TypeToken
 import com.mE.Health.data.dao.MockDataDao
 import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Appointment
+import com.mE.Health.data.model.AssistDetailEntity
 import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
-
-import com.mE.Health.data.model.ImagingStudyEntity
 import com.mE.Health.data.model.Imaging
+import com.mE.Health.data.model.ImagingStudyEntity
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
@@ -21,7 +21,7 @@ import com.mE.Health.data.model.Patient
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.PractitionerOrganization
 import com.mE.Health.data.model.Procedure
-import com.mE.Health.data.model.AssistDetailEntity
+import com.mE.Health.data.model.UnifiedHealthItems
 import com.mE.Health.data.model.toAssistDetail
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.dateToLocalDate
@@ -199,29 +199,42 @@ class MockRepository @Inject constructor(
     suspend fun getPractitionerWithOrganization(encounterId: String) =
         mockDataDao.getPractitionerWithOrganization(encounterId)
 
-    suspend fun insertAssistDetail(data: List<AssistDetailEntity>){
-        mockDataDao.insertAssistDetail(data)
+    suspend fun insertAssistDateFilteredData(data: List<AssistDetailEntity>) {
+        mockDataDao.insertAssistDateFilteredData(data)
     }
 
     suspend fun getUnifiedHealthItems(
         startDate: String,
         endDate: String
-    ): List<AssistDetailEntity> = withContext(Dispatchers.IO) {
-        val result = mutableListOf<AssistDetailEntity>()
+    ): UnifiedHealthItems = withContext(Dispatchers.IO) {
+        val formatterInput = Constants.YYYY_MM_DD_T_HH_MM_SS_Z
+        val formatterFilter = Constants.DD_MM_YYYY
 
-        result += mockDataDao.getVitals().map { it.toAssistDetail() }
-        result += mockDataDao.getLabs().map { it.toAssistDetail() }
-        result += mockDataDao.getConditionList().map { it.toAssistDetail() }
-        result += mockDataDao.getImagingStudyList().map { it.toAssistDetail() }
-        result
-            .filter {
-                val date = it.date
-                date != null && date.dateToLocalDate(Constants.YYYY_MM_DD_T_HH_MM_SS_Z)
-                    .isAfter(startDate.dateToLocalDate(Constants.DD_MM_YYYY))
-                        && date.dateToLocalDate(Constants.YYYY_MM_DD_T_HH_MM_SS_Z)
-                    .isBefore(endDate.dateToLocalDate(Constants.DD_MM_YYYY))
-            }
-            .sortedByDescending { it.date }
+        val start = startDate.dateToLocalDate(formatterFilter)
+        val end = endDate.dateToLocalDate(formatterFilter)
+
+        fun List<AssistDetailEntity>.filterByDate(): List<AssistDetailEntity> {
+            return filter { item ->
+                item.date?.let {
+                    val itemDate = it.dateToLocalDate(formatterInput)
+                    itemDate.isAfter(start) && itemDate.isBefore(end)
+                } ?: false
+            }.sortedByDescending { it.date }
+        }
+
+        val vitals = mockDataDao.getVitals()
+        val labs = mockDataDao.getLabs()
+        val conditions = mockDataDao.getConditionList()
+        val imagingStudies = mockDataDao.getImagingStudyList()
+
+        UnifiedHealthItems(
+            vitals = vitals,
+            labs = labs,
+            conditions = conditions,
+            imagingStudies = imagingStudies,
+            allItems = (vitals.map { it.toAssistDetail() } + labs.map { it.toAssistDetail() } + conditions.map { it.toAssistDetail() } + imagingStudies.map { it.toAssistDetail() })
+        )
     }
+
 
 }

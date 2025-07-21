@@ -5,12 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.helper.Resource
 import com.mE.Health.databinding.AssistDetailFragmentBinding
 import com.mE.Health.feature.adapter.AssistCategoryDetailAdapter
+import com.mE.Health.utility.LoaderDialog
 import com.mE.Health.utility.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 
@@ -23,6 +29,9 @@ class AssistDetailFragment : BaseFragment() {
     private lateinit var binding: AssistDetailFragmentBinding
     private var startDate = ""
     private var endDate = ""
+    private var assistId: String = ""
+    private var title: String = ""
+    private var daysFrequency: Int = 0
     private val startDateCalendar = Calendar.getInstance()
 
     override fun onCreateView(
@@ -52,7 +61,9 @@ class AssistDetailFragment : BaseFragment() {
     }
 
     private fun initView() {
-        val title = arguments?.getString("Title")
+        title = arguments?.getString("Title") ?: ""
+        assistId = arguments?.getString("AssistId") ?: ""
+        daysFrequency = arguments?.getInt("DaysFrequency", 0) ?: 0
         binding.tvAssistTitle.text = title
         dateRangePicker()
     }
@@ -95,7 +106,13 @@ class AssistDetailFragment : BaseFragment() {
                     endDate = "$dd-$mm-$year"
                     binding.tvEndDate.text = endDate
 
-                    mockViewModel.getAssistDetailData(startDate, endDate)
+                    mockViewModel.getAssistDetailData(
+                        title = "Health - $title",
+                        assistId = assistId,
+                        daysFrequency = daysFrequency,
+                        startDate = startDate,
+                        endDate = endDate
+                    )
                 }
             )
         }
@@ -114,7 +131,32 @@ class AssistDetailFragment : BaseFragment() {
             } else {
                 binding.rvList.visibility = View.VISIBLE
                 binding.llNoData.visibility = View.GONE
-                mockViewModel.insertAssistDetail(it)
+                mockViewModel.insertAssistDateFilteredData(it)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mockViewModel.llmChatResponse.collect { state ->
+                    when (state) {
+                        is Resource.Loading -> {
+                            LoaderDialog.show(requireContext())
+                        }
+
+                        is Resource.Success -> {
+                            LoaderDialog.hide()
+                        }
+
+                        is Resource.Error -> {
+                            LoaderDialog.hide()
+                            // Show error
+                        }
+
+                        is Resource.Offline -> {
+                            LoaderDialog.hide()
+                        }
+                    }
+                }
             }
         }
     }

@@ -1,51 +1,52 @@
 package com.mE.Health.feature.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mE.Health.R
-import com.mE.Health.models.ProviderDetail
-import com.mE.Health.utility.Constants
-import com.mE.Health.utility.roundview.RoundLinearLayout
+import com.mE.Health.data.model.advice.AdviceInteraction
+import com.mE.Health.databinding.ItemAdviceListBinding
 
-class AdviceAdapter(private val mContext: Context) :
+class AdviceAdapter() :
     RecyclerView.Adapter<AdviceAdapter.MyViewHolder>() {
 
+    var itemList: List<AdviceInteraction>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(data: AdviceInteraction, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvAdviceReadMore: TextView = itemView.findViewById(R.id.tvAdviceReadMore)
+    inner class MyViewHolder(val binding: ItemAdviceListBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemAdviceListBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): AdviceAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_advice_list, parent, false)
-        return MyViewHolder(view)
-    }
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item: AdviceInteraction? = itemList?.get(position)
 
-    override fun onBindViewHolder(holder: AdviceAdapter.MyViewHolder, position: Int) {
-        holder.tvAdviceReadMore.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.tvAdviceReadMore,
-                position
-            )
+        item?.let {
+            holder.binding.tvTitle.text = item.title
+            holder.binding.tvDescription.text = item.advice
+            holder.binding.tvAdviceReadMore.setOnClickListener {
+                onItemClickListener?.onClicked(item, position)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return itemList?.size ?: 0
     }
 }

@@ -1,6 +1,5 @@
 package com.mE.Health.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,14 +9,16 @@ import com.mE.Health.models.UserDataResponse
 import com.mE.Health.repository.AuthenticationRepository
 import com.mE.Health.retrofit.NetworkResult
 import com.mE.Health.utility.AppSession
+import com.mE.Health.utility.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val repository: AuthenticationRepository,
-    private  val appSession: AppSession
+class LoginViewModel @Inject constructor(
+    private val repository: AuthenticationRepository,
+    private val appSession: AppSession
 ) : ViewModel() {
 
     private val _loginStateData = MutableLiveData<NetworkResult<UserDataResponse>>()
@@ -39,6 +40,10 @@ class LoginViewModel @Inject constructor(private val repository: AuthenticationR
             repository.userLogin(request).let { response ->
                 if (response.isSuccessful) {
                     if (response.body() != null) {
+                        appSession.setStringPreference(
+                            Constants.USER_ID,
+                            response.body()?.data?.userId ?: ""
+                        )
                         setAuthenticated(response.body())
                         _loginStateData.postValue(NetworkResult.Success(response.body()))
                     } else {

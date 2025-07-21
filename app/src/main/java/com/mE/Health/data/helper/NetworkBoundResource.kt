@@ -63,3 +63,24 @@ fun <NetworkResponse, CachedData> NetworkBoundResource(
         }
     }
 }.flowOn(Dispatchers.IO)
+
+
+fun <NetworkResponse> NetworkBoundResource(
+    isNetworkAvailable: Boolean,
+    networkCall: suspend () -> NetworkResponse?
+): Flow<Resource<NetworkResponse?>> = flow {
+    emit(Resource.Loading())
+
+    if (isNetworkAvailable) {
+        try {
+            val remote = networkCall()
+            emit(Resource.Success(remote))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Network error"))
+        }
+    } else {
+        emit(Resource.Error("No internet connection"))
+    }
+}.flowOn(Dispatchers.IO)
+
+

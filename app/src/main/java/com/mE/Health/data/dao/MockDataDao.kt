@@ -156,6 +156,6 @@ interface MockDataDao {
     fun getPatientDetail(id: String): Patient?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAssistDetail(data: List<AssistDetailEntity>)
+    suspend fun insertAssistDateFilteredData(data: List<AssistDetailEntity>)
 
 }

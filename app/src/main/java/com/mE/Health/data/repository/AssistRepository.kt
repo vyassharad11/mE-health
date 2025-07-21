@@ -4,12 +4,21 @@ import com.mE.Health.data.dao.AssistDao
 import com.mE.Health.data.helper.NetworkBoundResource
 import com.mE.Health.data.helper.NetworkStatusProvider
 import com.mE.Health.data.helper.Resource
+import com.mE.Health.data.model.advice.AdviceInteraction
+import com.mE.Health.data.model.apiRequest.ChatRequest
 import com.mE.Health.data.model.assist.AssistItem
 import com.mE.Health.retrofit.assist.AssistApiService
+import com.mE.Health.utility.AppSession
+import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utils
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class AssistRepository @Inject constructor(
+    private val appSession: AppSession,
     private val apiService: AssistApiService,
     private val myItemDao: AssistDao,
     private val networkStatusProvider: NetworkStatusProvider
@@ -38,5 +47,50 @@ class AssistRepository @Inject constructor(
             queryDb = { myItemDao.getAllItems() }
         )
     }
+
+    fun generateLlmChat(
+        title: String,
+        assistId: String,
+        request: ChatRequest,
+        daysFrequency: Int
+    ): Flow<Resource<List<AdviceInteraction>>> {
+        return flow {
+            emit(Resource.Loading())
+
+            if (!networkStatusProvider.isNetworkAvailable()) {
+                emit(Resource.Error("No internet connection"))
+                return@flow
+            }
+
+            try {
+                val response = apiService.generateLlmChat(request)
+
+                val currentDate = Utils.getCurrentTimeMillisPlusDays()
+                val nextDate = Utils.getCurrentTimeMillisPlusDays(daysFrequency)
+
+                if (!response?.choices.isNullOrEmpty()) {
+                    val adviceList = response.choices.map {
+                        AdviceInteraction(
+                            userId = appSession.getStringPreference(Constants.USER_ID),
+                            assistId = assistId,
+                            adviceDate = "$currentDate",
+                            title = title,
+                            nextAdvice = "$nextDate",
+                            advice = it.message.content
+                        )
+                    }
+                    myItemDao.insertAdvice(adviceList)
+                }
+
+                // Return the list from DB or mock your own
+                val assistItems = myItemDao.getAdviceList()
+                emit(Resource.Success(assistItems))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage ?: "API call failed"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getAdviceList() = myItemDao.getAdviceList()
 
 }

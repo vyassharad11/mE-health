@@ -12,3 +12,11 @@ data class AssistDetailEntity(
     val source: String,
     val json: String
 )
+
+data class UnifiedHealthItems(
+    val vitals: List<Observation>,
+    val labs: List<DiagnosticReport>,
+    val conditions: List<Condition>,
+    val imagingStudies: List<ImagingStudyEntity>,
+    val allItems: List<AssistDetailEntity>
+)

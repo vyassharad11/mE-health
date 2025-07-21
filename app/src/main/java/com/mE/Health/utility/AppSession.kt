@@ -24,7 +24,7 @@ class AppSession @Inject constructor(
         }
     }
 
-    fun setUserData(authenticated: UserDataResponse?){
+    fun setUserData(authenticated: UserDataResponse?) {
         val gson = Gson()
         val json = gson.toJson(authenticated)
         prefsEditor?.putString(PREF_AUTHENTICATED, json)
@@ -42,4 +42,13 @@ class AppSession @Inject constructor(
         set(token) {
             sharedPref.edit { putString("Token ", "Token $token") }
         }
+
+    fun getStringPreference(key: String): String {
+        return sharedPref.getString(key, "")!!
+    }
+
+    fun setStringPreference(key: String?, value: String?) {
+        prefsEditor?.putString(key, value)
+        prefsEditor?.apply()
+    }
 }

@@ -40,5 +40,10 @@ object Utils {
         datePickerDialog.show()
     }
 
+    fun getCurrentTimeMillisPlusDays(daysToAdd: Int = 0): Long {
+        val currentTimeMillis = System.currentTimeMillis()
+        val millisToAdd = daysToAdd * 24 * 60 * 60 * 1000L
+        return currentTimeMillis + millisToAdd
+    }
 
 }

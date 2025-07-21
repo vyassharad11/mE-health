@@ -4,16 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
+import com.mE.Health.data.model.advice.AdviceInteraction
 import com.mE.Health.databinding.AdviceListFragmentBinding
 import com.mE.Health.feature.adapter.AdviceAdapter
 import com.mE.Health.utility.AdviceFilterItem
 import com.mE.Health.utility.BottomSheetAdviceFilter
-import com.mE.Health.utility.BottomSheetFilter
-import com.mE.Health.utility.FilterItem
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -25,6 +23,7 @@ class AdviceListFragment : BaseFragment() {
 
     private lateinit var binding: AdviceListFragmentBinding
     private var filterList = ArrayList<AdviceFilterItem>()
+    private lateinit var listAdapter: AdviceAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,19 +42,21 @@ class AdviceListFragment : BaseFragment() {
 
     private fun initView() {
         binding.rvAdvice.layoutManager = LinearLayoutManager(requireActivity())
-        val listAdapter = AdviceAdapter(requireActivity())
+        listAdapter = AdviceAdapter()
         binding.rvAdvice.adapter = listAdapter
         listAdapter.apply {
             onItemClickListener = object : AdviceAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+                override fun onClicked(data: AdviceInteraction, position: Int) {
                     openReadMoreDialog(
-                        requireActivity(),
-                        "",
-                        getString(R.string.appointment_description)
+                        context = requireActivity(),
+                        title = data.title,
+                        message = data.advice
                     )
                 }
             }
         }
+
+        getAdviceList()
     }
 
 
@@ -97,5 +98,14 @@ class AdviceListFragment : BaseFragment() {
             add(AdviceFilterItem("Unread", R.drawable.ic_unread_orange, false))
         }
         return filterList
+    }
+
+    private fun getAdviceList() {
+        mockViewModel.getAdviceList()
+        mockViewModel.adviceList.observe(viewLifecycleOwner) {
+            if (this::listAdapter.isInitialized) {
+                listAdapter.itemList = it
+            }
+        }
     }
 }

@@ -40,25 +40,4 @@ class AssistViewModel @Inject constructor(
         }
     }
 
-    suspend fun fetchAssistData(): String? = withContext(Dispatchers.IO) {
-        val client = OkHttpClient()
-
-        val json = """{ "application": "Health" }"""
-        val mediaType = "application/json".toMediaType()
-        val requestBody: RequestBody = json.toRequestBody(mediaType)
-
-        val request = Request.Builder()
-            .url("https://dev-admin.meinstein.ai/core/assist-data-list/")
-            .post(requestBody) // ← Important: use POST to send JSON
-            .addHeader("Content-Type", "application/json")
-            .build()
-
-        val response = client.newCall(request).execute()
-        return@withContext if (response.isSuccessful) {
-            response.body?.string()
-        } else {
-            null
-        }
-    }
-
 }

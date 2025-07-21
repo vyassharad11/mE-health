@@ -1,9 +1,11 @@
 package com.mE.Health.viewmodels.mockData
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.mE.Health.data.helper.Resource
 import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Appointment
@@ -22,16 +24,18 @@ import com.mE.Health.data.model.PractitionerBasicDetails
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.model.ProviderDTO
-import com.mE.Health.data.model.ProviderResponse
-import com.mE.Health.data.model.assist.AssistItem
-import com.mE.Health.data.repository.MockRepository
-import com.mE.Health.models.ProviderData
 import com.mE.Health.repository.ProviderRepository
-import com.mE.Health.retrofit.NetworkResult
+import com.mE.Health.data.model.advice.AdviceInteraction
+import com.mE.Health.data.model.apiRequest.ChatRequest
+import com.mE.Health.data.model.apiRequest.Message
+import com.mE.Health.data.repository.AssistRepository
+import com.mE.Health.data.repository.MockRepository
+import com.mE.Health.promptGenerator.DateRange
+import com.mE.Health.promptGenerator.PromptGenerator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,7 +43,7 @@ import javax.inject.Inject
 class MockDataViewModel @Inject constructor(
     private val repository: MockRepository,
     private val providerRepository: ProviderRepository,
-    private val mockRepository: MockRepository
+    private val assistRepository: AssistRepository
 ) : ViewModel() {
 
     private val _practitionerList = MutableLiveData<List<Practitioner>>()
@@ -100,8 +104,22 @@ class MockDataViewModel @Inject constructor(
     private val _assistDetailList = MutableLiveData<List<AssistDetailEntity>>()
     val assistDetailList: LiveData<List<AssistDetailEntity>> = _assistDetailList
 
+
     private val _providerList = MutableLiveData<List<ProviderDTO>>()
     val providerList: LiveData<List<ProviderDTO>> = _providerList
+
+    private val _llmChatResponse = MutableSharedFlow<Resource<List<AdviceInteraction>>>()
+    fun setLlmChatResponse(response: Resource<List<AdviceInteraction>>) {
+        viewModelScope.launch {
+            _llmChatResponse.emit(response)
+        }
+    }
+
+    val llmChatResponse: SharedFlow<Resource<List<AdviceInteraction>>> = _llmChatResponse
+
+    private val _adviceList = MutableLiveData<List<AdviceInteraction>>()
+    val adviceList: LiveData<List<AdviceInteraction>> = _adviceList
+
 
 
     init {
@@ -166,15 +184,65 @@ class MockDataViewModel @Inject constructor(
         }
     }
 
-    fun getAssistDetailData(startDate: String, endDate: String) {
+    fun getAssistDetailData(
+        title: String,
+        assistId: String,
+        daysFrequency: Int,
+        startDate: String,
+        endDate: String
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
-            _assistDetailList.postValue(repository.getUnifiedHealthItems(startDate, endDate))
+            val unifiedHealthData = repository.getUnifiedHealthItems(startDate, endDate)
+            _assistDetailList.postValue(unifiedHealthData.allItems)
+
+            val chronicPrompt = PromptGenerator.generateChronicConditionPrompt(
+                vitals = unifiedHealthData.vitals,
+                labResults = unifiedHealthData.labs,
+                conditions = unifiedHealthData.conditions,
+                imagingStudies = unifiedHealthData.imagingStudies,
+                dateRange = DateRange.AllTime
+            )
+
+            val messages = listOf(Message("user", chronicPrompt))
+            val chatRequest = ChatRequest(messages, 0.7)
+            generateLlmChatData(
+                title = title,
+                assistId = assistId,
+                daysFrequency = daysFrequency,
+                chatRequest = chatRequest
+            )
+            val json = Gson().toJson(chatRequest)
+            Log.e("TAG", "getAssistDetailData: $chronicPrompt")
+            Log.e("TAG", "getAssistDetailData: $json")
         }
     }
 
-    fun insertAssistDetail(data: List<AssistDetailEntity>) {
+    suspend fun generateLlmChatData(
+        assistId: String,
+        title: String,
+        daysFrequency: Int,
+        chatRequest: ChatRequest
+    ) {
+        setLlmChatResponse(Resource.Loading())
+        assistRepository.generateLlmChat(
+            title = title,
+            assistId = assistId,
+            daysFrequency = daysFrequency,
+            request = chatRequest
+        ).collect { result ->
+            _llmChatResponse.emit(result)
+        }
+    }
+
+    fun insertAssistDateFilteredData(data: List<AssistDetailEntity>) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertAssistDetail(data)
+            repository.insertAssistDateFilteredData(data)
+        }
+    }
+
+    fun getAdviceList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _adviceList.postValue(assistRepository.getAdviceList())
         }
     }
 
@@ -187,7 +255,7 @@ class MockDataViewModel @Inject constructor(
 
     fun getProviderList() {
         viewModelScope.launch(Dispatchers.IO) {
-            _providerList.postValue(mockRepository.getProviderItems())
+            _providerList.postValue(repository.getProviderItems())
         }
     }
 }
