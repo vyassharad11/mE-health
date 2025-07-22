@@ -1,21 +1,24 @@
 package com.mE.Health.feature
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.mE.Health.R
 import com.mE.Health.databinding.MyPersonaFragmentBinding
+import com.mE.Health.viewmodels.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 @AndroidEntryPoint
 class MyPersonaFragment : BaseFragment() {
 
     private lateinit var binding: MyPersonaFragmentBinding
+    private val viewModel: ProfileViewModel by viewModels()
+    private var progressDialog: Dialog? = null
+    private var isProfileClicked = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +34,7 @@ class MyPersonaFragment : BaseFragment() {
         activeHomeMenu(requireActivity())
         initView()
         initHeader()
+        observeProfileData()
     }
 
     private fun initHeader() {
@@ -45,13 +49,9 @@ class MyPersonaFragment : BaseFragment() {
 
     private fun initView() {
         binding.rllMyProfile.setOnClickListener {
-            refreshBottomMenu(requireActivity())
-            replaceFragment(
-                R.id.fragment_container,
-                MyProfileFragment(),
-                "MyProfileFragment",
-                "MyPersonaFragment"
-            )
+            isProfileClicked = true
+            showLoader()
+            viewModel.fetchProfile()
         }
 
         binding.rllMyHealth.setOnClickListener {
@@ -63,5 +63,42 @@ class MyPersonaFragment : BaseFragment() {
                 "MyPersonaFragment"
             )
         }
+    }
+
+    private fun observeProfileData() {
+        viewModel.profile.observe(viewLifecycleOwner) {
+            if (isProfileClicked) {
+                isProfileClicked = false
+                dismissLoader()
+                refreshBottomMenu(requireActivity())
+                replaceFragment(
+                    R.id.fragment_container,
+                    MyProfileFragment(),
+                    "MyProfileFragment",
+                    "MyPersonaFragment"
+                )
+            }
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) {
+            if (isProfileClicked) {
+                isProfileClicked = false
+                dismissLoader()
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showLoader() {
+        progressDialog = Dialog(requireContext())
+        progressDialog?.setContentView(R.layout.progress_loader)
+        progressDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        progressDialog?.setCancelable(false)
+        progressDialog?.show()
+    }
+
+
+    private fun dismissLoader() {
+        progressDialog?.dismiss()
     }
 }

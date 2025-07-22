@@ -56,7 +56,14 @@ class SettingFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
-        binding.cvHealthCare.setOnClickListener(this)
+        binding.cvHealthCare.setOnClickListener {
+            replaceFragment(
+                R.id.fragment_container,
+                ConnectProviderFragment(),
+                "ConnectProviderFragment",
+                "SettingFragment"
+            )
+        }
     }
 
 

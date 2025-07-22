@@ -688,6 +688,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             )
             add(
                 MyHealthTypeModel(
+                    getString(R.string.visits),
+                    mockViewModel.visitList.value?.size.toString(),
+                    R.drawable.ic_visits
+                )
+            )
+            add(
+                MyHealthTypeModel(
                     getString(R.string.conditions),
                     mockViewModel.conditionList.value?.size.toString(),
                     R.drawable.ic_conditions_my_health
@@ -716,9 +723,9 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             )
             add(
                 MyHealthTypeModel(
-                    getString(R.string.visits),
-                    mockViewModel.visitList.value?.size.toString(),
-                    R.drawable.ic_visits
+                    getString(R.string.imagings),
+                    mockViewModel.imagingList.value?.size.toString(),
+                    R.drawable.ic_imaging
                 )
             )
             add(
@@ -751,20 +758,14 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             )
             add(
                 MyHealthTypeModel(
-                    getString(R.string.imagings),
-                    mockViewModel.imagingList.value?.size.toString(),
-                    R.drawable.ic_imaging
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.record_vaults), "6", R.drawable.ic_upload_health
+                    getString(R.string.record_vaults),
+                    "6",
+                    R.drawable.ic_upload_health
                 )
             )
         }
         return typeList
     }
-
 
     private fun showFilterData(itemList: ArrayList<String>) {
         binding.rvFilter.visibility = View.VISIBLE

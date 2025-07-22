@@ -72,7 +72,6 @@
 
 \n\nThink of it as a digital sidekick, always ready to offer suggestions, reminders, and personalized advice to help you get the most out of your data and daily routines.</string>
 
-
     <string name="my_profile">My Profile</string>
     <string name="my_health">My Health</string>
     <string name="health">Health</string>
@@ -81,7 +80,7 @@
     <string name="search_allergies">Search allergies....</string>
     <string name="list_of_appointments">List of Appointments</string>
     <string name="list_of_conditions">List of Conditions</string>
-    <string name="list_of_labs">List of Labs</string>
+    <string name="list_of_labs">List of Lab Reports</string>
     <string name="list_of_medications">List of Medications</string>
     <string name="list_of_visits">List of Visits</string>
     <string name="list_of_procedures">List of Procedures</string>
@@ -196,7 +195,8 @@
     <string name="immunizations">Immunizations</string>
     <string name="billings">Billing</string>
     <string name="imagings">Imaging</string>
-    <string name="record_vaults">Record Vaults</string>
+
+    <string name="record_vaults">Record Vault</string>
     <string name="cancelled">Cancelled</string>
     <string name="not_available">Not available\n</string>
     <string name="dd_mm_yyyy">MM-DD-YYYY</string>
@@ -206,3 +206,4 @@
 
 
 </resources>
+

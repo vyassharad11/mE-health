@@ -55,6 +55,7 @@
 
 
                         <TextView
+                            android:id="@+id/tvName"
                             style="@style/textStyleBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -64,6 +65,7 @@
 
 
                         <TextView
+                            android:id="@+id/tvAddress"
                             style="@style/textStyleRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -161,6 +163,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <TextView
+                            android:id="@+id/tvPhone"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -210,6 +213,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <TextView
+                            android:id="@+id/tvEmail"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -272,6 +276,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/anniversaryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_5"
@@ -284,25 +289,40 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/dp_12"
-                    android:paddingVertical="@dimen/dp_15">
+                    android:paddingVertical="@dimen/dp_15"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:padding="@dimen/dp_5"
                         android:src="@drawable/ic_calendar_orange" />
 
-
-                    <TextView
-                        style="@style/textStyleMedium"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:text="@string/anniversary"
-                        android:textColor="@color/color_6E6B78"
-                        android:textSize="@dimen/sp_18" />
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="@dimen/dp_10">
+
+                        <TextView
+                            style="@style/textStyleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/anniversary"
+                            android:textColor="@color/color_6E6B78"
+                            android:textSize="@dimen/sp_18" />
+
+                        <TextView
+                            android:id="@+id/tvAnniversary"
+                            style="@style/textStyleSemiBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/color_6E6B78"
+                            android:textSize="@dimen/sp_18"
+                            android:layout_marginTop="@dimen/dp_4"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -389,6 +409,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <TextView
+                            android:id="@+id/tvGender"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -439,6 +460,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <TextView
+                            android:id="@+id/tvDob"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

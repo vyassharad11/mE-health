@@ -141,4 +141,19 @@
         <item name="cornerSize">5dp</item>
     </style>
 
+
+    <!-- In res/values/styles.xml -->
+    <style name="OrangeDatePickerDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <!-- Title text color -->
+        <item name="android:textColorPrimary">@color/orange</item>
+
+        <!-- Button colors -->
+        <item name="android:buttonBarPositiveButtonStyle">@style/OrangeDialogButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/OrangeDialogButton</item>
+    </style>
+
+    <style name="OrangeDialogButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/orange</item>
+    </style>
+
 </resources>

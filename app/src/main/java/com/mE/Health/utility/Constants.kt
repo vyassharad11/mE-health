@@ -51,6 +51,9 @@ object Constants {
     const val REDIRECTION_URL = "smartFhirAuthApp://callback"
 
     const val SMART_CONFIGURATION = ".well-known/smart-configuration"
+    const val GENDER_MALE = "M"
+    const val GENDER_FEMALE = "F"
+
 
 //    Code verifier : D6ZV0w-X6C1ZuOxB4GRPKDU9oMIvub9T0Xa67xDjsp4E8RRep6axGnCx2pd_ug9D
 //    Code challange : BuDTvp2nl01lRuN7SnxKTQuoEArn3YjfkHz32CvY6xI

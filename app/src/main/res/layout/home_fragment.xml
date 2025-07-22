@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <TextView
         style="@style/textStyleBold"
@@ -24,25 +23,24 @@
         android:layout_marginHorizontal="@dimen/dp_20"
         android:orientation="vertical">
 
+        <!-- AI Assistant Card -->
         <com.mE.Health.utility.roundview.RoundLinearLayout
             android:id="@+id/rllAiAssistant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="@dimen/dp_5"
             android:orientation="horizontal"
-            app:rv_backgroundColor="@color/color_333333"
+            app:rv_backgroundColor="@color/color_232222"
             app:rv_cornerRadius="@dimen/dp_10">
 
-            <com.mE.Health.utility.roundview.RoundLinearLayout
+            <LinearLayout
                 android:layout_width="@dimen/dp_30"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                app:rv_backgroundColor="@color/color_FB531C"
-                app:rv_cornerRadius_BL="@dimen/dp_10"
-                app:rv_cornerRadius_TL="@dimen/dp_10" />
+                android:background="@drawable/left_strip_gradient_rounded"
+                android:orientation="vertical" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -70,12 +68,13 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/dp_15"
                 android:src="@drawable/ic_ai_assistant" />
 
         </com.mE.Health.utility.roundview.RoundLinearLayout>
 
+        <!-- Data Marketplace Card -->
         <com.mE.Health.utility.roundview.RoundLinearLayout
             android:id="@+id/tvMarketPlace"
             android:layout_width="match_parent"
@@ -83,19 +82,17 @@
             android:layout_marginTop="@dimen/dp_20"
             android:elevation="@dimen/dp_5"
             android:orientation="horizontal"
-            app:rv_backgroundColor="@color/color_333333"
+            app:rv_backgroundColor="@color/color_232222"
             app:rv_cornerRadius="@dimen/dp_10">
 
-            <com.mE.Health.utility.roundview.RoundLinearLayout
+            <LinearLayout
                 android:layout_width="@dimen/dp_30"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                app:rv_backgroundColor="@color/color_FB531C"
-                app:rv_cornerRadius_BL="@dimen/dp_10"
-                app:rv_cornerRadius_TL="@dimen/dp_10" />
+                android:background="@drawable/left_strip_gradient_rounded"
+                android:orientation="vertical" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -123,13 +120,11 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/dp_15"
                 android:src="@drawable/ic_market_place" />
 
         </com.mE.Health.utility.roundview.RoundLinearLayout>
 
     </LinearLayout>
-
-
 </RelativeLayout>

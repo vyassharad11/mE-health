@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Slide
 import com.mE.Health.databinding.ActivityHomeNewBinding
+import com.mE.Health.feature.ConnectProviderFragment
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
 import com.mE.Health.feature.SettingFragment
@@ -176,26 +177,42 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 override fun onClicked(view: View?, position: Int) {
                     selectedItem = position
                     notifyDataSetChanged()
-                    if (position == 1) {
-                        updateNavMenuVisibility(View.GONE)
-                        homeNavClickAction(MyPersonaFragment())
-                    } else if (position == 2) {
-                        updateNavMenuVisibility(View.GONE)
-                        homeNavClickAction(SettingFragment())
-                    } else if (position == 4) {
-                        val intent = Intent(this@HomeActivity, MainActivity::class.java)
-                        intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                                Intent.FLAG_ACTIVITY_NEW_TASK or
-                                Intent.FLAG_ACTIVITY_NEW_TASK
-                                or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
-                        overridePendingTransition(
-                            R.anim.enter_from_bottom,
-                            android.R.anim.fade_out
-                        )
-                        finish()
+                    when (position) {
+                        0 -> { // Dashboard clicked in side nav
+                            updateNavMenuVisibility(View.GONE)
+                            isNavActive = false
+                            refreshMenu()
+                            activeDashboardMenu()
+                            clearBackStack()
+                            openFragment(HomeFragment())
+                        }
+
+                        1 -> {
+                            updateNavMenuVisibility(View.GONE)
+                            homeNavClickAction(MyPersonaFragment())
+                        }
+
+                        2 -> {
+                            updateNavMenuVisibility(View.GONE)
+                            homeNavClickAction(SettingFragment())
+                        }
+
+                        4 -> {
+                            val intent = Intent(this@HomeActivity, MainActivity::class.java)
+                            intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK
+                                    or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(intent)
+                            overridePendingTransition(
+                                R.anim.enter_from_bottom,
+                                android.R.anim.fade_out
+                            )
+                            finish()
+                        }
                     }
                 }
+
             }
         }
     }
@@ -262,7 +279,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun openSetting() {
-        addFragment(SettingFragment())
+        addFragment(ConnectProviderFragment())
     }
 
     private fun observeResponse() {

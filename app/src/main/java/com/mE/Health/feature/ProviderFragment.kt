@@ -109,7 +109,6 @@ class ProviderFragment : BaseFragment(), View.OnClickListener {
                 updateButton(binding.tvRecent)
                 providerRecentList = ArrayList()
                 providerRecentList = providerList.filter { it.isRecent  } as ArrayList<ProviderDTO>
-                providerAdapter.updateListWithTab( providerRecentList, Constants.RECENT)
             }
 
             R.id.tvConnected -> {

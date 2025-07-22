@@ -5,6 +5,7 @@ import com.mE.Health.data.dao.AssistDao
 import com.mE.Health.data.helper.NetworkStatusProvider
 import com.mE.Health.data.repository.AssistRepository
 import com.mE.Health.retrofit.LoginAPI
+import com.mE.Health.retrofit.ProfileApiService
 import com.mE.Health.retrofit.assist.AssistApiService
 import com.mE.Health.utility.AppSession
 import com.mE.Health.utility.Constants
@@ -15,7 +16,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -55,4 +55,15 @@ class NetworkModule {
     ): AssistRepository {
         return AssistRepository(appSession, apiService, myItemDao, networkStatusProvider)
     }
+
+    @Provides
+    @Singleton
+    fun provideProfileApiService(): ProfileApiService {
+        return Retrofit.Builder()
+            .baseUrl("https://dev-admin.meinstein.ai/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ProfileApiService::class.java)
+    }
+
 }

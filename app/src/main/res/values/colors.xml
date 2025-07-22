@@ -46,6 +46,11 @@
     <color name="color_808080">#808080</color>
     <color name="color_8A38F5">#8A38F5</color>
     <color name="color_1A8A38F5">#1A8A38F5</color>
+    <color name="orange">#FB531C</color>
+    <color name="color_232222">#232222</color>
+    <color name="color_F79E2D">#F79E2D</color>
+
+
 
 
 </resources>
