@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mE.Health.utility.roundview.RoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llMain"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/dp_20"
+    android:gravity="center"
+    android:minWidth="260dp"
+    android:paddingVertical="@dimen/dp_30"
+    android:paddingHorizontal="@dimen/dp_18"
+    android:orientation="vertical"
+    app:rv_backgroundColor="@color/white"
+    app:rv_cornerRadius="@dimen/dp_10">
+
+    <TextView
+        style="@style/textStyleBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.1"
+        android:scrollbars="vertical"
+        android:text="@string/deleting_account_permanently"
+        android:textColor="@color/text_color_primary"
+        android:textSize="@dimen/sp_16"
+        tools:ignore="UnusedAttribute" />
+
+    <TextView
+        android:id="@+id/tvMessage"
+        style="@style/textStyleRegular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:lineSpacingMultiplier="1.1"
+        android:scrollbars="vertical"
+        android:text="@string/deleting_account_permanently_description"
+        android:textColor="@color/text_color_primary"
+        android:textSize="@dimen/sp_16"
+        tools:ignore="UnusedAttribute" />
+
+    <TextView
+        android:id="@+id/tvPolicy"
+        style="@style/textStyleRegular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_50"
+        android:lineSpacingMultiplier="1.1"
+        android:scrollbars="vertical"
+        android:text="@string/confirm_this_description"
+        android:textColor="@color/text_color_primary"
+        android:textSize="@dimen/sp_8"
+        tools:ignore="UnusedAttribute" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        android:orientation="horizontal">
+
+        <com.mE.Health.utility.roundview.RoundLinearLayout
+            android:id="@+id/llInput"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/dp_10"
+            app:rv_cornerRadius="@dimen/dp_5"
+            app:rv_strokeColor="@color/text_color_primary"
+            app:rv_strokeWidth="@dimen/dp_1">
+
+            <EditText
+                android:id="@+id/etUserInput"
+                style="@style/textStyleRegular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:imeOptions="actionDone"
+                android:gravity="center"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:layout_marginHorizontal="@dimen/dp_5"
+                android:textColor="@color/color_333333"
+                android:textColorHint="@color/color_c8c8c8"
+                android:textSize="@dimen/sp_12" />
+
+        </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+        <com.mE.Health.utility.roundview.RoundTextView
+            android:id="@+id/rtvDeleteAccount"
+            style="@style/textStyleSemiBold"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_weight=".8"
+            android:gravity="center"
+            android:text="@string/delete_account"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:rv_backgroundColor="@color/color_FF6605"
+            app:rv_isRadiusHalfHeight="true" />
+
+    </LinearLayout>
+
+</com.mE.Health.utility.roundview.RoundLinearLayout>
+

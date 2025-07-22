@@ -203,6 +203,12 @@
 
     <string name="practitioner_no_record_title">No records found in this range.</string>
     <string name="practitioner_no_record_description">Maybe your body was just busy being awesome.</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_description">Before you go, can you tell us why you’re leaving? Your feedback helps us improve.\nReasons (select one):</string>
+    <string name="enter_reason_here">Enter the reason here</string>
+    <string name="deleting_account_permanently">Deleting Account Permanently</string>
+    <string name="deleting_account_permanently_description">Deleting your account will permanently erase all your registration information from our system. This cannot be undone.</string>
+    <string name="confirm_this_description">To Confirm this, type “DELETE”</string>
 
 
 </resources>

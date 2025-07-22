@@ -205,6 +205,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             setUploadDocumentData()
                         }
                     }
+                    setNoRecordData()
                 }
             }
         }
@@ -515,7 +516,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         filterStartDateCalendar = Calendar.getInstance()
 
         getStatusFilterList()
-        setNoRecordData()
 //        setFilterWithDateRange(false)
     }
 
@@ -676,7 +676,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 MyHealthTypeModel(
                     getString(R.string.practitioners),
                     mockViewModel.practitionerList.value?.size.toString(),
-                    R.drawable.ic_car
+                    R.drawable.ic_practitioner
                 )
             )
             add(
@@ -684,13 +684,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     getString(R.string.appointments),
                     mockViewModel.appointmentList.value?.size.toString(),
                     R.drawable.ic_appoinment
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.visits),
-                    mockViewModel.visitList.value?.size.toString(),
-                    R.drawable.ic_visits
                 )
             )
             add(
@@ -723,11 +716,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             )
             add(
                 MyHealthTypeModel(
-                    getString(R.string.imagings),
-                    mockViewModel.imagingList.value?.size.toString(),
-                    R.drawable.ic_imaging
+                    getString(R.string.visits),
+                    mockViewModel.visitList.value?.size.toString(),
+                    R.drawable.ic_visits
                 )
             )
+
             add(
                 MyHealthTypeModel(
                     getString(R.string.procedures),
@@ -742,6 +736,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     R.drawable.ic_allergy
                 )
             )
+
             add(
                 MyHealthTypeModel(
                     getString(R.string.immunizations),
@@ -754,6 +749,13 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     getString(R.string.billings),
                     mockViewModel.claimList.value?.size.toString(),
                     R.drawable.ic_billing
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    getString(R.string.imagings),
+                    mockViewModel.imagingList.value?.size.toString(),
+                    R.drawable.ic_imaging
                 )
             )
             add(
@@ -1799,7 +1801,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             1 -> if (appointmentAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
             2 -> if (conditionAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
             3 -> if (labAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            4 -> if (visitsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            4 -> if (vitalAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
             5 -> if (medicationAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
             6 -> if (visitsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
             7 -> if (procedureAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()

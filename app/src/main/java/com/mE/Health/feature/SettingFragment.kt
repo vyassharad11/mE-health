@@ -56,14 +56,8 @@ class SettingFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
-        binding.cvHealthCare.setOnClickListener {
-            replaceFragment(
-                R.id.fragment_container,
-                ConnectProviderFragment(),
-                "ConnectProviderFragment",
-                "SettingFragment"
-            )
-        }
+        binding.cvDeleteAccount.setOnClickListener(this)
+        binding.cvHealthCare.setOnClickListener(this)
     }
 
 
@@ -84,7 +78,16 @@ class SettingFragment : BaseFragment(), View.OnClickListener {
                     R.id.fragment_container,
                     ConnectProviderFragment(),
                     "ConnectProviderFragment",
-                    "HomeFragment"
+                    "SettingFragment"
+                )
+            }
+
+            R.id.cvDeleteAccount -> {
+                addFragment(
+                    R.id.fragment_container,
+                    DeleteAccountFragment(),
+                    "DeleteAccountFragment",
+                    "SettingFragment"
                 )
             }
         }
