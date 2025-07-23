@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class MyHealthTypeModel(
     val name: String,
     val count: String,
-    val icon: Int
+    val icon: Int,
+    val type: String = ""
 )

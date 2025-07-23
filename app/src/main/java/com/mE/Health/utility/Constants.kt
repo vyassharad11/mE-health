@@ -55,6 +55,24 @@ object Constants {
     const val GENDER_FEMALE = "F"
 
 
+    //Main UI Tile Types
+    const val PRACTITIONES = "PRACTITIONES"
+    const val APPOINTMENTS = "APPOINTMENTS"
+    const val CONDITIONS = "CONDITIONS"
+    const val LABS = "LABS"
+    const val VITALS = "VITALS"
+    const val MEDICATIONS = "MEDICATIONS"
+    const val VISITS = "VISITS"
+    const val PROCEDURES = "PROCEDURES"
+    const val ALLERGIES = "ALLERGIES"
+    const val IMMUNIZATIONS = "IMMUNIZATIONS"
+    const val BILLING = "BILLING"
+    const val IMAGING = "IMAGING"
+    const val RECORD_VAULTS = " RECORD_VAULTS"
+
+
+
+
 //    Code verifier : D6ZV0w-X6C1ZuOxB4GRPKDU9oMIvub9T0Xa67xDjsp4E8RRep6axGnCx2pd_ug9D
 //    Code challange : BuDTvp2nl01lRuN7SnxKTQuoEArn3YjfkHz32CvY6xI
 

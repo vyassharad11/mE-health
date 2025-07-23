@@ -18,11 +18,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.util.Pair
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.mE.Health.R
 import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.Appointment
@@ -57,6 +55,19 @@ import com.mE.Health.feature.adapter.MyHealthVitalAdapter
 import com.mE.Health.models.MyHealthTypeModel
 import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Constants.ALLERGIES
+import com.mE.Health.utility.Constants.APPOINTMENTS
+import com.mE.Health.utility.Constants.BILLING
+import com.mE.Health.utility.Constants.CONDITIONS
+import com.mE.Health.utility.Constants.IMAGING
+import com.mE.Health.utility.Constants.IMMUNIZATIONS
+import com.mE.Health.utility.Constants.LABS
+import com.mE.Health.utility.Constants.MEDICATIONS
+import com.mE.Health.utility.Constants.PRACTITIONES
+import com.mE.Health.utility.Constants.PROCEDURES
+import com.mE.Health.utility.Constants.RECORD_VAULTS
+import com.mE.Health.utility.Constants.VISITS
+import com.mE.Health.utility.Constants.VITALS
 import com.mE.Health.utility.FilterItem
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.getCalendarFromString
@@ -64,10 +75,7 @@ import com.mE.Health.utility.toFormateCalendar
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
-import java.util.TimeZone
 
 
 /**
@@ -139,6 +147,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+    private fun getTileSelectedType(): String? {
+        return myHealthTypeAdapter?.getSelectedHealthType()
+    }
+
     private fun initView() {
         setPractitionerData()
         binding.rvType.layoutManager =
@@ -152,56 +164,56 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     myHealthTypeAdapter?.selectedItem = position
                     myHealthTypeAdapter?.notifyDataSetChanged()
                     initFilterUI()
-                    when (position) {
-                        0 -> {
+                    when (getTileSelectedType()) {
+                        PRACTITIONES -> {
                             setPractitionerData()
                         }
 
-                        1 -> {
+                        APPOINTMENTS -> {
                             setAppointmentData()
                         }
 
-                        2 -> {
+                        CONDITIONS -> {
                             setConditionData()
                         }
 
-                        3 -> {
+                        LABS -> {
                             setLabData()
                         }
 
-                        4 -> {
+                        VITALS -> {
                             setVitalData()
                         }
 
-                        5 -> {
+                        MEDICATIONS -> {
                             setMedicationData()
                         }
 
-                        6 -> {
+                        VISITS -> {
                             setVisitsData()
                         }
 
-                        7 -> {
+                        PROCEDURES -> {
                             setProceduresData()
                         }
 
-                        8 -> {
+                        ALLERGIES -> {
                             setAllergiesData()
                         }
 
-                        9 -> {
+                        IMMUNIZATIONS -> {
                             setImmunizationData()
                         }
 
-                        10 -> {
+                        BILLING -> {
                             setBillingData()
                         }
 
-                        11 -> {
+                        IMAGING -> {
                             setImagingData()
                         }
 
-                        12 -> {
+                        RECORD_VAULTS -> {
                             setUploadDocumentData()
                         }
                     }
@@ -258,7 +270,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         imagingList = ArrayList()
         imagingList = mockViewModel.imagingList.value
 
-//        Log.i("===============","=========:${mockViewModel.providerList.value?.size}")
     }
 
     private fun addTextChangedListener() {
@@ -276,64 +287,53 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun onTextChangedListener(char: CharSequence?) {
-        when (myHealthTypeAdapter?.selectedItem) {
-            0 -> {
+        when (getTileSelectedType()) {
+            PRACTITIONES -> {
                 filterPractitionerList(char?.toString()!!)
             }
 
-            1 -> {
-                if (char?.trim().toString().isNotEmpty()) filterAppointmentList(char?.toString()!!)
-                else appointmentAdapter?.updateList(appointmentList!!)
+            APPOINTMENTS -> {
+                filterAppointmentList(char?.toString()!!)
             }
 
-            2 -> {
-                if (char?.trim().toString().isNotEmpty()) filterConditionList(char?.toString()!!)
-                else conditionAdapter?.updateList(conditionList!!)
+            CONDITIONS -> {
+                filterConditionList(char?.toString()!!)
             }
 
-            3 -> {
-                if (char?.trim().toString().isNotEmpty()) filterLabList(char?.toString()!!)
-                else labAdapter?.updateList(labList!!)
+            LABS -> {
+                filterLabList(char?.toString()!!)
             }
 
-            4 -> {
-                if (char?.trim().toString().isNotEmpty()) filterVitalList(char?.toString()!!)
-                else vitalAdapter?.updateList(vitalsList!!)
+            VITALS -> {
+                filterVitalList(char?.toString()!!)
             }
 
-            5 -> {
-                if (char?.trim().toString().isNotEmpty()) filterMedicationList(char?.toString()!!)
-                else medicationAdapter?.updateList(medicationList!!)
+            MEDICATIONS -> {
+                filterMedicationList(char?.toString()!!)
             }
 
-            6 -> {
-                if (char?.trim().toString().isNotEmpty()) filterVisitList(char?.toString()!!)
-                else visitsAdapter?.updateList(visitList!!)
+            VISITS -> {
+                filterVisitList(char?.toString()!!)
             }
 
-            7 -> {
-                if (char?.trim().toString().isNotEmpty()) filterProcedureList(char?.toString()!!)
-                else procedureAdapter?.updateList(procedureList!!)
+            PROCEDURES -> {
+                filterProcedureList(char?.toString()!!)
             }
 
-            8 -> {
-                if (char?.trim().toString().isNotEmpty()) filterAllergyList(char?.toString()!!)
-                else allergiesAdapter?.updateList(allergyList!!)
+            ALLERGIES -> {
+                filterAllergyList(char?.toString()!!)
             }
 
-            9 -> {
-                if (char?.trim().toString().isNotEmpty()) filterImmunizationList(char?.toString()!!)
-                else immunizationAdapter?.updateList(immunizationList!!)
+            IMMUNIZATIONS -> {
+                filterImmunizationList(char?.toString()!!)
             }
 
-            10 -> {
-                if (char?.trim().toString().isNotEmpty()) filterBillingList(char?.toString()!!)
-                else billingsAdapter?.updateList(billingList!!)
+            BILLING -> {
+                filterBillingList(char?.toString()!!)
             }
 
-            11 -> {
-                if (char?.trim().toString().isNotEmpty()) filterImagingList(char?.toString()!!)
-                else imagingAdapter?.updateList(imagingList!!)
+            IMAGING -> {
+                filterImagingList(char?.toString()!!)
             }
         }
         setNoRecordData()
@@ -349,139 +349,114 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun filterAppointmentList(text: String) {
-        val filterList = ArrayList<Appointment>()
-        for (item in appointmentList!!) {
-            if (item.practitionerName?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterAppointmentList(char: String) {
+        (if (char.trim().isNotEmpty()) appointmentList?.filter { item ->
+            item.practitionerName?.lowercase()!!.contains(char.lowercase())
+        } else appointmentList!!)?.let {
+            appointmentAdapter?.updateList(
+                it
+            )
         }
-        appointmentAdapter?.updateList(filterList)
     }
 
-    private fun filterConditionList(text: String) {
-        val filterList = ArrayList<Condition>()
-        for (item in conditionList!!) {
-            if (item.code_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterConditionList(char: String) {
+        (if (char.trim().isNotEmpty()) conditionList?.filter { item ->
+            item.code_display?.lowercase()!!.contains(char.lowercase())
+        } else conditionList!!)?.let {
+            conditionAdapter?.updateList(
+                it
+            )
         }
-        conditionAdapter?.updateList(filterList)
     }
 
-    private fun filterLabList(text: String) {
-        val filterList = ArrayList<DiagnosticReport>()
-        for (item in labList!!) {
-            if (item.code_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterLabList(char: String) {
+        (if (char.trim().isNotEmpty()) labList?.filter { item ->
+            item.code_display?.lowercase()!!.contains(char.lowercase())
+        } else labList!!)?.let {
+            labAdapter?.updateList(
+                it
+            )
         }
-        labAdapter?.updateList(filterList)
     }
 
-    private fun filterVitalList(text: String) {
-        val filterList = ArrayList<Observation>()
-        for (item in vitalsList!!) {
-            if (item.code_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterVitalList(char: String) {
+        (if (char.trim().isNotEmpty()) vitalsList?.filter { item ->
+            item.code_display?.lowercase()!!.contains(char.lowercase())
+        } else vitalsList!!)?.let {
+            vitalAdapter?.updateList(
+                it
+            )
         }
-        vitalAdapter?.updateList(filterList)
     }
 
-
-    private fun filterMedicationList(text: String) {
-        val filterList = ArrayList<MedicationRequest>()
-        for (item in medicationList!!) {
-            if (item.medicationCode_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterMedicationList(char: String) {
+        (if (char.trim().isNotEmpty()) medicationList?.filter { item ->
+            item.medicationCode_display?.lowercase()!!.contains(char.lowercase())
+        } else medicationList!!)?.let {
+            medicationAdapter?.updateList(
+                it
+            )
         }
-        medicationAdapter?.updateList(filterList)
     }
 
-    private fun filterVisitList(text: String) {
-        val filterList = ArrayList<Encounter>()
-        for (item in visitList!!) {
-            if (item.type_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterVisitList(char: String) {
+        (if (char.trim().isNotEmpty()) visitList?.filter { item ->
+            item.type_display?.lowercase()!!.contains(char.lowercase())
+        } else visitList!!)?.let {
+            visitsAdapter?.updateList(
+                it
+            )
         }
-        visitsAdapter?.updateList(filterList)
     }
 
-
-    private fun filterProcedureList(text: String) {
-        val filterList = ArrayList<Procedure>()
-        for (item in procedureList!!) {
-            if (item.code_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterProcedureList(char: String) {
+        (if (char.trim().isNotEmpty()) procedureList?.filter { item ->
+            item.code_display?.lowercase()!!.contains(char.lowercase())
+        } else procedureList!!)?.let {
+            procedureAdapter?.updateList(
+                it
+            )
         }
-        procedureAdapter?.updateList(filterList)
     }
 
-    private fun filterAllergyList(text: String) {
-        val filterList = ArrayList<AllergyIntolerance>()
-        for (item in allergyList!!) {
-            if (item.code_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterAllergyList(char: String) {
+        (if (char.trim().isNotEmpty()) allergyList?.filter { item ->
+            item.code_display?.lowercase()!!.contains(char.lowercase())
+        } else allergyList!!)?.let {
+            allergiesAdapter?.updateList(
+                it
+            )
         }
-        allergiesAdapter?.updateList(filterList)
     }
 
-    private fun filterImmunizationList(text: String) {
-        val filterList = ArrayList<Immunization>()
-        for (item in immunizationList!!) {
-            if (item.vaccineCode_display?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterImmunizationList(char: String) {
+        (if (char.trim().isNotEmpty()) immunizationList?.filter { item ->
+            item.vaccineCode_display?.lowercase()!!.contains(char.lowercase())
+        } else immunizationList!!)?.let {
+            immunizationAdapter?.updateList(
+                it
+            )
         }
-        immunizationAdapter?.updateList(filterList)
     }
 
-    private fun filterBillingList(text: String) {
-        val filterList = ArrayList<Claim>()
-        for (item in billingList!!) {
-            if (item.name?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterBillingList(char: String) {
+        (if (char.trim().isNotEmpty()) billingList?.filter { item ->
+            item.name?.lowercase()!!.contains(char.lowercase())
+        } else billingList!!)?.let {
+            billingsAdapter?.updateList(
+                it
+            )
         }
-        billingsAdapter?.updateList(filterList)
     }
 
-    private fun filterImagingList(text: String) {
-        val filterList = ArrayList<Imaging>()
-        for (item in imagingList!!) {
-            if (item.modality_display?.lowercase()
-                    ?.contains(text.lowercase()) == true || item.description?.lowercase()
-                    ?.contains(text.lowercase()) == true
-            ) {
-                filterList.add(item)
-            }
+    private fun filterImagingList(char: String) {
+        (if (char.trim().isNotEmpty()) imagingList?.filter { item ->
+            item.modality_display?.lowercase()!!.contains(char.lowercase())
+        } else imagingList!!)?.let {
+            imagingAdapter?.updateList(
+                it
+            )
         }
-        imagingAdapter?.updateList(filterList)
     }
 
     private fun initFilterUI() {
@@ -516,7 +491,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         filterStartDateCalendar = Calendar.getInstance()
 
         getStatusFilterList()
-//        setFilterWithDateRange(false)
     }
 
     override fun onClick(v: View?) {
@@ -570,7 +544,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.ivCalendarFilter -> {
-//                openDateRangePicker()
                 setCalendarFilterVisibility()
             }
 
@@ -638,37 +611,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun openDateRangePicker() {
-        val picker =
-            MaterialDatePicker.Builder.dateRangePicker().setTheme(R.style.CustomDatePickerTheme)
-                .setTitleText("Select Date Range")
-                .setSelection(Pair(firstDateSelected, secondDateSelected)).build()
-        picker.show(requireActivity().supportFragmentManager, "TAG")
-        picker.addOnNegativeButtonClickListener { picker?.dismiss() }
-        picker.addOnPositiveButtonClickListener {
-            binding.rlDateLayout.visibility = View.VISIBLE
-            binding.ivCalendarFilter.setColorFilter(
-                ContextCompat.getColor(
-                    requireActivity(), R.color.color_FF6605
-                )
-            )
-            firstDateSelected = it.first
-            secondDateSelected = it.second
-            binding.tvDateRange.text = "Date Range : ${convertTimeToDate(firstDateSelected)} - ${
-                convertTimeToDate(
-                    secondDateSelected
-                )
-            }"
-        }
-    }
-
-    private fun convertTimeToDate(time: Long): String {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        calendar.timeInMillis = time
-        val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-        return simpleDateFormat.format(calendar.time)
-    }
-
     private fun getAllMyHealthType(): ArrayList<MyHealthTypeModel> {
         val typeList: ArrayList<MyHealthTypeModel> = ArrayList()
         typeList.apply {
@@ -676,49 +618,56 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 MyHealthTypeModel(
                     getString(R.string.practitioners),
                     mockViewModel.practitionerList.value?.size.toString(),
-                    R.drawable.ic_practitioner
+                    R.drawable.ic_practitioner,
+                    PRACTITIONES
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.appointments),
                     mockViewModel.appointmentList.value?.size.toString(),
-                    R.drawable.ic_appoinment
+                    R.drawable.ic_appoinment,
+                    APPOINTMENTS
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.conditions),
                     mockViewModel.conditionList.value?.size.toString(),
-                    R.drawable.ic_conditions_my_health
+                    R.drawable.ic_conditions_my_health,
+                    CONDITIONS
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.labs),
                     mockViewModel.labList.value?.size.toString(),
-                    R.drawable.ic_labs
+                    R.drawable.ic_labs,
+                    LABS
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.vitals),
                     mockViewModel.vitalsList.value?.size.toString(),
-                    R.drawable.ic_vitals
+                    R.drawable.ic_vitals,
+                    VITALS
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.medications),
                     mockViewModel.medicationList.value?.size.toString(),
-                    R.drawable.ic_medication_my_health
+                    R.drawable.ic_medication_my_health,
+                    MEDICATIONS
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.visits),
                     mockViewModel.visitList.value?.size.toString(),
-                    R.drawable.ic_visits
+                    R.drawable.ic_visits,
+                    VISITS
                 )
             )
 
@@ -726,43 +675,48 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 MyHealthTypeModel(
                     getString(R.string.procedures),
                     mockViewModel.procedureList.value?.size.toString(),
-                    R.drawable.ic_procedures
+                    R.drawable.ic_procedures,
+                    PROCEDURES
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.allergies),
                     mockViewModel.allergyList.value?.size.toString(),
-                    R.drawable.ic_allergy
+                    R.drawable.ic_allergy,
+                    ALLERGIES
                 )
             )
-
             add(
                 MyHealthTypeModel(
                     getString(R.string.immunizations),
                     mockViewModel.immunizationList.value?.size.toString(),
-                    R.drawable.ic_immunization
+                    R.drawable.ic_immunization,
+                    IMMUNIZATIONS
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.billings),
                     mockViewModel.claimList.value?.size.toString(),
-                    R.drawable.ic_billing
+                    R.drawable.ic_billing,
+                    BILLING
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.imagings),
                     mockViewModel.imagingList.value?.size.toString(),
-                    R.drawable.ic_imaging
+                    R.drawable.ic_imaging,
+                    IMAGING
                 )
             )
             add(
                 MyHealthTypeModel(
                     getString(R.string.record_vaults),
                     "6",
-                    R.drawable.ic_upload_health
+                    R.drawable.ic_upload_health,
+                    RECORD_VAULTS
                 )
             )
         }
@@ -1064,12 +1018,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         practitionerAdapter.apply {
             onItemClickListener = object : MyHealthUploadDocAdapter.OnClickCallback {
                 override fun onClicked(view: View?, position: Int) {
-//                    addFragment(
-//                        R.id.fragment_container,
-//                        PractitionerDetailsFragment(),
-//                        "PractitionerDetailsFragment",
-//                        "MyHealthFragment"
-//                    )
                 }
             }
         }
@@ -1093,6 +1041,437 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     )
                 }
             }
+        }
+    }
+
+    private var startDate = ""
+    private var endDate = ""
+    private var filterStartDateCalendar = Calendar.getInstance()
+    private var filterEndDateCalendar = Calendar.getInstance()
+
+    private fun showStartDateCalendar() {
+        val datePickerDialog = DatePickerDialog(
+            requireActivity(),
+            R.style.my_dialog_theme,
+            { view, year, monthOfYear, dayOfMonth ->
+                startDate = (monthOfYear + 1).toString() + "-" + dayOfMonth.toString() + "-" + year
+                binding.tvFilterStartDate.text = startDate + "  "
+                filterStartDateCalendar.set(Calendar.YEAR, year)
+                filterStartDateCalendar.set(Calendar.MONTH, monthOfYear)
+                filterStartDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                if (filterStartDateCalendar > filterEndDateCalendar) {
+                    endDate = ""
+                    filterEndDateCalendar = Calendar.getInstance()
+                    binding.tvFilterEndDate.text = getString(R.string.dd_mm_yyyy)
+                }
+                setDateRange()
+            },
+            filterStartDateCalendar.get(Calendar.YEAR),
+            filterStartDateCalendar.get(Calendar.MONTH),
+            filterStartDateCalendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
+    private fun showEndDateCalendar() {
+        val datePickerDialog = DatePickerDialog(
+            requireActivity(),
+            R.style.my_dialog_theme,
+            { view, year, monthOfYear, dayOfMonth ->
+                endDate = (monthOfYear + 1).toString() + "-" + dayOfMonth.toString() + "-" + year
+                binding.tvFilterEndDate.text = endDate + "  "
+                filterEndDateCalendar.set(Calendar.YEAR, year)
+                filterEndDateCalendar.set(Calendar.MONTH, monthOfYear)
+                filterEndDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                setDateRange()
+            },
+            filterEndDateCalendar.get(Calendar.YEAR),
+            filterEndDateCalendar.get(Calendar.MONTH),
+            filterEndDateCalendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.datePicker.minDate = filterStartDateCalendar.timeInMillis
+        datePickerDialog.show()
+    }
+
+    private fun setDateRange() {
+        if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate)) {
+            binding.tvDateRange.text = "Date Range : $startDate - $endDate"
+            binding.rlDateLayout.visibility = View.VISIBLE
+            setFilterWithDateRange(true)
+        }
+    }
+
+    private fun setFilterWithDateRange(isFilterList: Boolean) {
+        val startDateCalendar = startDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
+        val endDateCalendar = endDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
+        when (getTileSelectedType()) {
+            PRACTITIONES -> setPractitionerDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            APPOINTMENTS -> setAppointmentDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            CONDITIONS -> setConditionDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            LABS -> setLabDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            VITALS -> setVitalDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            MEDICATIONS -> setMedicationDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            VISITS -> setVisitDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            PROCEDURES -> setProcedureDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            ALLERGIES -> setAllergyDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            IMMUNIZATIONS -> setImmunizationDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            BILLING -> setBillingDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+
+            IMAGING -> setImagingDateRangeFilter(
+                isFilterList, startDateCalendar, endDateCalendar
+            )
+        }
+        setNoRecordData()
+    }
+
+    private fun setPractitionerDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        practitionerAdapter?.updateList(if (isFilterList) practitionerList!!.filter { item ->
+            val dateCalendar = item.createdAt?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else practitionerList!!)
+    }
+
+    private fun setAppointmentDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        appointmentAdapter?.updateList(if (isFilterList) appointmentList!!.filter { item ->
+            val dateCalendar = item.startTime?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else appointmentList!!)
+    }
+
+    private fun setConditionDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        conditionAdapter?.updateList(if (isFilterList) conditionList!!.filter { item ->
+            val dateCalendar = item.recordedDate?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else conditionList!!)
+    }
+
+    private fun setLabDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        labAdapter?.updateList(if (isFilterList) labList!!.filter { item ->
+            val dateCalendar = item.issued?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else labList!!)
+    }
+
+    private fun setVitalDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        vitalAdapter?.updateList(if (isFilterList) vitalsList!!.filter { item ->
+            val dateCalendar = item.effectiveDate?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else vitalsList!!)
+    }
+
+    private fun setMedicationDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        medicationAdapter?.updateList(if (isFilterList) medicationList!!.filter { item ->
+            val dateCalendar = item.authoredOn?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else medicationList!!)
+    }
+
+    private fun setVisitDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        visitsAdapter?.updateList(if (isFilterList) visitList!!.filter { item ->
+            val dateCalendar = item.createdAt?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else visitList!!)
+    }
+
+    private fun setProcedureDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        procedureAdapter?.updateList(if (isFilterList) procedureList!!.filter { item ->
+            val dateCalendar = item.performedDate?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else procedureList!!)
+    }
+
+    private fun setAllergyDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        allergiesAdapter?.updateList(if (isFilterList) allergyList!!.filter { item ->
+            val dateCalendar = item.recordedDate?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else allergyList!!)
+    }
+
+    private fun setImmunizationDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        immunizationAdapter?.updateList(if (isFilterList) immunizationList!!.filter { item ->
+            val dateCalendar = item.occurrenceDate?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else immunizationList!!)
+    }
+
+    private fun setBillingDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        billingsAdapter?.updateList(if (isFilterList) billingList!!.filter { item ->
+            val dateCalendar = item.createdDate?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else billingList!!)
+    }
+
+    private fun setImagingDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        imagingAdapter?.updateList(if (isFilterList) imagingList!!.filter { item ->
+            val dateCalendar = item.started?.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
+        } else imagingList!!)
+    }
+
+    private fun isDateRangeAvailable(
+        dateCalendar: Calendar, startCalendar: Calendar, endCalendar: Calendar
+    ): Boolean {
+        return (dateCalendar.timeInMillis >= startCalendar.timeInMillis && dateCalendar.timeInMillis <= endCalendar.timeInMillis)
+    }
+
+    private fun applyStatusFilter(itemList: ArrayList<String>) {
+        when (getTileSelectedType()) {
+            APPOINTMENTS -> {
+                val list = ArrayList<Appointment>()
+                for (filterText in itemList) {
+                    list.addAll(appointmentList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                appointmentAdapter?.updateList(if (list.size > 0) list else appointmentList!!)
+            }
+
+            CONDITIONS -> {
+                val list = ArrayList<Condition>()
+                for (filterText in itemList) {
+                    list.addAll(conditionList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
+                }
+                conditionAdapter?.updateList(if (list.size > 0) list else conditionList!!)
+            }
+
+            LABS -> {
+                val list = ArrayList<DiagnosticReport>()
+                for (filterText in itemList) {
+                    list.addAll(labList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                labAdapter?.updateList(if (list.size > 0) list else labList!!)
+            }
+
+            VITALS -> {
+                val list = ArrayList<Observation>()
+                for (filterText in itemList) {
+                    list.addAll(vitalsList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                vitalAdapter?.updateList(if (list.size > 0) list else vitalsList!!)
+            }
+
+            MEDICATIONS -> {
+                val list = ArrayList<MedicationRequest>()
+                for (filterText in itemList) {
+                    list.addAll(medicationList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                medicationAdapter?.updateList(if (list.size > 0) list else medicationList!!)
+            }
+
+            VISITS -> {
+                val list = ArrayList<Encounter>()
+                for (filterText in itemList) {
+                    list.addAll(visitList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                visitsAdapter?.updateList(if (list.size > 0) list else visitList!!)
+            }
+
+            PROCEDURES -> {
+                val list = ArrayList<Procedure>()
+                for (filterText in itemList) {
+                    list.addAll(procedureList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                procedureAdapter?.updateList(if (list.size > 0) list else procedureList!!)
+            }
+
+            ALLERGIES -> {
+                val list = ArrayList<AllergyIntolerance>()
+                for (filterText in itemList) {
+                    list.addAll(allergyList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
+                }
+                allergiesAdapter?.updateList(if (list.size > 0) list else allergyList!!)
+            }
+
+            IMMUNIZATIONS -> {
+                val list = ArrayList<Immunization>()
+                for (filterText in itemList) {
+                    list.addAll(immunizationList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                immunizationAdapter?.updateList(if (list.size > 0) list else immunizationList!!)
+            }
+
+            BILLING -> {
+                val list = ArrayList<Claim>()
+                for (filterText in itemList) {
+                    list.addAll(billingList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                billingsAdapter?.updateList(if (list.size > 0) list else billingList!!)
+            }
+
+            IMAGING -> {
+                val list = ArrayList<Imaging>()
+                for (filterText in itemList) {
+                    list.addAll(imagingList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
+                }
+                imagingAdapter?.updateList(if (list.size > 0) list else imagingList!!)
+            }
+        }
+    }
+
+    private fun getStatusFilterList() {
+        filterList = ArrayList()
+
+        when (getTileSelectedType()) {
+            APPOINTMENTS -> for (item in appointmentList!!) item.status?.let { updateFilterList(it) }
+
+            CONDITIONS -> for (item in conditionList!!) item.clinicalStatus?.let {
+                updateFilterList(
+                    it
+                )
+            }
+
+            LABS -> for (item in labList!!) item.status?.let { updateFilterList(it) }
+
+            VITALS -> for (item in vitalsList!!) item.status?.let { updateFilterList(it) }
+
+            MEDICATIONS -> for (item in medicationList!!) item.status?.let { updateFilterList(it) }
+
+            VISITS -> for (item in visitList!!) item.status?.let { updateFilterList(it) }
+
+            PROCEDURES -> for (item in procedureList!!) item.status?.let { updateFilterList(it) }
+
+            ALLERGIES -> for (item in allergyList!!) item.clinicalStatus?.let { updateFilterList(it) }
+
+            IMMUNIZATIONS -> for (item in immunizationList!!) item.status?.let { updateFilterList(it) }
+
+            BILLING -> for (item in billingList!!) item.status?.let { updateFilterList(it) }
+
+            IMAGING -> for (item in imagingList!!) item.status?.let { updateFilterList(it) }
+        }
+    }
+
+    private fun updateFilterList(status: String) {
+        if (filterList.none { it.name.lowercase() == status.lowercase() }) {
+            FilterItem(status.capitalFirstChar(), false).let { filterList.add(it) }
+        }
+    }
+
+    private fun getFileLength(file: File): String {
+        val mb = convertToMegabytes(file)
+        return if (mb > 0) "$mb MB" else "${convertToKilobytes(file)} KB"
+    }
+
+    private fun convertToMegabytes(file: File): Long {
+        return file.length() / (1024 * 1024)
+    }
+
+    private fun convertToKilobytes(file: File): Long {
+        return file.length() / 1024
+    }
+
+    private fun setNoRecordLayout() {
+        binding.emptyLayout.apply {
+            llEmptyLayout.visibility = View.VISIBLE
+            ivEmptyType.setImageResource(R.drawable.practitioner_no_record)
+            tvEmptyTitle.text = getString(R.string.practitioner_no_record_title)
+            tvEmptyDescription.text = getString(R.string.practitioner_no_record_description)
+        }
+    }
+
+    private fun setNoRecordData() {
+        binding.emptyLayout.llEmptyLayout.visibility = View.GONE
+        when (getTileSelectedType()) {
+            PRACTITIONES -> if (practitionerAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            APPOINTMENTS -> if (appointmentAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            CONDITIONS -> if (conditionAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            LABS -> if (labAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            VITALS -> if (vitalAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            MEDICATIONS -> if (medicationAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            VISITS -> if (visitsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            PROCEDURES -> if (procedureAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            ALLERGIES -> if (allergiesAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            IMMUNIZATIONS -> if (immunizationAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            BILLING -> if (billingsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+
+            IMAGING -> if (imagingAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
         }
     }
 
@@ -1150,14 +1529,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     addFragment(
                         R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
                     )
-                    Log.i("=============", "=========picturePath: $picturePath")
                 }
             } catch (e: IOException) {
                 Log.i("TAG", "Some exception $e")
             }
         }
     }
-
 
     @SuppressLint("Range")
     private val getVideoPicker = registerForActivityResult(
@@ -1279,536 +1656,5 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
         // Return the file name and size as a pair
         return kotlin.Pair(fileName, fileSize)
-    }
-
-    private var startDate = ""
-    private var endDate = ""
-    private var filterStartDateCalendar = Calendar.getInstance()
-    private var filterEndDateCalendar = Calendar.getInstance()
-
-    private fun showStartDateCalendar() {
-        val datePickerDialog = DatePickerDialog(
-            requireActivity(),
-            R.style.my_dialog_theme,
-            { view, year, monthOfYear, dayOfMonth ->
-                startDate = (monthOfYear + 1).toString() + "-" + dayOfMonth.toString() + "-" + year
-                binding.tvFilterStartDate.text = startDate + "  "
-                filterStartDateCalendar.set(Calendar.YEAR, year)
-                filterStartDateCalendar.set(Calendar.MONTH, monthOfYear)
-                filterStartDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                if (filterStartDateCalendar > filterEndDateCalendar) {
-                    endDate = ""
-                    filterEndDateCalendar = Calendar.getInstance()
-                    binding.tvFilterEndDate.text = getString(R.string.dd_mm_yyyy)
-                }
-                setDateRange()
-            },
-            filterStartDateCalendar.get(Calendar.YEAR),
-            filterStartDateCalendar.get(Calendar.MONTH),
-            filterStartDateCalendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
-    }
-
-    private fun showEndDateCalendar() {
-        val datePickerDialog = DatePickerDialog(
-            requireActivity(), R.style.my_dialog_theme, { view, year, monthOfYear, dayOfMonth ->
-                endDate = (monthOfYear + 1).toString() + "-" + dayOfMonth.toString() + "-" + year
-                binding.tvFilterEndDate.text = endDate + "  "
-                filterEndDateCalendar.set(Calendar.YEAR, year)
-                filterEndDateCalendar.set(Calendar.MONTH, monthOfYear)
-                filterEndDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                setDateRange()
-            },
-            filterEndDateCalendar.get(Calendar.YEAR),
-            filterEndDateCalendar.get(Calendar.MONTH),
-            filterEndDateCalendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.datePicker.minDate = filterStartDateCalendar.timeInMillis
-        datePickerDialog.show()
-    }
-
-    private fun setDateRange() {
-        if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate)) {
-            binding.tvDateRange.text = "Date Range : $startDate - $endDate"
-            binding.rlDateLayout.visibility = View.VISIBLE
-            setFilterWithDateRange(true)
-        }
-    }
-
-    private fun setFilterWithDateRange(isFilterList: Boolean) {
-        val startDateCalendar =
-            startDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
-        val endDateCalendar =
-            endDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
-
-        when (myHealthTypeAdapter?.selectedItem) {
-            0 -> {
-                setPractitionerDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            1 -> {
-                setAppointmentDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            2 -> {
-                setConditionDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            3 -> {
-                setLabDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            4 -> {
-                setVitalDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            5 -> {
-                setMedicationDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            6 -> {
-                setVisitDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            7 -> {
-                setProcedureDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            8 -> {
-                setAllergyDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            9 -> {
-                setImmunizationDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            10 -> {
-                setBillingDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-
-            11 -> {
-                setImagingDateRangeFilter(
-                    isFilterList, startDateCalendar, endDateCalendar
-                )
-            }
-        }
-
-        setNoRecordData()
-    }
-
-    private fun setPractitionerDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        practitionerAdapter?.updateList(
-            if (isFilterList) practitionerList!!.filter { item ->
-                val dateCalendar = item.createdAt?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else practitionerList!!
-        )
-    }
-
-    private fun setAppointmentDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        appointmentAdapter?.updateList(
-            if (isFilterList) appointmentList!!.filter { item ->
-                val dateCalendar = item.startTime?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else appointmentList!!
-        )
-    }
-
-    private fun setConditionDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        conditionAdapter?.updateList(
-            if (isFilterList) conditionList!!.filter { item ->
-                val dateCalendar = item.recordedDate?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else conditionList!!
-        )
-    }
-
-    private fun setLabDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        labAdapter?.updateList(
-            if (isFilterList) labList!!.filter { item ->
-                val dateCalendar = item.issued?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else labList!!
-        )
-    }
-
-    private fun setVitalDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        vitalAdapter?.updateList(
-            if (isFilterList) vitalsList!!.filter { item ->
-                val dateCalendar = item.effectiveDate?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else vitalsList!!
-        )
-    }
-
-    private fun setMedicationDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        medicationAdapter?.updateList(
-            if (isFilterList) medicationList!!.filter { item ->
-                val dateCalendar = item.authoredOn?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else medicationList!!
-        )
-    }
-
-    private fun setVisitDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        visitsAdapter?.updateList(
-            if (isFilterList) visitList!!.filter { item ->
-                val dateCalendar = item.createdAt?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else visitList!!
-        )
-    }
-
-    private fun setProcedureDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        procedureAdapter?.updateList(
-            if (isFilterList) procedureList!!.filter { item ->
-                val dateCalendar = item.performedDate?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else procedureList!!
-        )
-    }
-
-    private fun setAllergyDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        allergiesAdapter?.updateList(
-            if (isFilterList) allergyList!!.filter { item ->
-                val dateCalendar = item.recordedDate?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else allergyList!!
-        )
-    }
-
-    private fun setImmunizationDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        immunizationAdapter?.updateList(
-            if (isFilterList) immunizationList!!.filter { item ->
-                val dateCalendar = item.occurrenceDate?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else immunizationList!!
-        )
-    }
-
-    private fun setBillingDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        billingsAdapter?.updateList(
-            if (isFilterList) billingList!!.filter { item ->
-                val dateCalendar = item.createdDate?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else billingList!!
-        )
-    }
-
-    private fun setImagingDateRangeFilter(
-        isFilterList: Boolean,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ) {
-        imagingAdapter?.updateList(
-            if (isFilterList) imagingList!!.filter { item ->
-                val dateCalendar = item.started?.toFormateCalendar(
-                    "dd-MM-yyyy",
-                    Constants.DD_MM_YYYY_FORMATE
-                )
-                isDateRangeAvailable(dateCalendar!!, startCalendar, endCalendar)
-            } else imagingList!!
-        )
-    }
-
-    private fun isDateRangeAvailable(
-        dateCalendar: Calendar,
-        startCalendar: Calendar,
-        endCalendar: Calendar
-    ): Boolean {
-        return (dateCalendar.timeInMillis >= startCalendar.timeInMillis &&
-                dateCalendar.timeInMillis <= endCalendar.timeInMillis)
-    }
-
-    private fun applyStatusFilter(itemList: ArrayList<String>) {
-        when (myHealthTypeAdapter?.selectedItem) {
-            1 -> {
-                val list = ArrayList<Appointment>()
-                for (filterText in itemList) {
-                    list.addAll(appointmentList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                appointmentAdapter?.updateList(if (list.size > 0) list else appointmentList!!)
-            }
-
-            2 -> {
-                val list = ArrayList<Condition>()
-                for (filterText in itemList) {
-                    list.addAll(conditionList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
-                }
-                conditionAdapter?.updateList(if (list.size > 0) list else conditionList!!)
-            }
-
-            3 -> {
-                val list = ArrayList<DiagnosticReport>()
-                for (filterText in itemList) {
-                    list.addAll(labList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                labAdapter?.updateList(if (list.size > 0) list else labList!!)
-            }
-
-            4 -> {
-                val list = ArrayList<Observation>()
-                for (filterText in itemList) {
-                    list.addAll(vitalsList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                vitalAdapter?.updateList(if (list.size > 0) list else vitalsList!!)
-            }
-
-            5 -> {
-                val list = ArrayList<MedicationRequest>()
-                for (filterText in itemList) {
-                    list.addAll(medicationList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                medicationAdapter?.updateList(if (list.size > 0) list else medicationList!!)
-            }
-
-            6 -> {
-                val list = ArrayList<Encounter>()
-                for (filterText in itemList) {
-                    list.addAll(visitList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                visitsAdapter?.updateList(if (list.size > 0) list else visitList!!)
-            }
-
-            7 -> {
-                val list = ArrayList<Procedure>()
-                for (filterText in itemList) {
-                    list.addAll(procedureList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                procedureAdapter?.updateList(if (list.size > 0) list else procedureList!!)
-            }
-
-            8 -> {
-                val list = ArrayList<AllergyIntolerance>()
-                for (filterText in itemList) {
-                    list.addAll(allergyList!!.filter { item -> item.clinicalStatus?.lowercase() == filterText.lowercase() })
-                }
-                allergiesAdapter?.updateList(if (list.size > 0) list else allergyList!!)
-            }
-
-            9 -> {
-                val list = ArrayList<Immunization>()
-                for (filterText in itemList) {
-                    list.addAll(immunizationList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                immunizationAdapter?.updateList(if (list.size > 0) list else immunizationList!!)
-            }
-
-            10 -> {
-                val list = ArrayList<Claim>()
-                for (filterText in itemList) {
-                    list.addAll(billingList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                billingsAdapter?.updateList(if (list.size > 0) list else billingList!!)
-            }
-
-            11 -> {
-                val list = ArrayList<Imaging>()
-                for (filterText in itemList) {
-                    list.addAll(imagingList!!.filter { item -> item.status?.lowercase() == filterText.lowercase() })
-                }
-                imagingAdapter?.updateList(if (list.size > 0) list else imagingList!!)
-            }
-        }
-    }
-
-    private fun getStatusFilterList() {
-        filterList = ArrayList()
-        when (myHealthTypeAdapter?.selectedItem) {
-            1 -> {
-                for (item in appointmentList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            2 -> {
-                for (item in conditionList!!) item.clinicalStatus?.let { updateFilterList(it) }
-            }
-
-            3 -> {
-                for (item in labList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            4 -> {
-                for (item in vitalsList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            5 -> {
-                for (item in medicationList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            6 -> {
-                for (item in visitList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            7 -> {
-                for (item in procedureList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            8 -> {
-                for (item in allergyList!!) item.clinicalStatus?.let { updateFilterList(it) }
-            }
-
-            9 -> {
-                for (item in immunizationList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            10 -> {
-                for (item in billingList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            11 -> {
-                for (item in imagingList!!) item.status?.let { updateFilterList(it) }
-            }
-
-            else -> {
-                filterList = getFilterList()
-            }
-        }
-    }
-
-    private fun updateFilterList(status: String) {
-        if (filterList.none { it.name.lowercase() == status.lowercase() }) {
-            FilterItem(status.capitalFirstChar(), false).let { filterList.add(it) }
-        }
-    }
-
-    private fun getFileLength(file: File): String {
-        val mb = convertToMegabytes(file)
-        return if (mb > 0) "$mb MB" else "${convertToKilobytes(file)} KB"
-    }
-
-    private fun convertToMegabytes(file: File): Long {
-        return file.length() / (1024 * 1024)
-    }
-
-    private fun convertToKilobytes(file: File): Long {
-        return file.length() / 1024
-    }
-
-    private fun setNoRecordLayout() {
-        binding.emptyLayout.apply {
-            llEmptyLayout.visibility = View.VISIBLE
-            ivEmptyType.setImageResource(R.drawable.practitioner_no_record)
-            tvEmptyTitle.text = getString(R.string.practitioner_no_record_title)
-            tvEmptyDescription.text = getString(R.string.practitioner_no_record_description)
-        }
-    }
-
-
-    private fun setNoRecordData() {
-        binding.emptyLayout.llEmptyLayout.visibility = View.GONE
-        when (myHealthTypeAdapter?.selectedItem) {
-            0 -> if (practitionerAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            1 -> if (appointmentAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            2 -> if (conditionAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            3 -> if (labAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            4 -> if (vitalAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            5 -> if (medicationAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            6 -> if (visitsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            7 -> if (procedureAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            8 -> if (allergiesAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            9 -> if (immunizationAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            10 -> if (billingsAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-            11 -> if (imagingAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
-        }
     }
 }

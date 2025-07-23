@@ -97,4 +97,8 @@ class MyHealthTypeAdapter(private val mContext: Context,
     override fun getItemCount(): Int {
         return itemList.size
     }
+
+    fun getSelectedHealthType(): String {
+        return itemList[selectedItem].type
+    }
 }

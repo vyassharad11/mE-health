@@ -209,6 +209,13 @@
     <string name="deleting_account_permanently">Deleting Account Permanently</string>
     <string name="deleting_account_permanently_description">Deleting your account will permanently erase all your registration information from our system. This cannot be undone.</string>
     <string name="confirm_this_description">To Confirm this, type “DELETE”</string>
+    <string name="contact_us_description">We’d love to hear from you, please drop us a line if you’ve any query.</string>
+    <string name="let_us_know">Let us know how we can assist you today!</string>
+    <string name="subject">Subject</string>
+    <string name="investor_enquiries">Investor Enquiries</string>
+    <string name="comment">Comment</string>
+    <string name="enter_your_thoughts">Enter your thoughts here</string>
+    <string name="please_select_subject">Please Select Subject</string>
 
 
 </resources>

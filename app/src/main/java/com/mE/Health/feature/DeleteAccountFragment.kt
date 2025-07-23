@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,8 @@ import com.mE.Health.feature.adapter.DeleteAccountListAdapter
 import com.mE.Health.utility.FilterItem
 import com.mE.Health.utility.roundview.RoundTextView
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.graphics.drawable.toDrawable
+import com.mE.Health.utility.roundview.RoundLinearLayout
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -106,13 +109,14 @@ class DeleteAccountFragment : BaseFragment() {
     private fun showUserInputDialog() {
         val dialog = Dialog(requireActivity())
         dialog.setContentView(R.layout.dialog_user_input)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(0))
+        dialog.window?.setBackgroundDrawable(0.toDrawable())
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        dialog.setCancelable(true)
+        dialog.setCancelable(false)
         val etUserInput = dialog.findViewById<EditText>(R.id.etUserInput)
+        val llCancel = dialog.findViewById<RoundLinearLayout>(R.id.llCancel)
         val rtvDeleteAccount = dialog.findViewById<RoundTextView>(R.id.rtvDeleteAccount)
         val tvMessage = dialog.findViewById<TextView>(R.id.tvMessage)
         val tvPolicy = dialog.findViewById<TextView>(R.id.tvPolicy)
@@ -151,8 +155,18 @@ class DeleteAccountFragment : BaseFragment() {
         rtvDeleteAccount.setOnClickListener {
             if (!etUserInput.text.isNullOrEmpty() && etUserInput.text.toString()
                     .lowercase() == "delete"
-            ) dialog.dismiss()
+            ) {
+                dialog.dismiss()
+            } else {
+                Toast.makeText(
+                    requireActivity(),
+                    "Please type 'DELETE' to confirm",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
+
+        llCancel.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 }

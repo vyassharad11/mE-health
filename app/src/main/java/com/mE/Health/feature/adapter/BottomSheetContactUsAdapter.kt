@@ -6,22 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.R
 import com.mE.Health.databinding.DeleteAccountListItemBinding
-import com.mE.Health.utility.Constants
 import com.mE.Health.utility.FilterItem
 
-class DeleteAccountListAdapter(private val mContext: Context) :
-    RecyclerView.Adapter<DeleteAccountListAdapter.MyViewHolder>() {
-
-    var itemList: List<FilterItem>? = ArrayList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
-    var type = Constants.ALL
+class BottomSheetContactUsAdapter(
+    private val mContext: Context, private val itemList: List<String>,
+    private val enquiries: String
+) : RecyclerView.Adapter<BottomSheetContactUsAdapter.MyViewHolder>() {
 
     interface OnClickCallback {
-        fun onClicked(data: FilterItem, position: Int)
+        fun onClicked(data: String, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -39,10 +32,10 @@ class DeleteAccountListAdapter(private val mContext: Context) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        itemList?.get(position)?.let { data ->
+        itemList[position].let { data ->
             with(holder.binding) {
-                tvName.text = data.name
-                ivCheckbox.setImageResource(if (data.isChecked) R.drawable.ic_checkbox_active else R.drawable.ic_checkbox_inactive)
+                tvName.text = data
+                ivCheckbox.setImageResource(if (data == enquiries) R.drawable.ic_radio_checked_button else R.drawable.ic_radio_unchecked_button)
                 holder.itemView.setOnClickListener {
                     onItemClickListener?.onClicked(data, position)
                 }
@@ -51,11 +44,6 @@ class DeleteAccountListAdapter(private val mContext: Context) :
     }
 
     override fun getItemCount(): Int {
-        return itemList?.size ?: 0
-    }
-
-    fun updateList(list: List<FilterItem>) {
-        this.itemList = list
-        notifyDataSetChanged()
+        return itemList.size
     }
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Slide
 import com.mE.Health.databinding.ActivityHomeNewBinding
 import com.mE.Health.feature.ConnectProviderFragment
+import com.mE.Health.feature.ContactUsFragment
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
 import com.mE.Health.feature.SettingFragment
@@ -195,6 +196,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         2 -> {
                             updateNavMenuVisibility(View.GONE)
                             homeNavClickAction(SettingFragment())
+                        }
+
+                        3 -> {
+                            updateNavMenuVisibility(View.GONE)
+                            homeNavClickAction(ContactUsFragment())
                         }
 
                         4 -> {

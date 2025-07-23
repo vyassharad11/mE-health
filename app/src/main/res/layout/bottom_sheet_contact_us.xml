@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mE.Health.utility.roundview.RoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    app:rv_backgroundColor="@color/transparent"
+    tools:ignore="MissingDefaultResource">
+
+
+    <com.mE.Health.utility.roundview.RoundLinearLayout
+        android:id="@+id/rllCancel"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        app:rv_backgroundColor="@color/background_color"
+        app:rv_isRadiusHalfHeight="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cross_arrow_black" />
+
+    </com.mE.Health.utility.roundview.RoundLinearLayout>
+
+
+    <com.mE.Health.utility.roundview.RoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_10"
+        app:rv_backgroundColor="@color/white"
+        app:rv_cornerRadius_TL="@dimen/dp_20"
+        app:rv_cornerRadius_TR="@dimen/dp_20"
+        tools:ignore="MissingDefaultResource">
+
+
+        <TextView
+            style="@style/textStyleBold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_20"
+            android:text="@string/please_select_subject"
+            android:textColor="@color/text_color_primary"
+            android:textSize="@dimen/sp_24" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_20"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBottomSheetFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                tools:itemCount="4"
+                tools:listitem="@layout/bottom_sheet_filter_item" />
+
+            <com.mE.Health.utility.roundview.RoundTextView
+                android:id="@+id/tvCancel"
+                style="@style/textStyleBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="@dimen/dp_30"
+                android:paddingHorizontal="@dimen/dp_40"
+                android:layout_marginHorizontal="@dimen/dp_30"
+                android:paddingVertical="@dimen/dp_10"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                app:rv_backgroundColor="@color/color_FF6605"
+                app:rv_isRadiusHalfHeight="true" />
+
+        </LinearLayout>
+    </com.mE.Health.utility.roundview.RoundLinearLayout>
+</com.mE.Health.utility.roundview.RoundLinearLayout>
