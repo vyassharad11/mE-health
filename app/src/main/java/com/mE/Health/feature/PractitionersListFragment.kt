@@ -47,7 +47,7 @@ class PractitionersListFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+//        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.back),binding.toolbar.tvTitle,true)
     }
 

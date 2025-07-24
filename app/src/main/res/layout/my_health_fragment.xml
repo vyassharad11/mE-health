@@ -97,6 +97,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/ivFilter"
                     android:padding="@dimen/dp_8"
+                    android:visibility="gone"
                     android:src="@drawable/ic_file_upload" />
 
 

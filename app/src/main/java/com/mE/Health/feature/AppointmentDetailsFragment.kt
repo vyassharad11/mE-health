@@ -11,6 +11,8 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.AppointmentDetailFragmentBinding
+import com.mE.Health.utility.BottomSheetContactUs
+import com.mE.Health.utility.BottomSheetShareData
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 import com.mE.Health.utility.toDisplayDate
@@ -157,6 +159,28 @@ class AppointmentDetailsFragment : BaseFragment() {
                     }
                 }
             }
+        }
+
+        binding.llShareButton.llShareData.setOnClickListener {
+            val list =
+                ArrayList<String>().apply {
+                    add("Dr. Ashley")
+                    add("Dr. Laura kim MD")
+                    add("Dr. Susan Lee MD")
+                    add("Dr. Emily carter MD")
+                    add("Dr. Rajesh Patel")
+                    add("Dr. James o’connor")
+                    add("Dr. Laura kim MD")
+                    add("Dr. Emily carter MD")
+                }
+            val bottomSheet = BottomSheetShareData(list, "strEnquiries")
+            bottomSheet.setOnCompleteListener(object : BottomSheetShareData.OnCompleteListener {
+                override fun onComplete(item: String) {
+                }
+            })
+            bottomSheet.show(
+                requireActivity().supportFragmentManager, "BottomSheetContactUs"
+            )
         }
     }
 }
