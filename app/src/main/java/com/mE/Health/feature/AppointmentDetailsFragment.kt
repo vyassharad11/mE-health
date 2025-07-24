@@ -1,5 +1,6 @@
 package com.mE.Health.feature
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -162,25 +163,35 @@ class AppointmentDetailsFragment : BaseFragment() {
         }
 
         binding.llShareButton.llShareData.setOnClickListener {
-            val list =
-                ArrayList<String>().apply {
-                    add("Dr. Ashley")
-                    add("Dr. Laura kim MD")
-                    add("Dr. Susan Lee MD")
-                    add("Dr. Emily carter MD")
-                    add("Dr. Rajesh Patel")
-                    add("Dr. James o’connor")
-                    add("Dr. Laura kim MD")
-                    add("Dr. Emily carter MD")
-                }
-            val bottomSheet = BottomSheetShareData(list, "strEnquiries")
-            bottomSheet.setOnCompleteListener(object : BottomSheetShareData.OnCompleteListener {
-                override fun onComplete(item: String) {
-                }
-            })
-            bottomSheet.show(
-                requireActivity().supportFragmentManager, "BottomSheetContactUs"
+
+
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(
+                Intent.EXTRA_TEXT,
+                "Dummy Text to share"
             )
+            startActivity(Intent.createChooser(intent, "Share via"))
+
+//            val list =
+//                ArrayList<String>().apply {
+//                    add("Dr. Ashley")
+//                    add("Dr. Laura kim MD")
+//                    add("Dr. Susan Lee MD")
+//                    add("Dr. Emily carter MD")
+//                    add("Dr. Rajesh Patel")
+//                    add("Dr. James o’connor")
+//                    add("Dr. Laura kim MD")
+//                    add("Dr. Emily carter MD")
+//                }
+//            val bottomSheet = BottomSheetShareData(list, "strEnquiries")
+//            bottomSheet.setOnCompleteListener(object : BottomSheetShareData.OnCompleteListener {
+//                override fun onComplete(item: String) {
+//                }
+//            })
+//            bottomSheet.show(
+//                requireActivity().supportFragmentManager, "BottomSheetContactUs"
+//            )
         }
     }
 }
