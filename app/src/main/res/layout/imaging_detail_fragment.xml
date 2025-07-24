@@ -30,7 +30,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:text="@string/detail"
                 android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_34" />
+                android:textSize="@dimen/sp_24" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -316,7 +316,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/dp_2"
                                         android:text="@string/active"
-                                        android:textColor="@color/text_color_primary"
+                                        android:textColor="@color/color_06C270"
                                         android:textSize="@dimen/sp_12" />
 
                                 </LinearLayout>
@@ -356,7 +356,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/dp_2"
                                         android:text="@string/active"
-                                        android:textColor="@color/text_color_primary"
+                                        android:textColor="@color/color_06C270"
                                         android:textSize="@dimen/sp_12" />
 
                                 </LinearLayout>
@@ -445,7 +445,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/dp_2"
                                         android:text="@string/completed"
-                                        android:textColor="@color/text_color_primary"
+                                        android:textColor="@color/color_06C270"
                                         android:textSize="@dimen/sp_12" />
 
                                 </LinearLayout>

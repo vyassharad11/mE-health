@@ -40,15 +40,9 @@ class VitalDetailsFragment : BaseFragment() {
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.vital)
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivSetting.setOnClickListener {
-
-        }
+        setHeaderBackProperties(binding.toolbar.ivBack)
+        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderTitleProperties(getString(R.string.vital),binding.toolbar.tvTitle,true)
     }
 
     private fun initView() {

@@ -49,8 +49,9 @@ class ContactUsFragment : BaseFragment() {
         binding.toolbar.ivBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
-        binding.toolbar.ivSetting.visibility = View.GONE
+        binding.toolbar.tvTitle.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     private fun initView() {

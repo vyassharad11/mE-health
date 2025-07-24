@@ -136,10 +136,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun initHeader() {
         binding.toolbar.tvTitle.text = getString(R.string.back)
         binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
+            onBackPressed()
         }
         binding.toolbar.tvTitle.setOnClickListener {
-            requireActivity().onBackPressed()
+            onBackPressed()
         }
         binding.toolbar.ivSetting.visibility = View.VISIBLE
         binding.toolbar.ivSetting.setOnClickListener {

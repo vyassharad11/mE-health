@@ -41,17 +41,15 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
         initHeader()
+        setPractitionerData()
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.practitioner)
-        binding.toolbar.ivCalendar.visibility = View.VISIBLE
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
+        setHeaderBackProperties(binding.toolbar.ivBack)
+        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderTitleProperties(getString(R.string.practitioner),binding.toolbar.tvTitle,true)
 
-        setPractitionerData()
+        binding.toolbar.ivCalendar.visibility = View.VISIBLE
     }
 
     private fun setPractitionerData() {

@@ -28,8 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_10"
                 android:text="@string/detail"
-                android:textColor="@color/text_color_primary"
-                android:textSize="@dimen/sp_34" />
+                android:textColor="@color/color_333333"
+                android:textSize="@dimen/sp_24" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

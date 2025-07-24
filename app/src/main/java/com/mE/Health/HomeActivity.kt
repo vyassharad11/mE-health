@@ -15,7 +15,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Slide
 import com.mE.Health.databinding.ActivityHomeNewBinding
-import com.mE.Health.feature.ConnectProviderFragment
 import com.mE.Health.feature.ContactUsFragment
 import com.mE.Health.feature.HomeFragment
 import com.mE.Health.feature.MyPersonaFragment
@@ -23,7 +22,6 @@ import com.mE.Health.feature.SettingFragment
 import com.mE.Health.feature.adapter.HomeMenuAdapter
 import com.mE.Health.feature.adapter.RadioButtonListAdapter
 import com.mE.Health.models.NavMenuDTO
-import com.mE.Health.viewmodels.assist.AssistViewModel
 import com.mE.Health.viewmodels.mockData.MockDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -100,7 +98,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         try {
             if (hideSideNavRequired()) return
             closeKeyboard()
-            val manager = supportFragmentManager
             if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
                 if (supportFragmentManager.backStackEntryCount == 1 && isNavActive) {
@@ -234,10 +231,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun homeNavClickAction(fragment: Fragment) {
-//        val fm: FragmentManager = supportFragmentManager
-//        val fragment: HomeFragment =
-//            fm.findFragmentById(R.id.fragment_container) as HomeFragment
-//        fragment.navClickAction()
         clearBackStack()
         addFragment(fragment)
     }
@@ -285,7 +278,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun openSetting() {
-        addFragment(ConnectProviderFragment())
+        addFragment(SettingFragment())
     }
 
     private fun observeResponse() {

@@ -37,17 +37,9 @@ class ImmunizationDetailsFragment : BaseFragment() {
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.back)
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.toolbar.tvTitle.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivSetting.setOnClickListener {
-
-        }
+        setHeaderBackProperties(binding.toolbar.ivBack)
+        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderTitleProperties(getString(R.string.immunization),binding.toolbar.tvTitle,true)
     }
 
     private fun initView() {

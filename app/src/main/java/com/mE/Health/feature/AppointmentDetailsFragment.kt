@@ -41,18 +41,9 @@ class AppointmentDetailsFragment : BaseFragment() {
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.appointments)
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivSetting.setOnClickListener {
-
-        }
-    }
-
-    private fun setDetail() {
-
+        setHeaderBackProperties(binding.toolbar.ivBack)
+        setHeaderSettingProperties(binding.toolbar.ivSetting, true)
+        setHeaderTitleProperties(getString(R.string.appointment), binding.toolbar.tvTitle, true)
     }
 
     private fun initView() {
@@ -93,6 +84,8 @@ class AppointmentDetailsFragment : BaseFragment() {
                         delegate.backgroundColor =
                             ContextCompat.getColor(requireActivity(), R.color.color_1A0063F7)
                     }
+                    binding.tvEditAppointment.visibility = View.VISIBLE
+                    binding.tvCancelAppointment.visibility = View.VISIBLE
                 } else if (detail.status?.lowercase() == getString(R.string.completed).lowercase()) {
                     binding.rtvStatus.apply {
                         text = getString(R.string.completed)

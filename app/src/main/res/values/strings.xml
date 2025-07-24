@@ -193,6 +193,7 @@
     <string name="procedures">Procedures</string>
     <string name="allergies">Allergies</string>
     <string name="immunizations">Immunizations</string>
+    <string name="immunization">Immunization</string>
     <string name="billings">Billing</string>
     <string name="imagings">Imaging</string>
 
@@ -216,6 +217,8 @@
     <string name="comment">Comment</string>
     <string name="enter_your_thoughts">Enter your thoughts here</string>
     <string name="please_select_subject">Please Select Subject</string>
+    <string name="visit">Visit</string>
+    <string name="appointment">Appointment</string>
 
 
 </resources>

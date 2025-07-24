@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/my_settings"
                 android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_34" />
+                android:textSize="@dimen/sp_24" />
 
 
             <TextView

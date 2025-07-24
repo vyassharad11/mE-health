@@ -37,15 +37,9 @@ class LabDetailsFragment : BaseFragment() {
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.lab)
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivSetting.setOnClickListener {
-
-        }
+        setHeaderBackProperties(binding.toolbar.ivBack)
+        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderTitleProperties(getString(R.string.lab),binding.toolbar.tvTitle,true)
     }
 
     private fun setDetails() {
@@ -56,7 +50,7 @@ class LabDetailsFragment : BaseFragment() {
             binding.apply {
                 tvLabId.text = detail.id.uppercase()
                 tvDate.text = detail.issued?.toDisplayDate()
-                tvStartDate.text = detail.effectiveDate?.toDisplayDate()
+                tvStartDate.text = "Start Date: "+detail.effectiveDate?.toDisplayDate()
                 tvName.text = detail.code_display
 
                 tvStatus.apply {

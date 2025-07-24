@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -84,7 +85,7 @@ open class BaseFragment : Fragment() {
     ) {
         try {
             if (activity == null) return
-            if (updateSideNavMenuVisibility(requireActivity())){
+            if (updateSideNavMenuVisibility(requireActivity())) {
                 return
             }
             fragment.enterTransition = Slide(Gravity.END)
@@ -129,7 +130,7 @@ open class BaseFragment : Fragment() {
     ) {
         try {
             if (activity == null) return
-            if (updateSideNavMenuVisibility(requireActivity())){
+            if (updateSideNavMenuVisibility(requireActivity())) {
                 return
             }
             fragment.enterTransition = Slide(Gravity.END)
@@ -250,7 +251,7 @@ open class BaseFragment : Fragment() {
         (getActivity(context) as HomeActivity).setBottomNavigationVisibility()
     }
 
-     fun refreshBottomMenu(context: Context) {
+    fun refreshBottomMenu(context: Context) {
         (getActivity(context) as HomeActivity).refreshMenu()
     }
 
@@ -263,7 +264,7 @@ open class BaseFragment : Fragment() {
         (getActivity(context) as HomeActivity).activeHomeMenu()
     }
 
-   fun updateSideNavStatus(context: Context) {
+    fun updateSideNavStatus(context: Context) {
         (getActivity(context) as HomeActivity).updateSideNavStatus()
     }
 
@@ -271,9 +272,47 @@ open class BaseFragment : Fragment() {
         (getActivity(context) as HomeActivity).openSetting()
     }
 
+    fun onBackPressed() {
+        requireActivity().onBackPressedDispatcher.onBackPressed()
+    }
 
-    private fun updateSideNavMenuVisibility(mActivity: Activity) : Boolean {
-        var status  = false
+    fun setHeaderBackProperties(
+        ivBack: ImageView
+    ) {
+        ivBack.apply {
+            setOnClickListener {
+                onBackPressed()
+            }
+        }
+    }
+
+    fun setHeaderTitleProperties(
+        title: String,
+        tvTitle: TextView,
+        isClickable: Boolean = false
+    ) {
+        tvTitle.apply {
+            text = title
+            if (isClickable) setOnClickListener {
+                onBackPressed()
+            }
+        }
+    }
+
+    fun setHeaderSettingProperties(
+        ivSetting: ImageView,
+        isVisible: Boolean = false
+    ) {
+        ivSetting.apply {
+            visibility = if (isVisible) View.VISIBLE else View.GONE
+            setOnClickListener {
+                openSetting(requireActivity())
+            }
+        }
+    }
+
+    private fun updateSideNavMenuVisibility(mActivity: Activity): Boolean {
+        var status = false
         val mCurrentActivity = (mActivity.applicationContext as MyApplication).getCurrentActivity()
         if ((mCurrentActivity as HomeActivity) != null) {
             status = (mActivity as HomeActivity).hideSideNavRequired()
@@ -334,10 +373,10 @@ open class BaseFragment : Fragment() {
 
 
     var filePath = ""
-     var cameraUri: Uri? = null
-     var cropPicturePath = ""
-     var picturePath = ""
-     var imageStoragePath = ""
+    var cameraUri: Uri? = null
+    var cropPicturePath = ""
+    var picturePath = ""
+    var imageStoragePath = ""
 
     fun log(tag: String, str: String) {
         Log.i(tag, str)
@@ -374,10 +413,10 @@ open class BaseFragment : Fragment() {
     }
 
     interface OnClickCallback {
-        fun onClick( position: Int)
+        fun onClick(position: Int)
     }
 
-    fun showUploadDocument( onClickCallback: OnClickCallback) {
+    fun showUploadDocument(onClickCallback: OnClickCallback) {
         val dialog = Dialog(requireActivity())
         dialog.setContentView(R.layout.dialog_camera_video)
         dialog.window?.setBackgroundDrawable(ColorDrawable(0))
@@ -413,7 +452,10 @@ open class BaseFragment : Fragment() {
     fun openGallery() {
         try {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            requireActivity().startActivityForResult(Intent.createChooser(intent, ""), BaseInterface.GALLERY)
+            requireActivity().startActivityForResult(
+                Intent.createChooser(intent, ""),
+                BaseInterface.GALLERY
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireActivity(), e.message, Toast.LENGTH_LONG).show()
@@ -503,7 +545,7 @@ open class BaseFragment : Fragment() {
         }
     }
 
-     fun getTempUri(activity: Activity): Uri {
+    fun getTempUri(activity: Activity): Uri {
         return Uri.fromFile(getTempFile(activity))
     }
 

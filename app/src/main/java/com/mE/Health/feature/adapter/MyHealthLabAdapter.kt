@@ -47,7 +47,7 @@ class MyHealthLabAdapter(private val mContext: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item: DiagnosticReport? = itemList?.get(position)
         item?.let {
-            holder.binding.tvRecordedDate.text = it.issued?.toDisplayDate()
+            holder.binding.tvRecordedDate.text = "Recorded Date: "+it.issued?.toDisplayDate()
             holder.binding.tvName.text = it.code_display
             holder.binding.tvViewDetail.setOnClickListener {
                 onItemClickListener?.onClicked(item, position)

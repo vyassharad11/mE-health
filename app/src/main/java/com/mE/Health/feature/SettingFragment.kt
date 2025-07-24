@@ -33,6 +33,16 @@ class SettingFragment : BaseFragment(), View.OnClickListener {
         initHeader()
     }
 
+    private fun initHeader() {
+        binding.toolbar.tvTitle.text = getString(R.string.back)
+        binding.toolbar.ivBack.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+        binding.toolbar.tvTitle.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+    }
+
     private fun initView() {
         var status = false
         var videoStatus = false
@@ -58,17 +68,6 @@ class SettingFragment : BaseFragment(), View.OnClickListener {
 
         binding.cvDeleteAccount.setOnClickListener(this)
         binding.cvHealthCare.setOnClickListener(this)
-    }
-
-
-    private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.back)
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.toolbar.tvTitle.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
     }
 
     override fun onClick(view: View?) {

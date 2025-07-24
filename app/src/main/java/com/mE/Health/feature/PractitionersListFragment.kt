@@ -45,6 +45,12 @@ class PractitionersListFragment : BaseFragment() {
         initHeader()
     }
 
+    private fun initHeader() {
+        setHeaderBackProperties(binding.toolbar.ivBack)
+        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderTitleProperties(getString(R.string.back),binding.toolbar.tvTitle,true)
+    }
+
     private fun initView() {
         val type = arguments?.getString(Constants.PN_TYPE, "")
 
@@ -127,18 +133,6 @@ class PractitionersListFragment : BaseFragment() {
                     }
                 }
             }
-        }
-    }
-
-    private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.condition)
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivSetting.setOnClickListener {
-
         }
     }
 }
