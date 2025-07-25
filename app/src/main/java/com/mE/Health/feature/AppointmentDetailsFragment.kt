@@ -1,6 +1,5 @@
 package com.mE.Health.feature
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,15 +8,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.mE.Health.R
+import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.AppointmentDetailFragmentBinding
-import com.mE.Health.utility.BottomSheetContactUs
-import com.mE.Health.utility.BottomSheetShareData
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 import com.mE.Health.utility.toDisplayDate
-import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -27,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class AppointmentDetailsFragment : BaseFragment() {
 
     private lateinit var binding: AppointmentDetailFragmentBinding
+    private var shareMessage = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +44,7 @@ class AppointmentDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting, true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting, true)
         setHeaderTitleProperties(getString(R.string.appointment), binding.toolbar.tvTitle, true)
     }
 
@@ -55,6 +54,7 @@ class AppointmentDetailsFragment : BaseFragment() {
 
             val datTimePair = openCloseTime(detail.startTime, detail.endTime)
             val dateTime = "${datTimePair.first},\n${datTimePair.second}"
+            generateShareMessage(detail)
             binding.apply {
                 tvDrName.text = detail.practitionerName
                 tvSpeciality.text = detail.practitionerSpecialty
@@ -62,7 +62,7 @@ class AppointmentDetailsFragment : BaseFragment() {
                 tvDate.text = datTimePair.first
                 tvTime.text = datTimePair.second
                 tvReason.text = reasonCodeObject.display
-                tvVisitDate.text = detail.createdAt?.toDisplayDate()
+                tvVisitDate.text = "Start Date: "+detail.createdAt?.toDisplayDate()
 
                 if (detail.status?.lowercase() == getString(R.string.booked).lowercase()) {
                     binding.rtvStatus.apply {
@@ -148,7 +148,7 @@ class AppointmentDetailsFragment : BaseFragment() {
                             ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
                     }
                     binding.rtvVisitStatus.apply {
-                        text = detail.status
+                        text = detail.status?.capitalFirstChar()
                         setTextColor(
                             ContextCompat.getColor(
                                 requireActivity(),
@@ -162,36 +162,30 @@ class AppointmentDetailsFragment : BaseFragment() {
             }
         }
 
-        binding.llShareButton.llShareData.setOnClickListener {
-
-
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            intent.putExtra(
-                Intent.EXTRA_TEXT,
-                "Dummy Text to share"
-            )
-            startActivity(Intent.createChooser(intent, "Share via"))
-
-//            val list =
-//                ArrayList<String>().apply {
-//                    add("Dr. Ashley")
-//                    add("Dr. Laura kim MD")
-//                    add("Dr. Susan Lee MD")
-//                    add("Dr. Emily carter MD")
-//                    add("Dr. Rajesh Patel")
-//                    add("Dr. James o’connor")
-//                    add("Dr. Laura kim MD")
-//                    add("Dr. Emily carter MD")
-//                }
-//            val bottomSheet = BottomSheetShareData(list, "strEnquiries")
-//            bottomSheet.setOnCompleteListener(object : BottomSheetShareData.OnCompleteListener {
-//                override fun onComplete(item: String) {
-//                }
-//            })
-//            bottomSheet.show(
-//                requireActivity().supportFragmentManager, "BottomSheetContactUs"
-//            )
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(message = shareMessage)
         }
+    }
+
+    private fun generateShareMessage(detail: Appointment){
+        val datTimePair = openCloseTime(detail.startTime, detail.endTime)
+        val dateTime = "${datTimePair.first}\n${datTimePair.second}"
+        val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)
+        shareMessage = "Here is my medical Appointment information from mEinstein I had to share! You have to try mE!\n" +
+                "https://bit.ly/4ipzMmF\n" +
+                "\n" +
+                "Annual well visit\n" +
+                "$dateTime\n" +
+                "Status: ${detail.status?.capitalFirstChar()}\n" +
+                "${ detail.practitionerName}\n" +
+                "Annual well visit\n" +
+                "Reason\n" +
+                "${reasonCodeObject.display}\n" +
+                "Visits Status\n" +
+                "Start Date: ${detail.createdAt?.toDisplayDate()}\n" +
+                "Status: ${detail.status?.capitalFirstChar()}\n" +
+                "\n" +
+                "\n" +
+                "Thank You!"
     }
 }

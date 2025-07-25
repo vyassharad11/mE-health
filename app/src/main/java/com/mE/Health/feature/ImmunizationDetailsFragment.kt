@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.ImmunizationDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
@@ -38,7 +39,7 @@ class ImmunizationDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.immunization),binding.toolbar.tvTitle,true)
     }
 
@@ -55,6 +56,9 @@ class ImmunizationDetailsFragment : BaseFragment() {
                     tvStatus.delegate.backgroundColor = it.second
                 }
             }
+        }
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.IMMUNIZATIONS,"Share via","Text to share")
         }
     }
 }

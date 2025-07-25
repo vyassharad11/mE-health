@@ -16,12 +16,14 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.telephony.TelephonyManager
+import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -278,7 +280,7 @@ open class BaseFragment : Fragment() {
     }
 
     fun onBackPressed() {
-        requireActivity().onBackPressedDispatcher.onBackPressed()
+        requireActivity().onBackPressed()
     }
 
     fun setHeaderBackProperties(
@@ -308,13 +310,12 @@ open class BaseFragment : Fragment() {
         ivSetting: ImageView,
         isVisible: Boolean = false
     ) {
-//        ivSetting.apply {
-//            visibility = if (isVisible) View.VISIBLE else View.GONE
-//            setOnClickListener {
-//                openSetting(requireActivity())
-//            }
-//        }
-        setHeaderUploadProperties(ivSetting, isVisible)
+        ivSetting.apply {
+            visibility = if (isVisible) View.VISIBLE else View.GONE
+            setOnClickListener {
+                openSetting(requireActivity())
+            }
+        }
     }
 
     fun setHeaderUploadProperties(
@@ -335,9 +336,10 @@ open class BaseFragment : Fragment() {
                             }
 
                             2 -> {
-                                val pickerIntent = Intent(Intent.ACTION_PICK)
-                                pickerIntent.type = "video/*"
-                                getVideoPicker.launch(pickerIntent)
+//                                val pickerIntent = Intent(Intent.ACTION_PICK)
+//                                pickerIntent.type = "video/*"
+//                                getVideoPicker.launch(pickerIntent)
+                                pickVideoFromStorage()
                             }
 
                             3 -> {
@@ -628,6 +630,15 @@ open class BaseFragment : Fragment() {
         return file.length() / 1024
     }
 
+    private fun getFileLength(size: Long): String {
+        val mb = size
+        return if (mb > 0) "$mb MB" else "${convertToKilobytes(size)} KB"
+    }
+
+    private fun convertToKilobytes(size: Long): Long {
+        return size / 1024
+    }
+
     private val getPhotoPicker = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -687,6 +698,58 @@ open class BaseFragment : Fragment() {
                 Log.i("TAG", "Some exception $e")
             }
         }
+    }
+
+    private fun pickVideoFromStorage() {
+        pickVideoLauncher.launch("video/*")
+    }
+
+    private val pickVideoLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            val retriever = android.media.MediaMetadataRetriever()
+            retriever.setDataSource(requireContext(), it)
+            val width =
+                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
+                    ?.toIntOrNull() ?: 0
+            val height =
+                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
+                    ?.toIntOrNull() ?: 0
+            retriever.release()
+            UserContentFragment.width = width
+            UserContentFragment.height = height
+            UserContentFragment.videoURI = it
+            val data = getFileNameAndSize(it, requireContext())
+            val size = getFileLength(data.second!!)
+            val fragment = UserContentFragment()
+            val bundle = Bundle()
+            bundle.apply {
+                putString(Constants.FILE_PATH, "${it.path}")
+                putString(Constants.FILE_LENGTH, size)
+                putString(Constants.FILE_NAME, data.first)
+                putString(Constants.FILE_TYPE, Constants.FILE_VIDEO)
+            }
+            fragment.arguments = bundle
+            addFragment(
+                R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
+            )
+        }
+    }
+
+    private fun getFileNameAndSize(uri: Uri, context: Context): Pair<String?, Long?> {
+        var name: String? = null
+        var size: Long? = null
+        val cursor = context.contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            val nameIndex = it.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+            val sizeIndex = it.getColumnIndex(android.provider.OpenableColumns.SIZE)
+            if (it.moveToFirst()) {
+                name = it.getString(nameIndex)
+                size = it.getLong(sizeIndex)
+            }
+        }
+        return Pair(name, size)
     }
 
     @SuppressLint("Range")
@@ -809,5 +872,15 @@ open class BaseFragment : Fragment() {
         }
         // Return the file name and size as a pair
         return kotlin.Pair(fileName, fileSize)
+    }
+
+    fun shareRecord(type: String = "", title: String = "", message: String) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra(
+            Intent.EXTRA_TEXT,
+            message
+        )
+        startActivity(Intent.createChooser(intent, title))
     }
 }

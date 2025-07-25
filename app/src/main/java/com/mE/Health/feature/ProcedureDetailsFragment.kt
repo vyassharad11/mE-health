@@ -10,6 +10,7 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.ProcedureDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
@@ -40,7 +41,7 @@ class ProcedureDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.procedure),binding.toolbar.tvTitle,true)
     }
 
@@ -60,6 +61,9 @@ class ProcedureDetailsFragment : BaseFragment() {
                 tvProcedureId.text = "#${reasonCodeObject.code}"
                 tvReason.text = reasonCodeObject.display
             }
+        }
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.PROCEDURES,"Share via","Text to share")
         }
     }
 }

@@ -61,6 +61,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="COVID-19 Booster"
+                                android:layout_marginRight="@dimen/dp_5"
+                                android:layout_alignParentLeft="true"
+                                android:layout_toStartOf="@+id/tvStatus"
                                 android:textColor="@color/text_color_primary"
                                 android:textSize="@dimen/sp_18" />
 
@@ -266,6 +269,7 @@
             </LinearLayout>
 
             <include
+                android:id="@+id/layoutSyncButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_5"

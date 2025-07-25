@@ -9,6 +9,7 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Insurance
 import com.mE.Health.databinding.BillingDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.fromJson
@@ -40,7 +41,7 @@ class BillingDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.billing),binding.toolbar.tvTitle,true)
     }
 
@@ -62,6 +63,9 @@ class BillingDetailsFragment : BaseFragment() {
                     }
                 }
             }
+        }
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.BILLING,"Share via","Text to share")
         }
     }
 }

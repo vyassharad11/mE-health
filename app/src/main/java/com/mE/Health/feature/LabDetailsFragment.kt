@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.LabDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
@@ -38,7 +39,7 @@ class LabDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.lab),binding.toolbar.tvTitle,true)
     }
 
@@ -64,6 +65,10 @@ class LabDetailsFragment : BaseFragment() {
 
         mockViewModel.practitionerDetail.observe(viewLifecycleOwner) {
             binding.tvPractitionerName.text = it.name
+        }
+
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.LAB,"Share via","Text to share")
         }
     }
 }

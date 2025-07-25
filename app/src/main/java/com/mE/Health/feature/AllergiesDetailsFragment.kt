@@ -5,23 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.AllergiesDetailFragmentBinding
-import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MedicationDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
-import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
+
+private const val s = Constants.ALLERGIES
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -48,7 +41,7 @@ class AllergiesDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.allergies),binding.toolbar.tvTitle,true)
     }
 
@@ -63,6 +56,9 @@ class AllergiesDetailsFragment : BaseFragment() {
                     tvStatus.delegate.backgroundColor = it.second
                 }
             }
+        }
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.ALLERGIES,"Share via","Text to share")
         }
     }
 }

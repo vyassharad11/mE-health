@@ -40,15 +40,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_20"
                 android:src="@drawable/dummy_photo"
                 android:visibility="gone"
                 app:rv_cornerRadius="@dimen/dp_10" />
 
             <VideoView
                 android:id="@+id/videoView"
-                android:layout_width="@dimen/dp_280"
-                android:layout_height="@dimen/dp_150"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_40"
                 android:visibility="gone" />
@@ -172,6 +172,7 @@
                     app:rv_strokeWidth="@dimen/dp_1" />
 
                 <com.mE.Health.utility.roundview.RoundTextView
+                    android:id="@+id/rtvSave"
                     style="@style/textStyleSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

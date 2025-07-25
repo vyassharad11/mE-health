@@ -97,7 +97,7 @@ class MyProfileFragment : BaseFragment() {
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
-            R.style.OrangeDatePickerDialogTheme,
+            R.style.my_dialog_theme,
             { _, year, month, dayOfMonth ->
                 val selectedDate = String.format("%02d/%02d/%04d", month + 1, dayOfMonth, year)
                 binding.tvAnniversary.text = selectedDate

@@ -5,15 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.DosageInstruction
 import com.mE.Health.data.model.MedicationCode
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.fromJson
@@ -45,7 +43,7 @@ class MedicationDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.medication),binding.toolbar.tvTitle,true)
     }
 
@@ -64,6 +62,10 @@ class MedicationDetailsFragment : BaseFragment() {
                 setTextColor(statusDetail.first)
                 delegate.backgroundColor = statusDetail.second
             }
+        }
+
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.MEDICATIONS,"Share via","Text to share")
         }
     }
 }

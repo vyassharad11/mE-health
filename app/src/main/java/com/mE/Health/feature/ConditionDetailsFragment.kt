@@ -5,19 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
-import com.mE.Health.databinding.AllergiesDetailFragmentBinding
 import com.mE.Health.databinding.ConditionDetailFragmentBinding
-import com.mE.Health.databinding.LabDetailFragmentBinding
-import com.mE.Health.databinding.MedicationDetailFragmentBinding
-import com.mE.Health.databinding.MyPersonaFragmentBinding
-import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
-import com.mE.Health.databinding.VisitsDetailFragmentBinding
-import com.mE.Health.feature.adapter.MyHealthTypeAdapter
-import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
-import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
-import com.mE.Health.feature.adapter.PractitionerVisitAdapter
 import com.mE.Health.utility.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,7 +35,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.condition),binding.toolbar.tvTitle,true)
     }
 
@@ -56,6 +45,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
         binding.tvVitalViewAll.setOnClickListener(this)
         binding.tvLabsViewAll.setOnClickListener(this)
         binding.tvVisitsViewAll.setOnClickListener(this)
+        binding.layoutSyncButton.llShareData.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -120,6 +110,9 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
                     "PractitionersListFragment",
                     "ConditionDetailsFragment"
                 )
+            }
+            R.id.llShareData -> {
+                shareRecord(Constants.CONDITIONS,"Share via","Text to share")
             }
         }
     }

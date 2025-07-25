@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import android.view.ViewGroup
 import android.widget.MediaController
 import android.widget.Toast
@@ -64,7 +65,7 @@ class UserContentFragment : BaseFragment() {
                     .into(binding.ivSelected)
                 binding.ivSelected.visibility = View.VISIBLE
             } else if (type.equals(Constants.FILE_VIDEO)) {
-                showVideoView(fileURI?.toUri()!!)
+                setVideoView()
             } else if (type.equals(Constants.FILE_DOCUMENT)) {
                 Log.i("================PATH", "=====${fileURI}")
                 showPDFView(fileURI?.toUri()!!)
@@ -99,21 +100,15 @@ class UserContentFragment : BaseFragment() {
         for (item in itemList) {
             addChipToGroup(item.itemName)
         }
+
+        binding.rtvSave.setOnClickListener {
+            pickVideoFromStorage()
+        }
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.user_content)
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.toolbar.tvTitle.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivSetting.setOnClickListener {
-
-        }
-
+        setHeaderTitleProperties(getString(R.string.user_content), binding.toolbar.tvTitle, true)
+        setHeaderSettingProperties(binding.toolbar.ivSetting, true)
         binding.toolbar.appBar.setBackgroundColor(
             ContextCompat.getColor(
                 requireActivity(),
@@ -253,6 +248,60 @@ class UserContentFragment : BaseFragment() {
                 "No application found which can open the file",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+
+    companion object{
+        var width = 0
+        var height = 0
+        var videoURI: Uri? = null
+    }
+
+    private fun setVideoView() {
+        // Set VideoView size
+        val params = binding.videoView.layoutParams
+        params.width = width
+        params.height = height
+        binding.videoView.layoutParams = params
+
+        binding.videoView.setVideoURI(videoURI)
+        binding.videoView.visibility = View.VISIBLE
+        val mediaController = MediaController(requireContext())
+        mediaController.setAnchorView(binding.videoView)
+        binding.videoView.setMediaController(mediaController)
+        binding.videoView.start()
+    }
+
+    private fun pickVideoFromStorage() {
+        pickVideoLauncher.launch("video/*")
+    }
+
+    private val pickVideoLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            val retriever = android.media.MediaMetadataRetriever()
+            retriever.setDataSource(requireContext(), it)
+            val width =
+                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
+                    ?.toIntOrNull() ?: 0
+            val height =
+                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
+                    ?.toIntOrNull() ?: 0
+            retriever.release()
+
+            // Set VideoView size
+            val params = binding.videoView.layoutParams
+            params.width = width
+            params.height = height
+            binding.videoView.layoutParams = params
+
+            binding.videoView.setVideoURI(it)
+            binding.videoView.visibility = View.VISIBLE
+            val mediaController = MediaController(requireContext())
+            mediaController.setAnchorView(binding.videoView)
+            binding.videoView.setMediaController(mediaController)
+            binding.videoView.start()
         }
     }
 }

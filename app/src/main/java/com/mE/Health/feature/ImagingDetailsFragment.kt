@@ -11,6 +11,7 @@ import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.databinding.ImagingDetailFragmentBinding
 import com.mE.Health.feature.adapter.ImagingPreviewAdapter
 import com.mE.Health.utility.BottomSheetImagingPreview
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
@@ -41,7 +42,7 @@ class ImagingDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.imaging),binding.toolbar.tvTitle,true)
     }
 
@@ -75,6 +76,10 @@ class ImagingDetailsFragment : BaseFragment() {
                     )
                 }
             }
+        }
+
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.IMAGING,"Share via","Text to share")
         }
     }
 }

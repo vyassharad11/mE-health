@@ -18,7 +18,6 @@ import com.mE.Health.feature.adapter.PractitionerVisitAdapter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.extractContactInfo
 import com.mE.Health.utility.toDisplayDate
-import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -46,7 +45,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.practitioner),binding.toolbar.tvTitle,true)
 
         binding.toolbar.ivCalendar.visibility = View.VISIBLE

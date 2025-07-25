@@ -10,10 +10,10 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.VitalDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.formatIntoPrettyDate
 import com.mE.Health.utility.toDisplayDate
-import com.mE.Health.utility.toFormattedDate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -41,7 +41,7 @@ class VitalDetailsFragment : BaseFragment() {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
         setHeaderTitleProperties(getString(R.string.vital),binding.toolbar.tvTitle,true)
     }
 
@@ -64,6 +64,10 @@ class VitalDetailsFragment : BaseFragment() {
 
         mockViewModel.patientDetail.observe(viewLifecycleOwner){
             binding.tvPatientName.text = it.name
+        }
+
+        binding.layoutSyncButton.llShareData.setOnClickListener {
+            shareRecord(Constants.VITALS,"Share via","Text to share")
         }
     }
 }
