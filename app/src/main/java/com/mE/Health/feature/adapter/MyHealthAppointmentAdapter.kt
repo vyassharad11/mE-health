@@ -9,6 +9,7 @@ import com.mE.Health.R
 import com.mE.Health.data.model.Appointment
 import com.mE.Health.databinding.ItemMyHealthAppointmentBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 

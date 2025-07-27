@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mE.Health.R
+import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Insurance
 import com.mE.Health.databinding.BillingDetailFragmentBinding
@@ -63,9 +64,28 @@ class BillingDetailsFragment : BaseFragment() {
                     }
                 }
             }
+            generateShareMessage(detail)
         }
         binding.layoutSyncButton.llShareData.setOnClickListener {
-            shareRecord(Constants.BILLING,"Share via","Text to share")
+            shareRecord(message = shareMessage)
         }
+    }
+
+    private fun generateShareMessage(detail: Claim) {
+        shareMessage =
+            "Here is my Billing information from mEinstein I had to share! You have to try mE!\n" +
+                    "https://bit.ly/4ipzMmF\n" +
+                    "\n" +
+                    "\n" +
+                    "${detail.name}\n" +
+                    "Status : ${detail.status?.capitalFirstChar()}\n" +
+                    "Date : ${detail.createdDate?.toDisplayDate()}\n" +
+                    "Amount : \$ ${detail.totalAmount}\n" +
+                    "Insurance Details\n" +
+                    "Insurance Company - ${fromJson(detail.insurance, Insurance::class.java).coverage?.display}\n" +
+                    "Coverage Type - Primary\n" +
+                    "Plan ID - BCBS-2023-456\n" +
+                    "\n" +
+                    "Thank You!!"
     }
 }

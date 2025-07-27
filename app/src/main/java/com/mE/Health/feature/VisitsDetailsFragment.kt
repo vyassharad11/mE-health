@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class VisitsDetailsFragment : BaseFragment() {
 
     private lateinit var binding: VisitsDetailFragmentBinding
-    private var shareMessage = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

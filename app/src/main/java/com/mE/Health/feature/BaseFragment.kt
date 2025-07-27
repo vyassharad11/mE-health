@@ -60,6 +60,7 @@ open class BaseFragment : Fragment() {
     val assistViewModel: AssistViewModel by activityViewModels()
     var dialogProgress: DialogProgress? = null
     var dialogOK: Dialog? = null
+    var shareMessage = ""
 
 
     fun replaceFragmentLogin(
@@ -874,13 +875,13 @@ open class BaseFragment : Fragment() {
         return kotlin.Pair(fileName, fileSize)
     }
 
-    fun shareRecord(type: String = "", title: String = "", message: String) {
+    fun shareRecord(message: String) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra(
             Intent.EXTRA_TEXT,
             message
         )
-        startActivity(Intent.createChooser(intent, title))
+        startActivity(Intent.createChooser(intent, "title"))
     }
 }

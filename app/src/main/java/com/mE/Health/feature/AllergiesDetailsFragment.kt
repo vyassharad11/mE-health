@@ -6,15 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mE.Health.R
+import com.mE.Health.data.model.AllergyIntolerance
 import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.DosageInstruction
+import com.mE.Health.data.model.MedicationCode
+import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.AllergiesDetailFragmentBinding
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.fromJson
 import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
-
-private const val s = Constants.ALLERGIES
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -56,9 +59,30 @@ class AllergiesDetailsFragment : BaseFragment() {
                     tvStatus.delegate.backgroundColor = it.second
                 }
             }
+            generateShareMessage(detail)
         }
         binding.layoutSyncButton.llShareData.setOnClickListener {
-            shareRecord(Constants.ALLERGIES,"Share via","Text to share")
+            shareRecord(message = shareMessage)
         }
+    }
+
+    private fun generateShareMessage(detail: AllergyIntolerance) {
+        shareMessage =
+            "Here is my Allergies information from mEinstein I had to share! You have to try mE!\n" +
+                    "https://bit.ly/4ipzMmF\n" +
+                    "\n" +
+                    "\n" +
+                    "${detail.code_display}\n" +
+                    "Clinical Status : ${detail.clinicalStatus?.capitalFirstChar()}\n" +
+                    "Recorded Date - ${detail.recordedDate?.toDisplayDate()}\n" +
+                    "Allergy ID - ALG- 2024-392\n" +
+                    "\n" +
+                    "Conditions (2)\n" +
+                    "Essential Hypertension : Clinical Status: Active\n" +
+                    "Type 2 Diabetic : Clinical Status: Active\n" +
+                    "Medications (2)\n" +
+                    "Lisinopril 10mg : Clinical Status: Active\n" +
+                    "Metformin 500mg : Clinical Status: Active\n\n" +
+                    "Thank You!!"
     }
 }

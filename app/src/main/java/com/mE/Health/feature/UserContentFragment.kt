@@ -102,7 +102,7 @@ class UserContentFragment : BaseFragment() {
         }
 
         binding.rtvSave.setOnClickListener {
-            pickVideoFromStorage()
+//            pickVideoFromStorage()
         }
     }
 

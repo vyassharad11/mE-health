@@ -32,4 +32,13 @@ object Utilities {
             else -> Pair(ContextCompat.getColor(mContext, R.color.color_F09C00),ContextCompat.getColor(mContext, R.color.color_AF09C00)) // Default case
         }
     }
+
+    fun getConditionUIStatus(mContext: Context,status:String): Pair<Int, Int> {
+        return when (status.lowercase()) {
+            "finished","completed","active" -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270))
+            "resolved" ->  Pair(ContextCompat.getColor(mContext, R.color.color_8A38F5),ContextCompat.getColor(mContext, R.color.color_1A8A38F5))
+            "canceled","inactive", "cancelled" -> Pair(ContextCompat.getColor(mContext, R.color.color_F02C2C),ContextCompat.getColor(mContext, R.color.color_1AF02C2C))
+            else -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270)) // Default case
+        }
+    }
 }

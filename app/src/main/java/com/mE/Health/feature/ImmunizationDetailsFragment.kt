@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.Immunization
 import com.mE.Health.databinding.ImmunizationDetailFragmentBinding
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
@@ -56,9 +57,28 @@ class ImmunizationDetailsFragment : BaseFragment() {
                     tvStatus.delegate.backgroundColor = it.second
                 }
             }
+            generateShareMessage(detail)
         }
         binding.layoutSyncButton.llShareData.setOnClickListener {
-            shareRecord(Constants.IMMUNIZATIONS,"Share via","Text to share")
+            shareRecord(message = shareMessage)
         }
+    }
+
+    private fun generateShareMessage(detail: Immunization) {
+        shareMessage =
+            "Here is my Immunization information from mEinstein I had to share! You have to try mE!\n" +
+                    "https://bit.ly/4ipzMmF\n" +
+                    "\n" +
+                    "\n" +
+                    "${detail.vaccineCode_display}\n" +
+                    "Status : ${ detail.status?.capitalFirstChar()}\n" +
+                    "Sarah Parker\n" +
+                    "Initial Consultation\n" +
+                    "\n" +
+                    "Record Details\n" +
+                    "Immunization ID : #IMM78901\n" +
+                    "Location : Apollo Hospital\n" +
+                    "Provider : Dr. Sarah Johnson\n\n" +
+                    "Thank You!!"
     }
 }

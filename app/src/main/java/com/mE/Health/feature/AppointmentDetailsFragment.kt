@@ -25,7 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class AppointmentDetailsFragment : BaseFragment() {
 
     private lateinit var binding: AppointmentDetailFragmentBinding
-    private var shareMessage = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

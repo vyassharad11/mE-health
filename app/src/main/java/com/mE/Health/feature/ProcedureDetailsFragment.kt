@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.ProcedureDetailFragmentBinding
 import com.mE.Health.utility.Constants
@@ -48,6 +50,7 @@ class ProcedureDetailsFragment : BaseFragment() {
     private fun initView() {
         DetailSingleton.procedure?.let { detail ->
             binding.apply {
+                generateShareMessage(detail)
                 tvName.text = detail.code_display
                 tvProcedureDate.text = detail.performedDate?.toDisplayDate()
 
@@ -63,7 +66,29 @@ class ProcedureDetailsFragment : BaseFragment() {
             }
         }
         binding.layoutSyncButton.llShareData.setOnClickListener {
-            shareRecord(Constants.PROCEDURES,"Share via","Text to share")
+            shareRecord(message = shareMessage)
         }
+    }
+
+
+    private fun generateShareMessage(detail: Procedure) {
+        val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)
+        shareMessage =
+            "Here is my medical Procedure information from mEinstein I had to share! You have to try mE!\n" +
+                    "https://bit.ly/4ipzMmF\n" +
+                    "\n" +
+                    "\n" +
+                    "${detail.code_display}\n" +
+                    "Status : ${detail.status?.capitalFirstChar()}\n" +
+                    "${detail.performedDate?.toDisplayDate()}\n" +
+                    "\n" +
+                    "Procedure Details\n" +
+                    "Procedure ID : #${reasonCodeObject.code}\n" +
+                    "Reason        : ${reasonCodeObject.display}\n" +
+                    "Visits Status : Active\n" +
+                    "Recorded Date: 06/11/2025\n" +
+                    "\n" +
+                    "\n" +
+                    "Thank You!!"
     }
 }

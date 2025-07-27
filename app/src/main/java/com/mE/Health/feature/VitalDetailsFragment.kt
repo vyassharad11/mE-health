@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
+import com.mE.Health.data.model.DiagnosticReport
+import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.VitalDetailFragmentBinding
 import com.mE.Health.utility.Constants
@@ -23,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class VitalDetailsFragment : BaseFragment() {
 
     private lateinit var binding: VitalDetailFragmentBinding
+    private var patientName = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,10 +67,34 @@ class VitalDetailsFragment : BaseFragment() {
 
         mockViewModel.patientDetail.observe(viewLifecycleOwner){
             binding.tvPatientName.text = it.name
+            patientName = it.name ?: ""
         }
 
         binding.layoutSyncButton.llShareData.setOnClickListener {
-            shareRecord(Constants.VITALS,"Share via","Text to share")
+            generateShareMessage(DetailSingleton.vital!!)
+            shareRecord(message = shareMessage)
         }
+    }
+
+    private fun generateShareMessage(detail: Observation) {
+        val values = Gson().fromJson(detail.value, Value::class.java)
+        shareMessage =
+            "Here is my Vital information from mEinstein I had to share! You have to try mE!\n" +
+                    "https://bit.ly/4ipzMmF\n" +
+                    "\n" +
+                    "\n" +
+                    "${detail.description}\n" +
+                    "Status : ${detail.status?.capitalFirstChar()}\n" +
+                    "${getString(R.string.value_with_unit, values.value, values.unit)}\n" +
+                    "\n" +
+                    "Start date\n" +
+                    "${detail.effectiveDate?.formatIntoPrettyDate()}\n\n" +
+                    "Details\n" +
+                    "Patient Name : $patientName\n" +
+                    "Vital ID        : ${detail.id.uppercase()}\n" +
+                    "Visits Status : In-progress\n" +
+                    "\n" +
+                    "\n" +
+                    "Thank You!!"
     }
 }
