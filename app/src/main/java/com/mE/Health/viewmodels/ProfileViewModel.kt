@@ -6,13 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mE.Health.models.ProfileData
 import com.mE.Health.retrofit.ProfileApiService
+import com.mE.Health.utility.AppSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val api: ProfileApiService
+    private val api: ProfileApiService,
+    private val appSession: AppSession
 ) : ViewModel() {
 
     private val _profile = MutableLiveData<ProfileData>()
@@ -25,8 +27,8 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = api.getProfile(
-                    token = "Token 06313aa39c53e3cbc4504293545b9f774a3ecf79",
-                    userId = mapOf("user_id" to 3)
+                    token = appSession.token,
+                    userId = mapOf("user_id" to appSession.getUserData()?.data?.userId!!)
                 )
                 if (response.status == 200) {
                     _profile.postValue(response.data)

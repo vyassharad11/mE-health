@@ -9,6 +9,6 @@ interface ProfileApiService {
     @POST("user/get-profile/")
     suspend fun getProfile(
         @Header("Authorization") token: String,
-        @Body userId: Map<String, Int>
+        @Body userId: Map<String, String>
     ): ProfileResponse
 }

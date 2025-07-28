@@ -632,6 +632,14 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             )
             add(
                 MyHealthTypeModel(
+                    getString(R.string.visits),
+                    mockViewModel.visitList.value?.size.toString(),
+                    R.drawable.ic_visits,
+                    VISITS
+                )
+            )
+            add(
+                MyHealthTypeModel(
                     getString(R.string.conditions),
                     mockViewModel.conditionList.value?.size.toString(),
                     R.drawable.ic_conditions_my_health,
@@ -664,13 +672,12 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             )
             add(
                 MyHealthTypeModel(
-                    getString(R.string.visits),
-                    mockViewModel.visitList.value?.size.toString(),
-                    R.drawable.ic_visits,
-                    VISITS
+                    getString(R.string.imagings),
+                    mockViewModel.imagingList.value?.size.toString(),
+                    R.drawable.ic_imaging,
+                    IMAGING
                 )
             )
-
             add(
                 MyHealthTypeModel(
                     getString(R.string.procedures),
@@ -701,14 +708,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     mockViewModel.claimList.value?.size.toString(),
                     R.drawable.ic_billing,
                     BILLING
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.imagings),
-                    mockViewModel.imagingList.value?.size.toString(),
-                    R.drawable.ic_imaging,
-                    IMAGING
                 )
             )
             add(

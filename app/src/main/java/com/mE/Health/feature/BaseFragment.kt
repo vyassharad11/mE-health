@@ -633,7 +633,7 @@ open class BaseFragment : Fragment() {
 
     private fun getFileLength(size: Long): String {
         val mb = size
-        return if (mb > 0) "$mb MB" else "${convertToKilobytes(size)} KB"
+        return if (mb > 0) "$mb KB" else "${convertToKilobytes(size)} KB"
     }
 
     private fun convertToKilobytes(size: Long): Long {
