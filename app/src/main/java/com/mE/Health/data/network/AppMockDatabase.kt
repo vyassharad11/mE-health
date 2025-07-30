@@ -23,13 +23,14 @@ import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.PractitionerOrganization
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.model.ProviderDTO
+import com.mE.Health.data.model.UserSavedFile
 
 @Database(
     entities = [Patient::class, Practitioner::class, Organization::class, Appointment::class,
         Claim::class, Condition::class, DiagnosticReport::class, Encounter::class,
         Immunization::class, MedicationRequest::class, Observation::class, PractitionerOrganization::class,
         Procedure::class, AllergyIntolerance::class, ImagingStudyEntity::class, AssistDetailEntity::class,
-        Imaging::class, ProviderDTO::class],
+        Imaging::class, ProviderDTO::class, UserSavedFile::class],
     version = 1
 )
 @TypeConverters(Converters::class)

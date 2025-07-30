@@ -9,7 +9,6 @@ import javax.inject.Inject
 class AppSession @Inject constructor(
     private var sharedPref: SharedPreferences
 ) {
-    private var userDTO: UserDataResponse? = null
     private var prefsEditor: SharedPreferences.Editor? = null
 
     companion object {
@@ -35,6 +34,13 @@ class AppSession @Inject constructor(
         val gson = Gson()
         val json = sharedPref?.getString(PREF_AUTHENTICATED, null) ?: return null
         return gson.fromJson(json, UserDataResponse::class.java)
+    }
+
+    fun getUserId(): String {
+        val gson = Gson()
+        val json = sharedPref.getString(PREF_AUTHENTICATED, null) ?: return ""
+        val userData = gson.fromJson(json, UserDataResponse::class.java)
+        return userData.data?.userId ?: ""
     }
 
     var token: String

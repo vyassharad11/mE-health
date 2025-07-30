@@ -36,6 +36,7 @@ import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.databinding.MyHealthFragmentBinding
+import com.mE.Health.feature.adapter.ActionType
 import com.mE.Health.feature.adapter.ClickState
 import com.mE.Health.feature.adapter.MyHealthAllergiesAdapter
 import com.mE.Health.feature.adapter.MyHealthAppointmentAdapter
@@ -70,6 +71,7 @@ import com.mE.Health.utility.Constants.VISITS
 import com.mE.Health.utility.Constants.VITALS
 import com.mE.Health.utility.FilterItem
 import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.extractContactInfo
 import com.mE.Health.utility.getCalendarFromString
 import com.mE.Health.utility.toFormateCalendar
 import dagger.hilt.android.AndroidEntryPoint
@@ -166,6 +168,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     initFilterUI()
                     when (getTileSelectedType()) {
                         PRACTITIONES -> {
+                            binding.ivFilter.visibility = View.GONE
                             setPractitionerData()
                         }
 
@@ -460,6 +463,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initFilterUI() {
+        binding.ivFilter.visibility = View.VISIBLE
         binding.rlDateLayout.visibility = View.GONE
         binding.rvFilter.visibility = View.GONE
         binding.rlSearchLayout.visibility = View.GONE
@@ -548,28 +552,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.ivFileUpload, R.id.rllUpload -> {
-                val onClickListener = object : OnClickCallback {
-                    override fun onClick(position: Int) {
-                        when (position) {
-                            1 -> {
-                                val photoPickerIntent = Intent(Intent.ACTION_PICK)
-                                photoPickerIntent.type = "image/*"
-                                getPhotoPicker.launch(photoPickerIntent)
-                            }
-
-                            2 -> {
-                                val pickerIntent = Intent(Intent.ACTION_PICK)
-                                pickerIntent.type = "video/*"
-                                getVideoPicker.launch(pickerIntent)
-                            }
-
-                            3 -> {
-                                pickPdfLauncher.launch(arrayOf("application/pdf"))
-                            }
-                        }
-                    }
-                }
-                showUploadDocument(onClickListener)
+                showUploadDocument(onUploadClickListener)
             }
 
             R.id.cvStartData -> {
@@ -578,6 +561,28 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
             R.id.cvEndData -> {
                 showEndDateCalendar()
+            }
+        }
+    }
+
+    private val onUploadClickListener = object : OnClickCallback {
+        override fun onClick(position: Int) {
+            when (position) {
+                1 -> {
+                    val photoPickerIntent = Intent(Intent.ACTION_PICK)
+                    photoPickerIntent.type = "image/*"
+                    getPhotoPicker.launch(photoPickerIntent)
+                }
+
+                2 -> {
+                    val pickerIntent = Intent(Intent.ACTION_PICK)
+                    pickerIntent.type = "video/*"
+                    getVideoPicker.launch(pickerIntent)
+                }
+
+                3 -> {
+                    pickPdfLauncher.launch(arrayOf("application/pdf"))
+                }
             }
         }
     }
@@ -764,14 +769,31 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = practitionerAdapter
         practitionerAdapter?.apply {
             onItemClickListener = object : MyHealthPractitionerAdapter.OnClickCallback {
-                override fun onClicked(data: Practitioner) {
+                override fun onClicked(data: Practitioner,type: ActionType) {
                     DetailSingleton.practitioner = data
-                    addFragment(
-                        R.id.fragment_container,
-                        PractitionerDetailsFragment(),
-                        "PractitionerDetailsFragment",
-                        "MyHealthFragment"
-                    )
+                    val contactInfo = data.telecom?.extractContactInfo()
+                    when(type){
+                        ActionType.DETAIL -> {
+                            addFragment(
+                                R.id.fragment_container,
+                                PractitionerDetailsFragment(),
+                                "PractitionerDetailsFragment",
+                                "MyHealthFragment"
+                            )
+                        }
+
+                        ActionType.EMAIL -> {
+                            sendEmail(contactInfo?.email!!,"Practitioner Email : ${data.specialty}")
+                        }
+
+                        ActionType.PHONE -> {
+                           openDialPadWithNumber(contactInfo?.phone!!)
+                        }
+
+                        ActionType.UPLOAD -> {
+                            showUploadDocument(onUploadClickListener)
+                        }
+                    }
                 }
             }
         }

@@ -13,6 +13,7 @@ import com.mE.Health.utility.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,6 +52,30 @@ class LoginViewModel @Inject constructor(
                     }
                 } else {
                     _loginStateData.postValue(NetworkResult.Error(response.message()))
+                }
+
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        appSession.setStringPreference(
+                            Constants.USER_ID,
+                            response.body()?.data?.userId ?: ""
+                        )
+                        setAuthenticated(response.body())
+                        _loginStateData.postValue(NetworkResult.Success(response.body()))
+                    } else {
+                        _loginStateData.postValue(NetworkResult.Error("Something went wrong"))
+                    }
+                } else if (response.code() == 401) {
+                    val errorMsg = response.errorBody()?.string()?.let {
+                        try {
+                            JSONObject(it).optString("message", "Bad request (400).")
+                        } catch (e: Exception) {
+                            "Bad request (400)."
+                        }
+                    } ?: "Bad request (400)."
+                    _loginStateData.postValue(NetworkResult.Error(errorMsg))
+                } else {
+                    _loginStateData.postValue(NetworkResult.Error(response.body()?.message))
                 }
             }
         }

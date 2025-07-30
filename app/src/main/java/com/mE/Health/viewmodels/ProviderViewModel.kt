@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mE.Health.data.model.ProviderDTO
+import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.data.repository.MockRepository
 import com.mE.Health.models.CountryStateData
 import com.mE.Health.models.ProviderData
 import com.mE.Health.repository.ProviderRepository
 import com.mE.Health.retrofit.NetworkResult
+import com.mE.Health.utility.AppSession
 import com.mE.Health.utility.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,9 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ProviderViewModel @Inject constructor(
     private val repository: ProviderRepository,
-    private val mockRepository: MockRepository
+    private val mockRepository: MockRepository,
+    private val appSession: AppSession
 ) :
     ViewModel() {
+
+    fun getAppSession(): AppSession {
+        return appSession
+    }
 
     private val _countryStateData = MutableLiveData<NetworkResult<CountryStateData>>()
     val stateListData: LiveData<NetworkResult<CountryStateData>>
@@ -86,6 +93,12 @@ class ProviderViewModel @Inject constructor(
     fun updateUserProviderAction(status: Boolean, id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             mockRepository.updateProviderStatus(status, id)
+        }
+    }
+
+    fun insertFile(list: UserSavedFile) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mockRepository.insertFile(list)
         }
     }
 }

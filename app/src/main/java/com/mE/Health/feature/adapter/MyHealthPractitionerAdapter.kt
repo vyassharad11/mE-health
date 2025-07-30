@@ -10,6 +10,10 @@ import com.mE.Health.models.CountryState
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.extractContactInfo
 
+enum class ActionType {
+    PHONE, EMAIL, UPLOAD, DETAIL
+}
+
 class MyHealthPractitionerAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthPractitionerAdapter.MyViewHolder>() {
 
@@ -22,7 +26,7 @@ class MyHealthPractitionerAdapter(private val mContext: Context) :
     var type = Constants.ALL
 
     interface OnClickCallback {
-        fun onClicked(data: Practitioner)
+        fun onClicked(data: Practitioner,type: ActionType)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -52,7 +56,16 @@ class MyHealthPractitionerAdapter(private val mContext: Context) :
             }
 
             holder.binding.rllDetail.setOnClickListener {
-                onItemClickListener?.onClicked(practitioner)
+                onItemClickListener?.onClicked(practitioner,ActionType.DETAIL)
+            }
+             holder.binding.llMail.setOnClickListener {
+                onItemClickListener?.onClicked(practitioner,ActionType.EMAIL)
+            }
+             holder.binding.llCall.setOnClickListener {
+                onItemClickListener?.onClicked(practitioner,ActionType.PHONE)
+            }
+             holder.binding.llUpload.setOnClickListener {
+                onItemClickListener?.onClicked(practitioner,ActionType.UPLOAD)
             }
         }
     }

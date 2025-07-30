@@ -12,8 +12,8 @@ import com.mE.Health.data.model.Claim
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
-import com.mE.Health.data.model.ImagingStudyEntity
 import com.mE.Health.data.model.Imaging
+import com.mE.Health.data.model.ImagingStudyEntity
 import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
@@ -25,6 +25,7 @@ import com.mE.Health.data.model.PractitionerOrganization
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.model.ProviderDTO
+import com.mE.Health.data.model.UserSavedFile
 
 @Dao
 interface MockDataDao {
@@ -133,6 +134,9 @@ interface MockDataDao {
     @Query("UPDATE provider_items SET isRecent=:status WHERE id LIKE :itemId")
     fun updateProviderStatus(status:Boolean,itemId:String)
 
+//    @Query("UPDATE practitioner SET fileDetail=:list WHERE id LIKE :itemId")
+//    fun updateFile(list:List<UserSavedImages>, itemId:String)
+
     @Query(
         """
         SELECT o.id, o.name, o.telecom, o.address
@@ -157,5 +161,8 @@ interface MockDataDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAssistDateFilteredData(data: List<AssistDetailEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFile(image: UserSavedFile)
 
 }

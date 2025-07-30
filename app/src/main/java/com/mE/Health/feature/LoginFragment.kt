@@ -15,8 +15,6 @@ import com.mE.Health.R
 import com.mE.Health.databinding.LoginFragmentBinding
 import com.mE.Health.models.LoginRequest
 import com.mE.Health.retrofit.NetworkResult
-import com.mE.Health.utility.AppSession
-import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Constants.USER_TYPE
 import com.mE.Health.viewmodels.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint

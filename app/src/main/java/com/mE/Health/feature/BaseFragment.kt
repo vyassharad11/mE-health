@@ -30,11 +30,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import com.mE.Health.HomeActivity
 import com.mE.Health.MyApplication
 import com.mE.Health.R
+import com.mE.Health.feature.adapter.ImagingPreviewAdapter
 import com.mE.Health.utility.BaseInterface
+import com.mE.Health.utility.BottomSheetImagingPreview
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.DialogProgress
@@ -52,6 +56,9 @@ import java.util.ArrayList
 import java.util.Date
 import java.util.Locale
 import kotlin.getValue
+import androidx.core.net.toUri
+import com.mE.Health.utility.AppSession
+import javax.inject.Inject
 
 
 open class BaseFragment : Fragment() {
@@ -61,7 +68,10 @@ open class BaseFragment : Fragment() {
     var dialogProgress: DialogProgress? = null
     var dialogOK: Dialog? = null
     var shareMessage = ""
+    var healthItemType = ""
 
+    @Inject
+    lateinit var appSession: AppSession
 
     fun replaceFragmentLogin(
         containerViewId: Int,
@@ -248,10 +258,10 @@ open class BaseFragment : Fragment() {
         val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
         tvMessage.text = message
         tvTitle.visibility = View.VISIBLE
-        val tvOk = dialog.findViewById<View>(R.id.tvOk)
-        tvOk.setOnClickListener(View.OnClickListener {
+        val tvOk = dialog.findViewById<TextView>(R.id.tvOk)
+        tvOk.setOnClickListener {
             dialog.dismiss()
-        })
+        }
         dialog.show()
     }
 
@@ -337,9 +347,6 @@ open class BaseFragment : Fragment() {
                             }
 
                             2 -> {
-//                                val pickerIntent = Intent(Intent.ACTION_PICK)
-//                                pickerIntent.type = "video/*"
-//                                getVideoPicker.launch(pickerIntent)
                                 pickVideoFromStorage()
                             }
 
@@ -491,31 +498,6 @@ open class BaseFragment : Fragment() {
         })
         dialog.show()
     }
-
-    fun openGallery() {
-        try {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            requireActivity().startActivityForResult(
-                Intent.createChooser(intent, ""),
-                BaseInterface.GALLERY
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(requireActivity(), e.message, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    fun openVideo() {
-        try {
-            var mediaChooser = Intent(Intent.ACTION_GET_CONTENT)
-            mediaChooser.setType("video/*")
-            requireActivity().startActivityForResult(mediaChooser, BaseInterface.TAKE_VIDEO)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(requireActivity(), e.message, Toast.LENGTH_LONG).show()
-        }
-    }
-
 
     private val isSDCARDMounted: Boolean
         get() {
@@ -726,6 +708,7 @@ open class BaseFragment : Fragment() {
             val fragment = UserContentFragment()
             val bundle = Bundle()
             bundle.apply {
+                putString(Constants.PN_TYPE, Constants.PRACTITIONER)
                 putString(Constants.FILE_PATH, "${it.path}")
                 putString(Constants.FILE_LENGTH, size)
                 putString(Constants.FILE_NAME, data.first)
@@ -752,69 +735,6 @@ open class BaseFragment : Fragment() {
         }
         return Pair(name, size)
     }
-
-    @SuppressLint("Range")
-    private val getVideoPicker = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val selectedImage: Uri = it?.data?.data!!
-            try {
-                val bitmap = MediaStore.Images.Media.getBitmap(
-                    requireActivity().contentResolver, selectedImage
-                )
-//                    binding.ivDemo.setImageBitmap(bitmap)
-                var uri = it?.data?.data!!
-                if (uri != null) {
-                    picturePath = getAbsolutePath(uri)
-                    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") if (TextUtils.isEmpty(
-                            picturePath
-                        )
-                    ) picturePath = uri.path.toString()
-                    val file = File(picturePath)
-                    if (!file.isFile || file.length() == 0L) {
-                        Toast.makeText(
-                            activity, "gallery_pick_error", Toast.LENGTH_LONG
-                        ).show()
-                        return@registerForActivityResult
-                    }
-                    filePath = picturePath
-                    Log.i(
-                        javaClass.name, "Gallery videoPath : $picturePath: ${file.length()}"
-                    )
-                    val cursor = requireActivity()!!.contentResolver.query(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        arrayOf(MediaStore.Images.Media._ID),
-                        MediaStore.Images.Media.DATA + "=? ",
-                        arrayOf(picturePath),
-                        null
-                    )
-                    if (cursor != null && cursor.moveToFirst()) {
-                        val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
-                        uri = Uri.parse("content://media/external/images/media/$id")
-                    }
-                    cursor?.close()
-                    val fileName = picturePath.substring(picturePath.lastIndexOf("/") + 1)
-                    val fragment = UserContentFragment()
-                    val bundle = Bundle()
-                    bundle.apply {
-                        putString(Constants.FILE_PATH, it.toString())
-                        putString(Constants.FILE_LENGTH, getFileLength(file))
-                        putString(Constants.FILE_NAME, fileName)
-                        putString(Constants.FILE_TYPE, Constants.FILE_VIDEO)
-                    }
-                    fragment.arguments = bundle
-                    addFragment(
-                        R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
-                    )
-                    Log.i("=============", "=========picturePath: $picturePath")
-                }
-            } catch (e: IOException) {
-                Log.i("TAG", "Some exception $e")
-            }
-        }
-    }
-
 
     private val pickPdfLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -883,5 +803,35 @@ open class BaseFragment : Fragment() {
             message
         )
         startActivity(Intent.createChooser(intent, "title"))
+    }
+
+    fun setPreviewDetail(rvPreview: RecyclerView) {
+        rvPreview.layoutManager = GridLayoutManager(requireActivity(), 2)
+        val previewAdapter = ImagingPreviewAdapter(requireActivity())
+        rvPreview.adapter = previewAdapter
+        previewAdapter.apply {
+            onItemClickListener = object : ImagingPreviewAdapter.OnClickCallback {
+                override fun onClicked(view: View?, position: Int) {
+                    val bottomSheet = BottomSheetImagingPreview("Series ${position + 1}")
+                    bottomSheet.show(
+                        requireActivity().supportFragmentManager,
+                        "BottomSheetImagingPreview"
+                    )
+                }
+            }
+        }
+    }
+
+    fun openDialPadWithNumber(phoneNumber: String) {
+        requireActivity().startActivity(Intent(Intent.ACTION_DIAL).apply {
+            data = "tel:$phoneNumber".toUri()
+        })
+    }
+
+    fun sendEmail(email: String, subject: String) {
+        requireActivity().startActivity(Intent(Intent.ACTION_SENDTO).apply {
+            data = "mailto:$email".toUri()
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+        })
     }
 }

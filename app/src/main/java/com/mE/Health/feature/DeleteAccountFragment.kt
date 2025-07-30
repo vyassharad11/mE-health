@@ -1,8 +1,8 @@
 package com.mE.Health.feature
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Typeface
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -16,16 +16,23 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mE.Health.MainActivity
 import com.mE.Health.R
+import com.mE.Health.data.model.Reason
 import com.mE.Health.databinding.DeleteAccountFragmentBinding
 import com.mE.Health.feature.adapter.DeleteAccountListAdapter
+import com.mE.Health.retrofit.NetworkResult
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.FilterItem
-import com.mE.Health.utility.roundview.RoundTextView
-import dagger.hilt.android.AndroidEntryPoint
-import androidx.core.graphics.drawable.toDrawable
 import com.mE.Health.utility.roundview.RoundLinearLayout
+import com.mE.Health.utility.roundview.RoundTextView
+import com.mE.Health.viewmodels.DeleteAccountViewModel
+import com.mE.Health.viewmodels.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -34,7 +41,9 @@ import com.mE.Health.utility.roundview.RoundLinearLayout
 class DeleteAccountFragment : BaseFragment() {
 
     private lateinit var binding: DeleteAccountFragmentBinding
-    private var itemList = ArrayList<FilterItem>()
+    private val viewModel: DeleteAccountViewModel by viewModels()
+    private var accountAdapter: DeleteAccountListAdapter? = null
+    private var selectedReason = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +58,8 @@ class DeleteAccountFragment : BaseFragment() {
         setBottomNavigationVisibility(requireActivity())
         initHeader()
         initView()
+        viewModel.getReasonData()
+        observeResponse()
     }
 
     private fun initHeader() {
@@ -67,17 +78,19 @@ class DeleteAccountFragment : BaseFragment() {
     }
 
     private fun initView() {
-        getDummyList()
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val adapter = DeleteAccountListAdapter(requireActivity())
-        adapter.itemList = itemList
-        binding.rvList.adapter = adapter
-        adapter.apply {
+        accountAdapter = DeleteAccountListAdapter(requireActivity())
+        binding.rvList.adapter = accountAdapter
+        accountAdapter?.apply {
             onItemClickListener = object : DeleteAccountListAdapter.OnClickCallback {
-                override fun onClicked(data: FilterItem, position: Int) {
-                    itemList?.get(position)?.isChecked = !itemList?.get(position)?.isChecked!!
-                    notifyItemChanged(position)
-                    if (itemList?.get(itemList?.size!! - 1)?.isChecked!!) {
+                override fun onClicked(data: Reason, position: Int) {
+                    accountAdapter?.selectedItem = position
+                    selectedReason = data.id
+                    notifyDataSetChanged()
+                    if (data.name.lowercase() == "other" || itemList?.get(
+                            position
+                        )?.name?.lowercase() == "others"
+                    ) {
                         binding.llInput.visibility = View.VISIBLE
                     } else {
                         binding.llInput.visibility = View.GONE
@@ -88,22 +101,14 @@ class DeleteAccountFragment : BaseFragment() {
 
         binding.rtvDeleteAccount.setOnClickListener {
             // Handle delete account action
-            showUserInputDialog()
+            if (selectedReason.isNullOrEmpty()) Toast.makeText(
+                requireActivity(),
+                "Please select a reason for deleting your account",
+                Toast.LENGTH_SHORT
+            ).show()
+            else
+                showUserInputDialog()
         }
-    }
-
-    private fun getDummyList(): ArrayList<FilterItem> {
-        itemList = ArrayList()
-        itemList.apply {
-            add(FilterItem("I don’t find this app useful", false))
-            add(FilterItem("I don’t have time to use the app right now", false))
-            add(FilterItem("I had technical issues or bugs", false))
-            add(FilterItem("I didn’t find mEinstein useful", false))
-            add(FilterItem("I don’t have time to use the app right now", false))
-            add(FilterItem("I’m switching to another app/service", false))
-            add(FilterItem("Other", false))
-        }
-        return itemList
     }
 
     private fun showUserInputDialog() {
@@ -157,6 +162,12 @@ class DeleteAccountFragment : BaseFragment() {
                     .lowercase() == "delete"
             ) {
                 dialog.dismiss()
+                viewModel.deleteUserAccount(
+                    selectedReason,
+                    Constants.source,
+                    "3",
+                    "security issue"
+                )
             } else {
                 Toast.makeText(
                     requireActivity(),
@@ -168,5 +179,76 @@ class DeleteAccountFragment : BaseFragment() {
 
         llCancel.setOnClickListener { dialog.dismiss() }
         dialog.show()
+    }
+
+    private fun observeResponse() {
+        viewModel.reasonStateData.observe(requireActivity()) {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    showProgressDialog()
+                }
+
+                is NetworkResult.Error -> {
+                    hideProgressDialog()
+                    showDialogOk(it.message!!)
+                }
+
+                is NetworkResult.Success -> {
+                    hideProgressDialog()
+                    if (it.data?.data.isNullOrEmpty()) {
+                        Toast.makeText(
+                            requireActivity(),
+                            "No reasons available",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        accountAdapter?.updateList(it.data?.data ?: emptyList())
+                    }
+                }
+
+                else -> {
+                    hideProgressDialog()
+                    showDialogOk(it?.message!!)
+                }
+            }
+        }
+
+        viewModel.deleteStateData.observe(requireActivity()) {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    showProgressDialog()
+                }
+
+                is NetworkResult.Error -> {
+                    hideProgressDialog()
+                    showDialogOk(it.message!!)
+                }
+
+                is NetworkResult.Success -> {
+                    hideProgressDialog()
+                    Toast.makeText(
+                        requireActivity(),
+                        it.data?.mETextRes ?: "Account successfully deleted",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val intent = Intent(requireActivity(), MainActivity::class.java)
+                    intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                            Intent.FLAG_ACTIVITY_NEW_TASK or
+                            Intent.FLAG_ACTIVITY_NEW_TASK
+                            or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                    requireActivity().overridePendingTransition(
+                        R.anim.enter_from_bottom,
+                        android.R.anim.fade_out
+                    )
+                    requireActivity().finish()
+                }
+
+                else -> {
+                    hideProgressDialog()
+                    showDialogOk(it?.message!!)
+                }
+            }
+        }
     }
 }

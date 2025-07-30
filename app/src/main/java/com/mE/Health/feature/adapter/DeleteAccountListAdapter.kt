@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.R
+import com.mE.Health.data.model.Reason
 import com.mE.Health.databinding.DeleteAccountListItemBinding
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.FilterItem
@@ -12,16 +13,17 @@ import com.mE.Health.utility.FilterItem
 class DeleteAccountListAdapter(private val mContext: Context) :
     RecyclerView.Adapter<DeleteAccountListAdapter.MyViewHolder>() {
 
-    var itemList: List<FilterItem>? = ArrayList()
+    var itemList: List<Reason>? = ArrayList()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
     var type = Constants.ALL
+    var selectedItem = -1
 
     interface OnClickCallback {
-        fun onClicked(data: FilterItem, position: Int)
+        fun onClicked(data: Reason, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
@@ -42,7 +44,7 @@ class DeleteAccountListAdapter(private val mContext: Context) :
         itemList?.get(position)?.let { data ->
             with(holder.binding) {
                 tvName.text = data.name
-                ivCheckbox.setImageResource(if (data.isChecked) R.drawable.ic_checkbox_active else R.drawable.ic_checkbox_inactive)
+                ivCheckbox.setImageResource(if (position==selectedItem) R.drawable.ic_checkbox_active else R.drawable.ic_checkbox_inactive)
                 holder.itemView.setOnClickListener {
                     onItemClickListener?.onClicked(data, position)
                 }
@@ -54,7 +56,7 @@ class DeleteAccountListAdapter(private val mContext: Context) :
         return itemList?.size ?: 0
     }
 
-    fun updateList(list: List<FilterItem>) {
+    fun updateList(list: List<Reason>) {
         this.itemList = list
         notifyDataSetChanged()
     }

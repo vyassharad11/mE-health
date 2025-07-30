@@ -45,8 +45,9 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
-        setHeaderTitleProperties(getString(R.string.practitioner),binding.toolbar.tvTitle,true)
+        healthItemType = Constants.PRACTITIONER
+        setHeaderUploadProperties(binding.toolbar.ivSetting, true)
+        setHeaderTitleProperties(getString(R.string.practitioner), binding.toolbar.tvTitle, true)
 
         binding.toolbar.ivCalendar.visibility = View.VISIBLE
     }
@@ -90,6 +91,9 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
         binding.tvAppointmentViewAll.setOnClickListener(this)
         binding.tvVisitViewAll.setOnClickListener(this)
+        binding.rllMail.setOnClickListener(this)
+        binding.rllCall.setOnClickListener(this)
+        binding.llUpload.setOnClickListener(this)
     }
 
     private fun setAppointmentData(list: List<Appointment>?) {
@@ -109,7 +113,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view?.id) {
+        when (view?.id) {
             R.id.tvAppointmentViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
@@ -122,6 +126,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
                     "PractitionerDetailsFragment"
                 )
             }
+
             R.id.tvVisitViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
@@ -133,6 +138,18 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
                     "PractitionersListFragment",
                     "PractitionerDetailsFragment"
                 )
+            }
+
+            R.id.rllMail -> {
+                val contactInfo = DetailSingleton.practitioner?.telecom?.extractContactInfo()
+                sendEmail(contactInfo?.email!!, "Practitioner Email : ${DetailSingleton.practitioner?.specialty}")
+            }
+
+            R.id.rllCall -> {
+                val contactInfo = DetailSingleton.practitioner?.telecom?.extractContactInfo()
+                openDialPadWithNumber(contactInfo?.phone!!)
+            }
+            R.id.llUpload -> {
             }
         }
     }

@@ -22,6 +22,7 @@ import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.PractitionerOrganization
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.model.UnifiedHealthItems
+import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.data.model.toAssistDetail
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.dateToLocalDate
@@ -189,6 +190,8 @@ class MockRepository @Inject constructor(
     suspend fun getProviderItems() = mockDataDao.getProviderListItem()
 
     suspend fun updateProviderStatus(status:Boolean,id:String) = mockDataDao.updateProviderStatus(status,id)
+
+    suspend fun insertFile(list: UserSavedFile) = mockDataDao.insertFile(list)
 
     suspend fun getOrganizationsByPractitionerId(practitionerId: String) =
         mockDataDao.getOrganizationsByPractitionerId(practitionerId)

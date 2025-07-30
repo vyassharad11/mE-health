@@ -66,20 +66,7 @@ class ImagingDetailsFragment : BaseFragment() {
             generateShareMessage(detail)
         }
 
-        binding.rvPreview.layoutManager = GridLayoutManager(requireActivity(), 2)
-        val previewAdapter = ImagingPreviewAdapter(requireActivity())
-        binding.rvPreview.adapter = previewAdapter
-        previewAdapter.apply {
-            onItemClickListener = object : ImagingPreviewAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
-                    val bottomSheet = BottomSheetImagingPreview("Series ${position + 1}")
-                    bottomSheet.show(
-                        requireActivity().supportFragmentManager,
-                        "BottomSheetImagingPreview"
-                    )
-                }
-            }
-        }
+        setPreviewDetail(binding.rvPreview)
 
         binding.layoutSyncButton.llShareData.setOnClickListener {
             shareRecord(message = shareMessage)

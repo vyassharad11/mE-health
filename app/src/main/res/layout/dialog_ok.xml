@@ -62,7 +62,7 @@
         android:scrollbars="vertical"
         android:text="@string/ok"
         android:textAllCaps="true"
-        android:textColor="@color/color_007AFF"
+        android:textColor="@color/text_color_orange"
         android:textSize="@dimen/sp_20"
         tools:ignore="UnusedAttribute" />
 

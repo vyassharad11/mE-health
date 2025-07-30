@@ -5,7 +5,9 @@ import java.util.Locale
 
 object Constants {
     const val BASE_URL = "https://dev-admin.meinstein.ai/"
+    const val DELETE_URL = "https://dev-admin.meinstein.ai/user/api/deletion-reasons/"
     var token = ""
+    var source = "mE-Health"
 
     const val GET = "GET"
     const val POST = "POST"

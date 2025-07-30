@@ -13,6 +13,7 @@ import com.mE.Health.R
 import com.mE.Health.data.helper.Resource
 import com.mE.Health.databinding.AssistDetailFragmentBinding
 import com.mE.Health.feature.adapter.AssistCategoryDetailAdapter
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.LoaderDialog
 import com.mE.Health.utility.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,14 +51,9 @@ class AssistDetailFragment : BaseFragment() {
     }
 
     private fun initHeader() {
-        binding.toolbar.tvTitle.text = getString(R.string.back)
-        binding.toolbar.ivSetting.visibility = View.VISIBLE
-        binding.toolbar.ivBack.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.toolbar.tvTitle.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
+        setHeaderBackProperties(binding.toolbar.ivBack)
+        setHeaderSettingProperties(binding.toolbar.ivSetting, true)
+        setHeaderTitleProperties(getString(R.string.back), binding.toolbar.tvTitle, true)
     }
 
     private fun initView() {

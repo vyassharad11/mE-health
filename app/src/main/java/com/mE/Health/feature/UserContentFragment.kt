@@ -1,30 +1,41 @@
 package com.mE.Health.feature
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import android.view.ViewGroup
 import android.widget.MediaController
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.mE.Health.R
+import com.mE.Health.data.model.UserSavedFile
+import com.mE.Health.data.model.UserSavedImages
 import com.mE.Health.databinding.UserContentFragmentBinding
 import com.mE.Health.feature.adapter.UploadDocFilterAdapter
 import com.mE.Health.feature.adapter.UploadDocItem
 import com.mE.Health.utility.Constants
+import com.mE.Health.viewmodels.ProviderViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.File
+import java.net.URLDecoder
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 /**
@@ -34,6 +45,8 @@ import java.io.File
 class UserContentFragment : BaseFragment() {
 
     private lateinit var binding: UserContentFragmentBinding
+    private val viewModel: ProviderViewModel by viewModels()
+    private var list = ArrayList<UserSavedImages>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +59,7 @@ class UserContentFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        appSession = viewModel.getAppSession()
         initView()
         initHeader()
     }
@@ -58,6 +72,16 @@ class UserContentFragment : BaseFragment() {
             binding.tvImageSize.text = "File Size: ${bundle.getString(Constants.FILE_LENGTH)}"
             binding.tvImageName.text = "Name : ${bundle.getString(Constants.FILE_NAME)}"
             binding.tvFilterType.text = type
+            list.apply {
+                add(
+                    UserSavedImages(
+                        bundle.getString(Constants.FILE_NAME) ?: "",
+                        bundle.getString(Constants.FILE_LENGTH) ?: "",
+                        type ?: "",
+                        fileURI ?: ""
+                    )
+                )
+            }
             val imgFile = fileURI?.toUri()
             if (type.equals(Constants.FILE_IMAGE)) {
                 Glide.with(requireActivity())
@@ -67,7 +91,6 @@ class UserContentFragment : BaseFragment() {
             } else if (type.equals(Constants.FILE_VIDEO)) {
                 setVideoView()
             } else if (type.equals(Constants.FILE_DOCUMENT)) {
-                Log.i("================PATH", "=====${fileURI}")
                 showPDFView(fileURI?.toUri()!!)
             }
         }
@@ -102,7 +125,19 @@ class UserContentFragment : BaseFragment() {
         }
 
         binding.rtvSave.setOnClickListener {
+//            pickImageFromStorage()
+//            viewModel.updateFile(list,"pract1")
 //            pickVideoFromStorage()
+//            pickImageFromStorage()
+
+//            val imagePath = getPathFromUri( fileURI)
+//            if (imagePath != null) {
+//                // 3. Store in Room
+//                lifecycleScope.launch {
+//                    val db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "app_db").build()
+//                    db.imageDao().insertImage(ImageEntity(imagePath = imagePath))
+//                }
+//            }
         }
     }
 
@@ -149,27 +184,6 @@ class UserContentFragment : BaseFragment() {
         return typeList
     }
 
-    private fun showVideoView(videoUrl: Uri) {
-        binding.videoView.visibility = View.VISIBLE
-        // setting uri to video view
-        binding.videoView.setVideoURI(videoUrl)
-        // Media controls
-        val mediaController = MediaController(requireActivity())
-        mediaController.setAnchorView(binding.videoView)
-        binding.videoView.setMediaController(mediaController)
-
-        binding.videoView.setOnPreparedListener {
-            // Starting the video when ready
-            binding.videoView.start()
-        }
-
-        binding.videoView.setOnErrorListener { _, what, extra ->
-            // Handling video playback errors
-            println("Video playback error: what=$what, extra=$extra")
-            true
-        }
-    }
-
     private fun showPDFView(fileURI: Uri) {
         binding.ivPdf.visibility = View.VISIBLE
         binding.ivPdf.setOnClickListener {
@@ -189,69 +203,7 @@ class UserContentFragment : BaseFragment() {
         }
     }
 
-    private fun openFile(url: File) {
-        try {
-            val uri = Uri.fromFile(url)
-
-            val intent = Intent(Intent.ACTION_VIEW)
-            if (url.toString().contains(".doc") || url.toString().contains(".docx")) {
-                // Word document
-                intent.setDataAndType(uri, "application/msword")
-            } else if (url.toString().contains(".pdf")) {
-                // PDF file
-                intent.setDataAndType(uri, "application/pdf")
-            } else if (url.toString().contains(".ppt") || url.toString().contains(".pptx")) {
-                // Powerpoint file
-                intent.setDataAndType(uri, "application/vnd.ms-powerpoint")
-            } else if (url.toString().contains(".xls") || url.toString().contains(".xlsx")) {
-                // Excel file
-                intent.setDataAndType(uri, "application/vnd.ms-excel")
-            } else if (url.toString().contains(".zip")) {
-                // ZIP file
-                intent.setDataAndType(uri, "application/zip")
-            } else if (url.toString().contains(".rar")) {
-                // RAR file
-                intent.setDataAndType(uri, "application/x-rar-compressed")
-            } else if (url.toString().contains(".rtf")) {
-                // RTF file
-                intent.setDataAndType(uri, "application/rtf")
-            } else if (url.toString().contains(".wav") || url.toString().contains(".mp3")) {
-                // WAV audio file
-                intent.setDataAndType(uri, "audio/x-wav")
-            } else if (url.toString().contains(".gif")) {
-                // GIF file
-                intent.setDataAndType(uri, "image/gif")
-            } else if (url.toString().contains(".jpg") || url.toString()
-                    .contains(".jpeg") || url.toString().contains(".png")
-            ) {
-                // JPG file
-                intent.setDataAndType(uri, "image/jpeg")
-            } else if (url.toString().contains(".txt")) {
-                // Text file
-                intent.setDataAndType(uri, "text/plain")
-            } else if (url.toString().contains(".3gp") || url.toString().contains(".mpg") ||
-                url.toString().contains(".mpeg") || url.toString()
-                    .contains(".mpe") || url.toString().contains(".mp4") || url.toString()
-                    .contains(".avi")
-            ) {
-                // Video files
-                intent.setDataAndType(uri, "video/*")
-            } else {
-                intent.setDataAndType(uri, "*/*")
-            }
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            requireActivity().startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(
-                requireActivity(),
-                "No application found which can open the file",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    companion object{
+    companion object {
         var width = 0
         var height = 0
         var videoURI: Uri? = null
@@ -263,7 +215,6 @@ class UserContentFragment : BaseFragment() {
         params.width = width
         params.height = height
         binding.videoView.layoutParams = params
-
         binding.videoView.setVideoURI(videoURI)
         binding.videoView.visibility = View.VISIBLE
         val mediaController = MediaController(requireContext())
@@ -272,36 +223,79 @@ class UserContentFragment : BaseFragment() {
         binding.videoView.start()
     }
 
-    private fun pickVideoFromStorage() {
-        pickVideoLauncher.launch("video/*")
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                // 1. Copy image to app-specific folder
+                val appFolder = File(requireContext().filesDir, "mE-Health")
+                if (!appFolder.exists()) appFolder.mkdirs()
+                val formattedTime = SimpleDateFormat(
+                    "MM-dd-yyyy-HH-mm-ss",
+                    Locale.getDefault()
+                ).format(Calendar.getInstance().time)
+                val fileName = "IMG_$formattedTime.jpg"
+                val destFile = File(appFolder, fileName)
+                requireContext().contentResolver.openInputStream(it)?.use { input ->
+                    destFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                // 2. Save image path to Room database
+                val imagePath = destFile.absolutePath
+                val fileSizeBytes = destFile.length()
+                val fileSizeString = when {
+                    fileSizeBytes >= 1024 * 1024 -> String.format(
+                        "%.2f MB",
+                        fileSizeBytes / (1024.0 * 1024.0)
+                    )
+
+                    fileSizeBytes >= 1024 -> String.format("%.2f KB", fileSizeBytes / 1024.0)
+                    else -> "$fileSizeBytes Bytes"
+                }
+                lifecycleScope.launch {
+                    val fileObject = UserSavedFile(
+                        user_id = appSession.getUserId(),
+                        health_type = Constants.PRACTITIONER,
+                        file_name = fileName,
+                        size = fileSizeString,
+                        file_type = Constants.FILE_IMAGE,
+                        file_path = imagePath
+                    )
+                    viewModel.insertFile(fileObject)
+                }
+
+                binding.tvImageSize.text = "File Size: $fileSizeString"
+                binding.tvImageName.text = "Name : ${getFileNameFromUri(it,requireActivity())}"
+                // 3. Show image in ImageView
+                Glide.with(requireContext())
+                    .load(destFile)
+                    .into(binding.ivSelected)
+                binding.ivSelected.visibility = View.VISIBLE
+            }
+        }
+
+
+    // Call this function to open the image picker
+    private fun pickImageFromStorage() {
+        pickImageLauncher.launch("image/*")
     }
 
-    private val pickVideoLauncher = registerForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            val retriever = android.media.MediaMetadataRetriever()
-            retriever.setDataSource(requireContext(), it)
-            val width =
-                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
-                    ?.toIntOrNull() ?: 0
-            val height =
-                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
-                    ?.toIntOrNull() ?: 0
-            retriever.release()
-
-            // Set VideoView size
-            val params = binding.videoView.layoutParams
-            params.width = width
-            params.height = height
-            binding.videoView.layoutParams = params
-
-            binding.videoView.setVideoURI(it)
-            binding.videoView.visibility = View.VISIBLE
-            val mediaController = MediaController(requireContext())
-            mediaController.setAnchorView(binding.videoView)
-            binding.videoView.setMediaController(mediaController)
-            binding.videoView.start()
+    fun getFileNameFromUri(uri: Uri, context: Context): String? {
+        if (uri.scheme == "content") {
+            context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (nameIndex != -1 && cursor.moveToFirst()) {
+                    return cursor.getString(nameIndex)
+                }
+            }
         }
+        // Fallback for file:// or unknown schemes
+        uri.path?.let { path ->
+            val cut = path.lastIndexOf('/')
+            if (cut != -1 && cut + 1 < path.length) {
+                return URLDecoder.decode(path.substring(cut + 1), "UTF-8")
+            }
+        }
+        return null
     }
 }
