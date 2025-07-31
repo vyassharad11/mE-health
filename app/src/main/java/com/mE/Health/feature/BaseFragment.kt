@@ -1,6 +1,5 @@
 package com.mE.Health.feature
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
@@ -11,19 +10,17 @@ import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.telephony.TelephonyManager
-import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
-import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -59,6 +56,8 @@ import kotlin.getValue
 import androidx.core.net.toUri
 import com.mE.Health.utility.AppSession
 import javax.inject.Inject
+import androidx.core.graphics.drawable.toDrawable
+import java.net.URLDecoder
 
 
 open class BaseFragment : Fragment() {
@@ -68,7 +67,6 @@ open class BaseFragment : Fragment() {
     var dialogProgress: DialogProgress? = null
     var dialogOK: Dialog? = null
     var shareMessage = ""
-    var healthItemType = ""
 
     @Inject
     lateinit var appSession: AppSession
@@ -337,26 +335,27 @@ open class BaseFragment : Fragment() {
             setImageResource(R.drawable.ic_upload_orange)
             visibility = if (isVisible) View.VISIBLE else View.GONE
             setOnClickListener {
-                val onClickListener = object : OnClickCallback {
-                    override fun onClick(position: Int) {
-                        when (position) {
-                            1 -> {
-                                val photoPickerIntent = Intent(Intent.ACTION_PICK)
-                                photoPickerIntent.type = "image/*"
-                                getPhotoPicker.launch(photoPickerIntent)
-                            }
+                showUploadDocumentDialog(onFileUploadListener)
+            }
+        }
+    }
 
-                            2 -> {
-                                pickVideoFromStorage()
-                            }
-
-                            3 -> {
-                                pickPdfLauncher.launch(arrayOf("application/pdf"))
-                            }
-                        }
-                    }
+    val onFileUploadListener = object : OnClickCallback {
+        override fun onClick(position: Int) {
+            when (position) {
+                1 -> {
+                    UserContentFragment.fileType = Constants.FILE_IMAGE
+                    pickFileFromStorage("image/*")
                 }
-                showUploadDocument(onClickListener)
+
+                2 -> {
+                    UserContentFragment.fileType = Constants.FILE_VIDEO
+                    pickFileFromStorage("video/*")
+                }
+
+                3 -> {
+                    pickPdfLauncher.launch(arrayOf("application/pdf"))
+                }
             }
         }
     }
@@ -466,10 +465,10 @@ open class BaseFragment : Fragment() {
         fun onClick(position: Int)
     }
 
-    fun showUploadDocument(onClickCallback: OnClickCallback) {
+    fun showUploadDocumentDialog(onClickCallback: OnClickCallback) {
         val dialog = Dialog(requireActivity())
         dialog.setContentView(R.layout.dialog_camera_video)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(0))
+        dialog.window?.setBackgroundDrawable(0.toDrawable())
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -481,123 +480,27 @@ open class BaseFragment : Fragment() {
         val tvVideo = dialog.findViewById<TextView>(R.id.tvVideo)
         val tvDocument = dialog.findViewById<View>(R.id.tvDocument)
         val tvCancel = dialog.findViewById<View>(R.id.tvCancel)
-        tvPicture.setOnClickListener(View.OnClickListener {
+        tvPicture.setOnClickListener {
             dialog.dismiss()
             onClickCallback.onClick(1)
-        })
-        tvVideo.setOnClickListener(View.OnClickListener {
+        }
+        tvVideo.setOnClickListener {
             dialog.dismiss()
             onClickCallback.onClick(2)
-        })
-        tvDocument.setOnClickListener(View.OnClickListener {
+        }
+        tvDocument.setOnClickListener {
             dialog.dismiss()
             onClickCallback.onClick(3)
-        })
-        tvCancel.setOnClickListener(View.OnClickListener {
+        }
+        tvCancel.setOnClickListener {
             dialog.dismiss()
-        })
+        }
         dialog.show()
     }
 
-    private val isSDCARDMounted: Boolean
-        get() {
-            val status = Environment.getExternalStorageState()
-            return status == Environment.MEDIA_MOUNTED
-        }
-
-    fun getAbsolutePath(uri: Uri): String {
-        val projection = arrayOf(MediaStore.MediaColumns.DATA)
-        val cursor = requireActivity().contentResolver.query(
-            uri, projection,
-            null, null, null
-        )
-        var filePath = ""
-        if (cursor != null) {
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
-            cursor.moveToFirst()
-            filePath = cursor.getString(columnIndex)
-        }
-        cursor?.close()
-        return filePath
-    }
-
-    fun getImageFilePath(uri: Uri): String? {
-        val file = File(uri.path)
-        var res: String? = null
-        val filePath =
-            file.path.split(":".toRegex()).toTypedArray()
-        val image_id = filePath[filePath.size - 1]
-        val cursor = requireActivity().getContentResolver().query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
-            MediaStore.Images.Media._ID + " = ? ",
-            arrayOf(image_id), null
-        )
-        if (cursor != null) {
-            cursor.moveToFirst()
-            res = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
-            cursor.close()
-        }
-        return res
-    }
-
-
-    protected fun performCrop(activity: Activity, picUri: Uri) {
-        try {
-            val cropIntent = Intent("com.android.camera.action.CROP")
-            cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            cropIntent.setDataAndType(picUri, "image/*")
-            cropIntent.putExtra("crop", "true")
-            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, getTempUri(activity))
-            cropIntent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-            startActivityForResult(cropIntent, BaseInterface.CROP)
-        } catch (e: ActivityNotFoundException) {
-            e.printStackTrace()
-            Toast.makeText(
-                activity,
-                "crop_action_support",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(
-                activity,
-                "crop_action_support",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        }
-    }
-
-    fun getTempUri(activity: Activity): Uri {
-        return Uri.fromFile(getTempFile(activity))
-    }
-
-    private fun getTempFile(activity: Activity): File {
-        val imageName = SimpleDateFormat("ddMMMyyyy_HHmmss", Locale.US)
-            .format(Date()) + ".jpg"
-        val tempFile = getNewFile(BaseInterface.IMAGE_DIRECTORY_CROP, imageName)
-        cropPicturePath = tempFile.path
-        return tempFile
-    }
-
-
-    fun getNewFile(directoryName: String, imageName: String): File {
-        val file: File
-        if (isSDCARDMounted) {
-            val folder = File(requireActivity().getExternalFilesDir(""), directoryName)
-            folder.mkdir()
-            file = File(folder, imageName)
-            try {
-                file.createNewFile()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        } else {
-            file = File(requireActivity().filesDir, imageName)
-        }
-        return file
+    fun setUserSelectedDetails(itemId: String, itemType: String) {
+        UserContentFragment.healthItemId = itemId
+        UserContentFragment.healthItemType = itemType
     }
 
     private fun getFileLength(file: File): String {
@@ -613,157 +516,29 @@ open class BaseFragment : Fragment() {
         return file.length() / 1024
     }
 
-    private fun getFileLength(size: Long): String {
-        val mb = size
-        return if (mb > 0) "$mb KB" else "${convertToKilobytes(size)} KB"
-    }
-
     private fun convertToKilobytes(size: Long): Long {
         return size / 1024
     }
 
-    private val getPhotoPicker = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val selectedImage: Uri = it?.data?.data!!
-            try {
-                val bitmap = MediaStore.Images.Media.getBitmap(
-                    requireActivity().contentResolver, selectedImage
-                )
-                var uri = it?.data?.data!!
-                if (uri != null) {
-                    picturePath = getAbsolutePath(uri)
-                    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") if (TextUtils.isEmpty(
-                            picturePath
-                        )
-                    ) picturePath = uri.path.toString()
-                    val file = File(picturePath)
-                    if (!file.isFile || file.length() == 0L) {
-                        Toast.makeText(
-                            activity, "gallery_pick_error", Toast.LENGTH_LONG
-                        ).show()
-                        return@registerForActivityResult
-                    }
-                    filePath = picturePath
-                    Log.i(
-                        javaClass.name, "Gallery picturePath : $picturePath: ${file.length()}"
-                    )
-
-
-                    val cursor = requireActivity()!!.contentResolver.query(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        arrayOf(MediaStore.Images.Media._ID),
-                        MediaStore.Images.Media.DATA + "=? ",
-                        arrayOf(picturePath),
-                        null
-                    )
-                    if (cursor != null && cursor.moveToFirst()) {
-                        val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
-                        uri = Uri.parse("content://media/external/images/media/$id")
-                    }
-                    cursor?.close()
-                    val fileName = File(uri!!.path).name
-                    val fragment = UserContentFragment()
-                    val bundle = Bundle()
-                    bundle.apply {
-                        putString(Constants.FILE_PATH, uri.toString())
-                        putString(Constants.FILE_LENGTH, getFileLength(file))
-                        putString(Constants.FILE_NAME, fileName)
-                        putString(Constants.FILE_TYPE, Constants.FILE_IMAGE)
-                    }
-                    fragment.arguments = bundle
-                    addFragment(
-                        R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
-                    )
-                }
-            } catch (e: IOException) {
-                Log.i("TAG", "Some exception $e")
-            }
-        }
+    private fun pickFileFromStorage(input:String) {
+        pickFileLauncher.launch(input)
     }
 
-    private fun pickVideoFromStorage() {
-        pickVideoLauncher.launch("video/*")
-    }
-
-    private val pickVideoLauncher = registerForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            val retriever = android.media.MediaMetadataRetriever()
-            retriever.setDataSource(requireContext(), it)
-            val width =
-                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
-                    ?.toIntOrNull() ?: 0
-            val height =
-                retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
-                    ?.toIntOrNull() ?: 0
-            retriever.release()
-            UserContentFragment.width = width
-            UserContentFragment.height = height
-            UserContentFragment.videoURI = it
-            val data = getFileNameAndSize(it, requireContext())
-            val size = getFileLength(data.second!!)
-            val fragment = UserContentFragment()
-            val bundle = Bundle()
-            bundle.apply {
-                putString(Constants.PN_TYPE, Constants.PRACTITIONER)
-                putString(Constants.FILE_PATH, "${it.path}")
-                putString(Constants.FILE_LENGTH, size)
-                putString(Constants.FILE_NAME, data.first)
-                putString(Constants.FILE_TYPE, Constants.FILE_VIDEO)
-            }
-            fragment.arguments = bundle
-            addFragment(
-                R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
+    private val pickFileLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            UserContentFragment.fileURI = uri
+            replaceFragment(
+                R.id.fragment_container, UserContentFragment(), "UserContentFragment", "MyHealthFragment"
             )
         }
-    }
-
-    private fun getFileNameAndSize(uri: Uri, context: Context): Pair<String?, Long?> {
-        var name: String? = null
-        var size: Long? = null
-        val cursor = context.contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            val nameIndex = it.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
-            val sizeIndex = it.getColumnIndex(android.provider.OpenableColumns.SIZE)
-            if (it.moveToFirst()) {
-                name = it.getString(nameIndex)
-                size = it.getLong(sizeIndex)
-            }
-        }
-        return Pair(name, size)
-    }
 
     private val pickPdfLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
-                // Get the file information
-                val fileInfo = getFileInfo(it)
-                val fileName = fileInfo.first
-                val fileSize = fileInfo.second.toFloat()
-
-                // Convert file size to MB
-                val fileSizeInMB = java.lang.String.format("%.3f", fileSize / 1000000.0)
-
-                // Update the UI with the file information
-                val name =
-                    "Filename - $fileName\nFile size - $fileSizeInMB MB\nFile path - ${it.path}"
-                Log.i("================", "=====$name")
-                Log.i("================FILE_PATH", "=====${it.toString()}")
-                val filename = picturePath.substring(picturePath.lastIndexOf("/") + 1)
-                val fragment = UserContentFragment()
-                val bundle = Bundle()
-                bundle.apply {
-                    putString(Constants.FILE_PATH, it.toString())
-                    putString(Constants.FILE_LENGTH, "$fileSizeInMB MB")
-                    putString(Constants.FILE_NAME, fileName)
-                    putString(Constants.FILE_TYPE, Constants.FILE_DOCUMENT)
-                }
-                fragment.arguments = bundle
+                UserContentFragment.fileURI = it
+                UserContentFragment.fileType = Constants.FILE_DOCUMENT
                 addFragment(
-                    R.id.fragment_container, fragment, "UserContentFragment", "MyHealthFragment"
+                    R.id.fragment_container, UserContentFragment(), "UserContentFragment", "MyHealthFragment"
                 )
             } ?: run {
                 // Handle the case where no file was selected
@@ -772,7 +547,7 @@ open class BaseFragment : Fragment() {
         }
 
     // Function to get the file name from URI - optional
-    private fun getFileInfo(uri: Uri): kotlin.Pair<String, Long> {
+    fun getFileInfo(uri: Uri): kotlin.Pair<String, Long> {
         // Initialize default values
         var fileName = "Unknown"
         var fileSize = 0L
@@ -834,4 +609,59 @@ open class BaseFragment : Fragment() {
             putExtra(Intent.EXTRA_SUBJECT, subject)
         })
     }
+
+    fun getFileExtensionFromUri(uri: Uri, context: Context): String? {
+        // Try to get extension from file name
+        val fileName = getFileNameFromUri(uri, context)
+        fileName?.let {
+            val dotIndex = it.lastIndexOf('.')
+            if (dotIndex != -1 && dotIndex < it.length - 1) {
+                return it.substring(dotIndex + 1)
+            }
+        }
+        // Fallback: get extension from MIME type
+        val mimeType = context.contentResolver.getType(uri)
+        return mimeType?.let { MimeTypeMap.getSingleton().getExtensionFromMimeType(it) }
+    }
+
+    private fun getFileNameFromUri(uri: Uri, context: Context): String? {
+        if (uri.scheme == "content") {
+            context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (nameIndex != -1 && cursor.moveToFirst()) {
+                    return cursor.getString(nameIndex)
+                }
+            }
+        }
+        // Fallback for file:// or unknown schemes
+        uri.path?.let { path ->
+            val cut = path.lastIndexOf('/')
+            if (cut != -1 && cut + 1 < path.length) {
+                return URLDecoder.decode(path.substring(cut + 1), "UTF-8")
+            }
+        }
+        return null
+    }
+
+    fun getFileSizeFromUri(uri: Uri): String? {
+        val cursor = requireActivity().contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            val sizeIndex = it.getColumnIndex(OpenableColumns.SIZE)
+            if (sizeIndex != -1 && it.moveToFirst()) {
+                val fileSizeBytes = it.getLong(sizeIndex)
+                val fileSizeString = when {
+                    fileSizeBytes >= 1024 * 1024 -> String.format(
+                        "%.2f MB",
+                        fileSizeBytes / (1024.0 * 1024.0)
+                    )
+
+                    fileSizeBytes >= 1024 -> String.format("%.2f KB", fileSizeBytes / 1024.0)
+                    else -> "$fileSizeBytes Bytes"
+                }
+                return fileSizeString
+            }
+        }
+        return null
+    }
+
 }

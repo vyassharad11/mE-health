@@ -5,13 +5,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.R
+import com.mE.Health.databinding.ItemImagingPreviewBinding
 
-class ImagingPreviewAdapter(
-    private val mContext: Context
-) :
+class ImagingPreviewAdapter(private val mContext: Context) :
     RecyclerView.Adapter<ImagingPreviewAdapter.MyViewHolder>() {
 
     interface OnClickCallback {
@@ -20,26 +17,23 @@ class ImagingPreviewAdapter(
 
     var onItemClickListener: OnClickCallback? = null
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvName: TextView = itemView.findViewById(R.id.tvName)
-//        var ivChecked: ImageView = itemView.findViewById(R.id.ivChecked)
-    }
+    inner class MyViewHolder(val binding: ItemImagingPreviewBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ImagingPreviewAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_imaging_preview, parent, false)
-        return MyViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemImagingPreviewBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: ImagingPreviewAdapter.MyViewHolder,
+        holder: MyViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
-        holder.tvName.text = "Series ${position+1}"
+        holder.binding.tvName.text = "Series ${position + 1}"
         holder.itemView.setOnClickListener {
             onItemClickListener?.onClicked(
                 holder.itemView,

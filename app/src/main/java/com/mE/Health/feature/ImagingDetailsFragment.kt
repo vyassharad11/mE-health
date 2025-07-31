@@ -5,17 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Imaging
-import com.mE.Health.data.model.Insurance
 import com.mE.Health.databinding.ImagingDetailFragmentBinding
-import com.mE.Health.feature.adapter.ImagingPreviewAdapter
-import com.mE.Health.utility.BottomSheetImagingPreview
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
-import com.mE.Health.utility.fromJson
 import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,23 +1,32 @@
 package com.mE.Health.feature
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
+import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerDetailOrganizationAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
+import com.mE.Health.feature.adapter.UserSavedFileAdapter
+import com.mE.Health.utility.BottomSheetImagingPreview
+import com.mE.Health.utility.BottomSheetUserSavedFilePreview
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.extractContactInfo
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ProviderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -27,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: PractitionerDetailsFragmentBinding
+    private val viewModel: ProviderViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +55,6 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        healthItemType = Constants.PRACTITIONER
         setHeaderUploadProperties(binding.toolbar.ivSetting, true)
         setHeaderTitleProperties(getString(R.string.practitioner), binding.toolbar.tvTitle, true)
 
@@ -54,6 +63,9 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private fun setPractitionerData() {
         DetailSingleton.practitioner?.let {
+            setUserSaveFileData(it.id)
+            setUserSelectedDetails(it.id, Constants.PRACTITIONER)
+
             mockViewModel.getOrganizationsByPractitionerId(it.id)
             mockViewModel.getAppointmentsByPractitionerId(it.id)
 
@@ -142,15 +154,51 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
             R.id.rllMail -> {
                 val contactInfo = DetailSingleton.practitioner?.telecom?.extractContactInfo()
-                sendEmail(contactInfo?.email!!, "Practitioner Email : ${DetailSingleton.practitioner?.specialty}")
+                sendEmail(
+                    contactInfo?.email!!,
+                    "Practitioner Email : ${DetailSingleton.practitioner?.specialty}"
+                )
             }
 
             R.id.rllCall -> {
                 val contactInfo = DetailSingleton.practitioner?.telecom?.extractContactInfo()
                 openDialPadWithNumber(contactInfo?.phone!!)
             }
+
             R.id.llUpload -> {
             }
         }
+    }
+
+    private fun setUserSaveFileData(id: String) {
+        viewModel.userSavedFileList.observe(requireActivity()) {
+            if (it.isNotEmpty()) {
+                binding.userSavedFileLayout.llFileLayout.visibility = View.VISIBLE
+                binding.userSavedFileLayout.rvFile.layoutManager =
+                    GridLayoutManager(requireActivity(), 2)
+                val previewAdapter = UserSavedFileAdapter(requireActivity())
+                binding.userSavedFileLayout.rvFile.adapter = previewAdapter
+                previewAdapter.updateList(it)
+                previewAdapter.apply {
+                    onItemClickListener = object : UserSavedFileAdapter.OnClickCallback {
+                        override fun onClicked(item: UserSavedFile?, position: Int) {
+                            if (item?.file_type == Constants.FILE_IMAGE) {
+                                val bottomSheet = BottomSheetUserSavedFilePreview(
+                                    requireActivity(),
+                                    item?.file_name!!, item.file_path
+                                )
+                                bottomSheet.show(
+                                    requireActivity().supportFragmentManager,
+                                    "BottomSheetUserSavedFilePreview"
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                binding.userSavedFileLayout.llFileLayout.visibility = View.GONE
+            }
+        }
+        viewModel.getUserSavedFileList(id)
     }
 }

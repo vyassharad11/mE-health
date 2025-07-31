@@ -165,4 +165,7 @@ interface MockDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFile(image: UserSavedFile)
 
+    @Query("SELECT * FROM user_saved_file WHERE health_item_id = :id AND user_id = :userId")
+    fun getUserSavedItemList(id: String, userId: String): List<UserSavedFile>
+
 }

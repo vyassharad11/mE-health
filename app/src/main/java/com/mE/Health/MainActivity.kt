@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         openFragment()
+        TestClass.hidden = false
     }
 
     private fun openFragment() {

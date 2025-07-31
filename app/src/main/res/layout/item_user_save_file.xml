@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_100"
             android:scaleType="centerCrop"
-            android:src="@drawable/dummy_imaging_preview"
             app:rv_cornerRadius="@dimen/dp_10" />
 
         <TextView
@@ -30,35 +29,7 @@
             android:layout_marginTop="@dimen/dp_10"
             android:text="Series"
             android:textColor="@color/text_color_primary"
-            android:textSize="@dimen/sp_16" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_5"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/textStyleMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_image_preview"
-                android:drawablePadding="@dimen/dp_5"
-                android:text="@string/image_report"
-                android:textColor="@color/text_color_primary"
-                android:textSize="@dimen/sp_12" />
-
-            <TextView
-                style="@style/textStyleBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:text="Report.jpg"
-                android:visibility="gone"
-                android:textColor="@color/text_color_primary"
-                android:textSize="@dimen/sp_17" />
-        </LinearLayout>
-
+            android:textSize="@dimen/sp_12" />
 
     </LinearLayout>
 

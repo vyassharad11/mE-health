@@ -45,11 +45,14 @@ class ProviderViewModel @Inject constructor(
     private val _providerList = MutableLiveData<List<ProviderDTO>>()
     val providerList: LiveData<List<ProviderDTO>> = _providerList
 
+    private val _userSavedFileList = MutableLiveData<List<UserSavedFile>>()
+    val userSavedFileList: LiveData<List<UserSavedFile>> = _userSavedFileList
+
 
     fun stateList() {
         viewModelScope.launch(Dispatchers.IO) {
             _countryStateData.postValue(NetworkResult.Loading())
-            repository.stateList().let { response ->
+            repository.stateList().let  { response ->
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         _countryStateData.postValue(NetworkResult.Success(response.body()))
@@ -63,24 +66,11 @@ class ProviderViewModel @Inject constructor(
         }
     }
 
-    fun providerList(type: String, search: String, state: String) {
+    fun getUserSavedFileList(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _providerData.postValue(NetworkResult.Loading())
-            val response = if (type == Constants.STATE) repository.providerStateList(
-                search,
-                state
-            ) else repository.providerCountryList("", "")
-            response.let { response ->
-                if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        _providerData.postValue(NetworkResult.Success(response.body()))
-                    } else {
-                        _providerData.postValue(NetworkResult.Error("Something went wrong"))
-                    }
-                } else {
-                    _providerData.postValue(NetworkResult.Error(response.message()))
-                }
-            }
+            _userSavedFileList.postValue(
+                mockRepository.getUserSavedItemList(id, appSession.getUserId())
+            )
         }
     }
 

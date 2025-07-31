@@ -337,6 +337,7 @@ data class UserSavedFile(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val user_id: String,
     val health_type: String,
+    val health_item_id: String,
     val file_name: String,
     val size: String,
     val file_type: String,

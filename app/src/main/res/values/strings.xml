@@ -219,6 +219,7 @@
     <string name="please_select_subject">Please Select Subject</string>
     <string name="visit">Visit</string>
     <string name="appointment">Appointment</string>
+    <string name="saved_files">Saved Files</string>
 
 
 </resources>

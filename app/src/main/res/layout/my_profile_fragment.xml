@@ -106,11 +106,12 @@
 
                     </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <com.mE.Health.utility.roundview.RoundedImageView
+                        android:layout_width="@dimen/dp_100"
+                        android:layout_height="@dimen/dp_100"
+                        app:rv_isOval="true"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/dummy_my_profile" />
+                        android:src="@drawable/ic_user_profile" />
 
                 </LinearLayout>
 

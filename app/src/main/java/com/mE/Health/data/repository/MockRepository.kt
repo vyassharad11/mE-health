@@ -240,4 +240,7 @@ class MockRepository @Inject constructor(
     }
 
 
+    suspend fun getUserSavedItemList(id: String, userId: String) =
+        mockDataDao.getUserSavedItemList(id, userId)
+
 }
