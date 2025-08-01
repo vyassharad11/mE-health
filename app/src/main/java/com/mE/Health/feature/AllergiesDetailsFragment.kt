@@ -50,6 +50,7 @@ class AllergiesDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.allergy?.let { detail ->
+            setUserSelectedDetails(detail.id,Constants.ALLERGIES)
             binding.apply {
                 tvRecordedDate.text = detail.recordedDate?.toDisplayDate()
                 tvName.text = detail.code_display

@@ -316,6 +316,10 @@
                 android:layout_marginTop="@dimen/dp_30"
                 layout="@layout/layout_sync_share_button" />
 
+            <include
+                android:id="@+id/userSavedFileLayout"
+                layout="@layout/user_saved_file_layout" />
+
             <include layout="@layout/bottom_view" />
 
 

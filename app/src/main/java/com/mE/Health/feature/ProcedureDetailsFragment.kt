@@ -49,6 +49,13 @@ class ProcedureDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.procedure?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
+            setUserSelectedDetails(detail.id, Constants.PROCEDURES)
+
             binding.apply {
                 generateShareMessage(detail)
                 tvName.text = detail.code_display

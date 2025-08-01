@@ -213,10 +213,12 @@
                     android:paddingHorizontal="@dimen/dp_12"
                     android:paddingVertical="@dimen/dp_15">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/dummy_doctor" />
+                    <com.mE.Health.utility.roundview.RoundedImageView
+                        android:layout_width="@dimen/dp_60"
+                        android:layout_height="@dimen/dp_60"
+                        app:rv_isOval="true"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_user_profile" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -392,9 +394,11 @@
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_isRadiusHalfHeight="true" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"/>
+            <include
+                android:id="@+id/userSavedFileLayout"
+                layout="@layout/user_saved_file_layout" />
+
+            <include layout="@layout/bottom_view" />
 
         </LinearLayout>
 

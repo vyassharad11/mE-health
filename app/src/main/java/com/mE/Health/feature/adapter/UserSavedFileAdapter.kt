@@ -2,6 +2,10 @@ package com.mE.Health.feature.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
+import android.media.ThumbnailUtils
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +19,7 @@ import com.mE.Health.databinding.ItemImagingPreviewBinding
 import com.mE.Health.databinding.ItemMyHealthLabBinding
 import com.mE.Health.databinding.ItemUserSaveFileBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utilities.getVideoThumbnail
 
 class UserSavedFileAdapter(private val mContext: Context) :
     RecyclerView.Adapter<UserSavedFileAdapter.MyViewHolder>() {
@@ -56,10 +61,24 @@ class UserSavedFileAdapter(private val mContext: Context) :
                     position
                 )
             }
-            if (it.file_type == Constants.FILE_IMAGE) {
-                Glide.with(mContext)
-                    .load(it.file_path)
-                    .into(holder.binding.ivUserSaved)
+            when (it.file_type) {
+                Constants.FILE_IMAGE -> {
+                    Glide.with(mContext)
+                        .load(it.file_path)
+                        .into(holder.binding.ivUserSaved)
+                    holder.binding.llFile.visibility = View.GONE
+                }
+                Constants.FILE_VIDEO -> {
+                    Glide.with(mContext)
+                        .load(getVideoThumbnail(it.file_path)) // works with video Uris too
+                        .into(holder.binding.ivUserSaved)
+                    holder.binding.llFile.visibility = View.VISIBLE
+                    holder.binding.ivFile.setImageResource(R.drawable.ic_play_video)
+                }
+                else -> {
+                    holder.binding.llFile.visibility = View.VISIBLE
+                    holder.binding.ivFile.setImageResource(R.drawable.ic_pdf)
+                }
             }
         }
     }

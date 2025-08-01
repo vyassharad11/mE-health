@@ -1,4 +1,12 @@
-<?xml version ="1.0" encoding ="utf-8"?><!--  Learn More about how to use App Actions: https://developer.android.com/guide/actions/index.html -->
-<paths>
-    <external-path name="external_files" path="."/>
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Allow access to files in external storage -->
+    <external-path
+        name="external"
+        path="." />
+
+    <!-- OR if the file is in internal app storage -->
+    <files-path
+        name="files"
+        path="." />
 </paths>

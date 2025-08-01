@@ -1,18 +1,14 @@
 package com.mE.Health.feature
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
@@ -21,7 +17,8 @@ import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.databinding.UserContentFragmentBinding
 import com.mE.Health.feature.adapter.UploadDocItem
 import com.mE.Health.utility.Constants
-import com.mE.Health.viewmodels.ProviderViewModel
+import com.mE.Health.utility.DialogOK
+import com.mE.Health.utility.Utilities.openPdf
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
@@ -37,7 +34,6 @@ import java.util.Locale
 class UserContentFragment : BaseFragment() {
 
     private lateinit var binding: UserContentFragmentBinding
-    private val viewModel: ProviderViewModel by viewModels()
 
     companion object {
         var width = 0
@@ -59,7 +55,7 @@ class UserContentFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
-        appSession = viewModel.getAppSession()
+        appSession = fileViewModel.getAppSession()
         initView()
         initHeader()
     }
@@ -148,7 +144,7 @@ class UserContentFragment : BaseFragment() {
     private fun getAllMyHealthType(): ArrayList<UploadDocItem> {
         val typeList: ArrayList<UploadDocItem> = ArrayList()
         typeList.apply {
-            add(UploadDocItem("Practictioner"))
+            add(UploadDocItem("Practitioner"))
             add(UploadDocItem("Appointments"))
             add(UploadDocItem("Conditions"))
             add(UploadDocItem("Labs"))
@@ -175,19 +171,7 @@ class UserContentFragment : BaseFragment() {
         binding.tvImageName.text = "Name : $fileName"
 
         binding.ivPdf.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.setDataAndType(fileURI, "application/pdf")
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            try {
-                startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                Toast.makeText(
-                    requireActivity(),
-                    "No application found which can open the PDF file",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            openPdf(requireActivity(), fileURI)
         }
     }
 
@@ -246,11 +230,17 @@ class UserContentFragment : BaseFragment() {
                 file_type = fileType,
                 file_path = imagePath
             )
-            viewModel.insertFile(fileObject)
+            fileViewModel.insertFile(fileObject)
         }
-
-        Toast.makeText(requireActivity(), "File saved successfully", Toast.LENGTH_SHORT).show()
-        onBackPressed()
+        val dialogOK = DialogOK(requireActivity(), "", "File saved successfully").apply {
+            onClickCallback = object : DialogOK.OkClickCallback {
+                override fun onOk() {
+                    parentFragmentManager.setFragmentResult("UpdateView", Bundle())
+                    requireActivity().onBackPressed()
+                }
+            }
+        }
+        dialogOK.show()
     }
 
     private fun generateCustomFileName(): String {

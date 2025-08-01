@@ -48,8 +48,8 @@ class BillingDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.claim?.let { detail ->
+            setUserSelectedDetails(detail.claimId,Constants.BILLING)
             binding.apply {
-
                 tvBillingDate.text = detail.createdDate?.toDisplayDate()
                 tvClinicName.text = detail.name
                 tvBillingAmount.text = "\$ ${detail.totalAmount}"

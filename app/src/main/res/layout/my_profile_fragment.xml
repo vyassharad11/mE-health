@@ -110,6 +110,7 @@
                         android:layout_width="@dimen/dp_100"
                         android:layout_height="@dimen/dp_100"
                         app:rv_isOval="true"
+                        android:scaleType="centerCrop"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_user_profile" />
 

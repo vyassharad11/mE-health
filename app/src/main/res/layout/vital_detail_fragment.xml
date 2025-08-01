@@ -290,6 +290,10 @@
                 android:layout_marginTop="@dimen/dp_60"
                 layout="@layout/layout_sync_share_button" />
 
+            <include
+                android:id="@+id/userSavedFileLayout"
+                layout="@layout/user_saved_file_layout" />
+
             <com.mE.Health.utility.roundview.RoundTextView
                 android:id="@+id/tvEditMedication"
                 style="@style/textStyleSemiBold"

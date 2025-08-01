@@ -38,7 +38,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:lineSpacingMultiplier="1.1"
-        android:minHeight="80dp"
+        android:minHeight="@dimen/dp_140"
         android:paddingHorizontal="@dimen/dp_18"
         android:paddingTop="@dimen/dp_24"
         android:scrollbars="vertical"
@@ -49,7 +49,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"
-        android:layout_marginTop="@dimen/dp_40"
         android:background="@color/color_dadada" />
 
     <TextView

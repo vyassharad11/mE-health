@@ -276,6 +276,10 @@
                 android:layout_marginTop="@dimen/dp_40"
                 layout="@layout/layout_sync_share_button" />
 
+            <include
+                android:id="@+id/userSavedFileLayout"
+                layout="@layout/user_saved_file_layout" />
+
             <com.mE.Health.utility.roundview.RoundTextView
                 style="@style/textStyleSemiBold"
                 android:layout_width="match_parent"

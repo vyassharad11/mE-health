@@ -50,6 +50,13 @@ class VitalDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.vital?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
+            setUserSelectedDetails(detail.id, Constants.VITALS)
+
             if (detail.patientId != null) {
                 mockViewModel.getPatientDetail(detail.patientId)
             }

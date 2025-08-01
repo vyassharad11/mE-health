@@ -54,6 +54,13 @@ class MedicationDetailsFragment : BaseFragment() {
 
     private fun setDetails() {
         DetailSingleton.medication?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
+            setUserSelectedDetails(detail.id, Constants.MEDICATION)
+
             binding.tvMedicationDisplay.text = detail.medicationCode_display
             binding.tvMedicationId.text =
                 fromJson(detail.medicationCode, MedicationCode::class.java).code

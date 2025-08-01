@@ -9,6 +9,7 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.databinding.VisitsDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
@@ -46,9 +47,16 @@ class VisitsDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.visit?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
+            setUserSelectedDetails(detail.id, Constants.VISITS)
+
             binding.apply {
                 tvType.text = detail.type_display
-                tvStatus.text = detail.status
+                tvStatus.text = detail.status?.capitalFirstChar()
                 generateShareMessage(detail)
                 val statusDetail =
                     Utilities.getVisitUIStatus(requireActivity(), detail.status ?: "")

@@ -21,14 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ProviderViewModel @Inject constructor(
     private val repository: ProviderRepository,
-    private val mockRepository: MockRepository,
-    private val appSession: AppSession
+    private val mockRepository: MockRepository
 ) :
     ViewModel() {
-
-    fun getAppSession(): AppSession {
-        return appSession
-    }
 
     private val _countryStateData = MutableLiveData<NetworkResult<CountryStateData>>()
     val stateListData: LiveData<NetworkResult<CountryStateData>>
@@ -44,10 +39,6 @@ class ProviderViewModel @Inject constructor(
 
     private val _providerList = MutableLiveData<List<ProviderDTO>>()
     val providerList: LiveData<List<ProviderDTO>> = _providerList
-
-    private val _userSavedFileList = MutableLiveData<List<UserSavedFile>>()
-    val userSavedFileList: LiveData<List<UserSavedFile>> = _userSavedFileList
-
 
     fun stateList() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -66,14 +57,6 @@ class ProviderViewModel @Inject constructor(
         }
     }
 
-    fun getUserSavedFileList(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _userSavedFileList.postValue(
-                mockRepository.getUserSavedItemList(id, appSession.getUserId())
-            )
-        }
-    }
-
     fun getProviderList() {
         viewModelScope.launch(Dispatchers.IO) {
             _providerList.postValue(mockRepository.getProviderItems())
@@ -83,12 +66,6 @@ class ProviderViewModel @Inject constructor(
     fun updateUserProviderAction(status: Boolean, id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             mockRepository.updateProviderStatus(status, id)
-        }
-    }
-
-    fun insertFile(list: UserSavedFile) {
-        viewModelScope.launch(Dispatchers.IO) {
-            mockRepository.insertFile(list)
         }
     }
 }

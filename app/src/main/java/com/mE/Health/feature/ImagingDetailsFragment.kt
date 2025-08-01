@@ -9,6 +9,7 @@ import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Imaging
 import com.mE.Health.databinding.ImagingDetailFragmentBinding
+import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
@@ -45,6 +46,13 @@ class ImagingDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.imaging?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
+            setUserSelectedDetails(detail.id, Constants.IMAGING)
+
             binding.apply {
                 tvName.text = "${detail.modality_display} (${detail.modality_code})"
                 tvDescription.text = detail.description

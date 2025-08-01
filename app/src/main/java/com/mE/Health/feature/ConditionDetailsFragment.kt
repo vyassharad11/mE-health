@@ -60,6 +60,13 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private fun setData() {
         DetailSingleton.condition?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
+            setUserSelectedDetails(detail.id,Constants.CONDITIONS)
+
             binding.apply {
                 tvName.text = detail.code_display
                 Utilities.getConditionUIStatus(requireActivity(), detail.clinicalStatus ?: "").let {

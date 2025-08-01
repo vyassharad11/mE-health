@@ -1,7 +1,15 @@
 package com.mE.Health.utility
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
+import android.net.Uri
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.mE.Health.MainActivity
 import com.mE.Health.R
 
 object Utilities {
@@ -39,6 +47,35 @@ object Utilities {
             "resolved" ->  Pair(ContextCompat.getColor(mContext, R.color.color_8A38F5),ContextCompat.getColor(mContext, R.color.color_1A8A38F5))
             "canceled","inactive", "cancelled" -> Pair(ContextCompat.getColor(mContext, R.color.color_F02C2C),ContextCompat.getColor(mContext, R.color.color_1AF02C2C))
             else -> Pair(ContextCompat.getColor(mContext, R.color.color_06C270),ContextCompat.getColor(mContext, R.color.color_A06C270)) // Default case
+        }
+    }
+
+    fun openPdf(mainActivity: Activity, fileURI: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(fileURI, "application/pdf")
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        try {
+            mainActivity.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(
+                mainActivity,
+                "No application found which can open the PDF file",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    fun getVideoThumbnail(videoPath: String): Bitmap? {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(videoPath)
+            retriever.getFrameAtTime(0) // 0 = first frame
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        } finally {
+            retriever.release()
         }
     }
 }

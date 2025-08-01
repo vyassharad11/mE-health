@@ -11,6 +11,7 @@ import android.view.Window
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mE.Health.R
+import androidx.core.graphics.drawable.toDrawable
 
 class DialogOK(context: Context, title: String, message: String) : Dialog(context) {
     var onClickCallback: OkClickCallback? = null
@@ -19,13 +20,13 @@ class DialogOK(context: Context, title: String, message: String) : Dialog(contex
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setContentView(R.layout.dialog_ok)
-            this.window!!.setBackgroundDrawable(ColorDrawable(0))
+            this.window!!.setBackgroundDrawable(0.toDrawable())
             this.window!!.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            this.setCanceledOnTouchOutside(true)
-            this.setCancelable(true)
+            this.setCanceledOnTouchOutside(false)
+            this.setCancelable(false)
 
             val tvTitle = this.findViewById<TextView>(R.id.tvTitle)
             val tvMessage = this.findViewById<TextView>(R.id.tvMessage)

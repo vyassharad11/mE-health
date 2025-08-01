@@ -46,6 +46,8 @@ class ImmunizationDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.immunization?.let { detail ->
+            setUserSelectedDetails(detail.id, Constants.IMMUNIZATIONS)
+
             binding.apply {
                 tvName.text = detail.vaccineCode_display
 

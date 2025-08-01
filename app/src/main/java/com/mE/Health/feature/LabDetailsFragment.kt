@@ -52,6 +52,13 @@ class LabDetailsFragment : BaseFragment() {
 
     private fun setDetails() {
         DetailSingleton.lab?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
+            setUserSelectedDetails(detail.id, Constants.LABS)
+
             if (detail.performerId != null) {
                 mockViewModel.getPractitionerDetail(detail.performerId)
             }

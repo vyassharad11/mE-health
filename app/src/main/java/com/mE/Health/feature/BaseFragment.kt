@@ -2,16 +2,13 @@ package com.mE.Health.feature
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Environment
-import android.provider.MediaStore
+import android.os.Bundle
 import android.provider.OpenableColumns
 import android.telephony.TelephonyManager
 import android.text.TextUtils
@@ -21,10 +18,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,12 +34,17 @@ import androidx.transition.Slide
 import com.mE.Health.HomeActivity
 import com.mE.Health.MyApplication
 import com.mE.Health.R
+import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.feature.adapter.ImagingPreviewAdapter
-import com.mE.Health.utility.BaseInterface
+import com.mE.Health.feature.adapter.UserSavedFileAdapter
+import com.mE.Health.utility.AppSession
 import com.mE.Health.utility.BottomSheetImagingPreview
+import com.mE.Health.utility.BottomSheetUserSavedFilePreview
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.DialogProgress
+import com.mE.Health.utility.Utilities.openPdf
+import com.mE.Health.viewmodels.FileViewModel
 import com.mE.Health.viewmodels.assist.AssistViewModel
 import com.mE.Health.viewmodels.mockData.MockDataViewModel
 import dagger.hilt.android.internal.managers.ViewComponentManager
@@ -48,24 +54,18 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.Locale
-import kotlin.getValue
-import androidx.core.net.toUri
-import com.mE.Health.utility.AppSession
-import javax.inject.Inject
-import androidx.core.graphics.drawable.toDrawable
 import java.net.URLDecoder
+import java.util.Locale
+import javax.inject.Inject
 
 
 open class BaseFragment : Fragment() {
 
     val mockViewModel: MockDataViewModel by activityViewModels()
     val assistViewModel: AssistViewModel by activityViewModels()
-    var dialogProgress: DialogProgress? = null
-    var dialogOK: Dialog? = null
+    val fileViewModel: FileViewModel by activityViewModels()
+    private var dialogProgress: DialogProgress? = null
+    private var dialogOK: Dialog? = null
     var shareMessage = ""
 
     @Inject
@@ -340,26 +340,6 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    val onFileUploadListener = object : OnClickCallback {
-        override fun onClick(position: Int) {
-            when (position) {
-                1 -> {
-                    UserContentFragment.fileType = Constants.FILE_IMAGE
-                    pickFileFromStorage("image/*")
-                }
-
-                2 -> {
-                    UserContentFragment.fileType = Constants.FILE_VIDEO
-                    pickFileFromStorage("video/*")
-                }
-
-                3 -> {
-                    pickPdfLauncher.launch(arrayOf("application/pdf"))
-                }
-            }
-        }
-    }
-
     private fun updateSideNavMenuVisibility(mActivity: Activity): Boolean {
         var status = false
         val mCurrentActivity = (mActivity.applicationContext as MyApplication).getCurrentActivity()
@@ -421,11 +401,6 @@ open class BaseFragment : Fragment() {
     }
 
 
-    var filePath = ""
-    var cameraUri: Uri? = null
-    var cropPicturePath = ""
-    var picturePath = ""
-    var imageStoragePath = ""
 
     fun log(tag: String, str: String) {
         Log.i(tag, str)
@@ -498,26 +473,37 @@ open class BaseFragment : Fragment() {
         dialog.show()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        parentFragmentManager.setFragmentResultListener("UpdateView", viewLifecycleOwner) { key, bundle ->
+            fileViewModel.getUserSavedFileList(UserContentFragment.healthItemId)
+        }
+    }
+
     fun setUserSelectedDetails(itemId: String, itemType: String) {
         UserContentFragment.healthItemId = itemId
         UserContentFragment.healthItemType = itemType
     }
 
-    private fun getFileLength(file: File): String {
-        val mb = convertToMegabytes(file)
-        return if (mb > 0) "$mb MB" else "${convertToKilobytes(file)} KB"
-    }
+    val onFileUploadListener = object : OnClickCallback {
+        override fun onClick(position: Int) {
+            when (position) {
+                1 -> {
+                    UserContentFragment.fileType = Constants.FILE_IMAGE
+                    pickFileFromStorage("image/*")
+                }
 
-    private fun convertToMegabytes(file: File): Long {
-        return file.length() / (1024 * 1024)
-    }
+                2 -> {
+                    UserContentFragment.fileType = Constants.FILE_VIDEO
+                    pickFileFromStorage("video/*")
+                }
 
-    private fun convertToKilobytes(file: File): Long {
-        return file.length() / 1024
-    }
-
-    private fun convertToKilobytes(size: Long): Long {
-        return size / 1024
+                3 -> {
+                    UserContentFragment.fileType = Constants.FILE_DOCUMENT
+                    pickPdfLauncher.launch(arrayOf("application/pdf"))
+                }
+            }
+        }
     }
 
     private fun pickFileFromStorage(input:String) {
@@ -527,7 +513,7 @@ open class BaseFragment : Fragment() {
     private val pickFileLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             UserContentFragment.fileURI = uri
-            replaceFragment(
+            addFragment(
                 R.id.fragment_container, UserContentFragment(), "UserContentFragment", "MyHealthFragment"
             )
         }
@@ -536,7 +522,6 @@ open class BaseFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
                 UserContentFragment.fileURI = it
-                UserContentFragment.fileType = Constants.FILE_DOCUMENT
                 addFragment(
                     R.id.fragment_container, UserContentFragment(), "UserContentFragment", "MyHealthFragment"
                 )
@@ -664,4 +649,69 @@ open class BaseFragment : Fragment() {
         return null
     }
 
+    fun setUserSaveFileData(
+        id: String,
+        rvUserSavedFile: RecyclerView,
+        llFileLayout: LinearLayout
+    ) {
+        fileViewModel.userSavedFileList.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                llFileLayout.visibility = View.VISIBLE
+                initSaveFileLayout(requireActivity(), rvUserSavedFile, it)
+            } else {
+                llFileLayout.visibility = View.GONE
+            }
+        }
+        fileViewModel.getUserSavedFileList(id)
+    }
+
+    private fun initSaveFileLayout(
+        mActivity: Activity,
+        rvUserSavedFile: RecyclerView,
+        userSavedFileList: List<UserSavedFile>?
+    ) {
+        rvUserSavedFile.layoutManager = GridLayoutManager(mActivity, 2)
+        val userSavedFileAdapter = UserSavedFileAdapter(mActivity)
+        userSavedFileAdapter.itemList = userSavedFileList ?: ArrayList()
+        rvUserSavedFile.adapter = userSavedFileAdapter
+        userSavedFileAdapter.onItemClickListener = onSaveFileItemClickListener
+    }
+
+     private val onSaveFileItemClickListener = object : UserSavedFileAdapter.OnClickCallback {
+        override fun onClicked(item: UserSavedFile?, position: Int) {
+            when (item?.file_type) {
+                Constants.FILE_IMAGE,Constants.FILE_VIDEO -> {
+                    val bottomSheet = BottomSheetUserSavedFilePreview(
+                        requireActivity(),
+                        item.file_name, item.file_type, item.file_path
+                    )
+                    bottomSheet.show(
+                        requireActivity().supportFragmentManager,
+                        "BottomSheetUserSavedFilePreview"
+                    )
+                }
+
+                Constants.FILE_DOCUMENT -> {
+                    val pdfFile = File(item.file_path)
+                    if (!pdfFile.exists()) {
+                        Log.e("PDF Error", "File does not exist: ${pdfFile.absolutePath}")
+                        return
+                    }
+                    val pdfUri = FileProvider.getUriForFile(
+                        requireActivity(),
+                        requireActivity().packageName + ".fileprovider",
+                        pdfFile
+                    )
+                    openPdf(
+                        requireActivity(),
+                        pdfUri
+                    )
+                }
+
+                else -> {
+
+                }
+            }
+        }
+    }
 }

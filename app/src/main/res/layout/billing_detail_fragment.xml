@@ -14,7 +14,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/llBottom"
         android:layout_below="@+id/toolbar"
         android:overScrollMode="never">
 
@@ -23,7 +22,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="@dimen/dp_10">
-
 
             <TextView
                 style="@style/textStyleBold"
@@ -37,7 +35,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dp_5"
+                android:layout_marginHorizontal="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_20"
                 app:cardCornerRadius="@dimen/dp_5"
                 app:cardElevation="@dimen/dp_2"
@@ -75,9 +73,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
+                                android:layout_marginTop="@dimen/dp_5"
                                 android:layout_marginEnd="@dimen/dp_10"
                                 android:layout_toStartOf="@+id/tvStatus"
-                                android:layout_marginTop="@dimen/dp_5"
                                 android:text="Clinic Name "
                                 android:textColor="@color/color_333333"
                                 android:textSize="@dimen/sp_18" />
@@ -89,11 +87,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
+                                android:layout_marginTop="@dimen/dp_5"
                                 android:layout_marginEnd="@dimen/dp_10"
                                 android:paddingHorizontal="@dimen/dp_15"
                                 android:paddingVertical="@dimen/dp_5"
                                 android:text="@string/planned"
-                                android:layout_marginTop="@dimen/dp_5"
                                 android:textColor="@color/color_F09C00"
                                 android:textSize="@dimen/sp_8"
                                 app:rv_backgroundColor="@color/color_AF09C00"
@@ -140,10 +138,10 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dp_5"
+                android:layout_marginHorizontal="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_15"
-                app:cardCornerRadius="@dimen/dp_5"
                 android:layout_marginBottom="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_5"
                 app:cardElevation="@dimen/dp_5"
                 app:strokeColor="@color/white">
 
@@ -272,42 +270,41 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <include
+                android:id="@+id/layoutSyncButton"
+                layout="@layout/layout_sync_share_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_80" />
+
+            <include
+                android:id="@+id/userSavedFileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_30"
+                android:layout_marginHorizontal="@dimen/dp_5"
+                layout="@layout/user_saved_file_layout" />
+
+            <com.mE.Health.utility.roundview.RoundTextView
+                android:id="@+id/tvViewInvoice"
+                style="@style/textStyleSemiBold"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_45"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_20"
+                android:gravity="center"
+                android:text="@string/view_invoice"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_17"
+                app:rv_backgroundColor="@color/color_FF6605"
+                app:rv_isRadiusHalfHeight="true" />
+
+            <include layout="@layout/bottom_view" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
-        android:id="@+id/llBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_20"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/layoutSyncButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/dp_5"
-            layout="@layout/layout_sync_share_button" />
-
-        <com.mE.Health.utility.roundview.RoundTextView
-            android:id="@+id/tvViewInvoice"
-            style="@style/textStyleSemiBold"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
-            android:layout_marginHorizontal="@dimen/dp_5"
-            android:layout_marginTop="@dimen/dp_20"
-            android:gravity="center"
-            android:text="@string/view_invoice"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_17"
-            app:rv_backgroundColor="@color/color_FF6605"
-            app:rv_isRadiusHalfHeight="true" />
-
-        <include layout="@layout/bottom_view" />
-
-    </LinearLayout>
 
 </RelativeLayout>
