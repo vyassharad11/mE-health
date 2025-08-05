@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -78,4 +79,12 @@ object Utilities {
             retriever.release()
         }
     }
+
+    fun getDeviceDisplayMetrics(): Pair<Int, Int> {
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+        return Pair(screenWidth, screenHeight)
+    }
+
 }

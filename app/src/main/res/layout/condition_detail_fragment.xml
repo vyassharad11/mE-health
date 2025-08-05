@@ -663,6 +663,7 @@
                 android:layout_marginTop="@dimen/dp_20"
                 android:layout_marginBottom="@dimen/dp_50"
                 android:gravity="center"
+                android:visibility="gone"
                 android:text="@string/add_related_data"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_17"

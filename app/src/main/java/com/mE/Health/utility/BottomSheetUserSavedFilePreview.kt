@@ -74,9 +74,9 @@ class BottomSheetUserSavedFilePreview(
         }
 
         if (fileType == Constants.FILE_IMAGE) {
-            val displayMetrics = Resources.getSystem().displayMetrics
-            val screenWidth = displayMetrics.widthPixels
-            val screenHeight = displayMetrics.heightPixels
+            val displayMetrics = Utilities.getDeviceDisplayMetrics()
+            val screenWidth = displayMetrics.first
+            val screenHeight = displayMetrics.second
             Glide.with(mContext)
                 .load(filePath)
                 .override(screenWidth, screenHeight)

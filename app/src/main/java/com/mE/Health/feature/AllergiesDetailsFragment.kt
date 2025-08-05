@@ -50,6 +50,11 @@ class AllergiesDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.allergy?.let { detail ->
+            setUserSaveFileData(
+                detail.id,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
             setUserSelectedDetails(detail.id,Constants.ALLERGIES)
             binding.apply {
                 tvRecordedDate.text = detail.recordedDate?.toDisplayDate()

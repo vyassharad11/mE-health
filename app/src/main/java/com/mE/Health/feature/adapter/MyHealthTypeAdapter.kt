@@ -2,6 +2,7 @@ package com.mE.Health.feature.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.R
 import com.mE.Health.models.MyHealthTypeModel
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.roundview.RoundLinearLayout
 
 class MyHealthTypeAdapter(private val mContext: Context,
@@ -66,9 +68,13 @@ class MyHealthTypeAdapter(private val mContext: Context,
     }
 
     private fun setActiveType(holder: MyHealthTypeAdapter.MyViewHolder){
+        val displayMetrics = Utilities.getDeviceDisplayMetrics()
+        val itemWidth = displayMetrics.first/3.5
+
+
         val layoutParams = holder.cvLayout.layoutParams
-        layoutParams.height =mContext.resources.getDimensionPixelOffset(R.dimen.dp_200)
-        layoutParams.width = mContext.resources.getDimensionPixelOffset(R.dimen.dp_130)
+        layoutParams.height = (itemWidth*1.5).toInt()
+        layoutParams.width = itemWidth.toInt()
         holder.cvLayout.layoutParams = layoutParams
         holder.llMain.setPadding(0, 0, 0, 0)
         holder.rllBottomView.delegate.backgroundColor = ContextCompat.getColor(mContext,R.color.color_FF6605)
@@ -76,10 +82,14 @@ class MyHealthTypeAdapter(private val mContext: Context,
     }
 
     private fun setInActiveType(holder: MyHealthTypeAdapter.MyViewHolder){
+        val displayMetrics = Utilities.getDeviceDisplayMetrics()
+        val itemWidth = displayMetrics.first/3.5
+
+
         holder.llMain.setPadding(0, mContext.resources.getDimensionPixelOffset(R.dimen.dp_10), 0, 0)
         val layoutParams = holder.cvLayout.layoutParams
-        layoutParams.height =mContext.resources.getDimensionPixelOffset(R.dimen.dp_180)
-        layoutParams.width = mContext.resources.getDimensionPixelOffset(R.dimen.dp_130)
+        layoutParams.height =(itemWidth*1.3).toInt()
+        layoutParams.width = itemWidth.toInt()
         holder.cvLayout.layoutParams = layoutParams
         holder.rllBottomView.delegate.backgroundColor = ContextCompat.getColor(mContext,R.color.color_6E6B78)
         holder.cvLayout.strokeColor = ContextCompat.getColor(mContext,R.color.white)

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.telephony.TelephonyManager
@@ -43,6 +44,7 @@ import com.mE.Health.utility.BottomSheetUserSavedFilePreview
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.DialogProgress
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.Utilities.openPdf
 import com.mE.Health.viewmodels.FileViewModel
 import com.mE.Health.viewmodels.assist.AssistViewModel
@@ -52,6 +54,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URLDecoder
@@ -358,7 +361,7 @@ open class BaseFragment : Fragment() {
     fun openReadMoreDialog(context: Context, title: String, message: String) {
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.dialog_read_more)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(0))
+        dialog.window?.setBackgroundDrawable(0.toDrawable())
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -699,7 +702,7 @@ open class BaseFragment : Fragment() {
                     }
                     val pdfUri = FileProvider.getUriForFile(
                         requireActivity(),
-                        requireActivity().packageName + ".fileprovider",
+                        requireActivity().packageName + ".provider",
                         pdfFile
                     )
                     openPdf(
@@ -713,5 +716,19 @@ open class BaseFragment : Fragment() {
                 }
             }
         }
+    }
+
+    fun openPdfFromRaw(context: Context) {
+        val fileName = "sample.pdf" // file name in res/raw
+        val outFile = File(context.cacheDir, fileName)
+        val path = FileProvider.getUriForFile(
+            requireActivity(),
+            "com.mE.Health.provider", // must match manifest authority exactly
+            outFile
+        )
+        openPdf(
+            requireActivity(),
+            path
+        )
     }
 }

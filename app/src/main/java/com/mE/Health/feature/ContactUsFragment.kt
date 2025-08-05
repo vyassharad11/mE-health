@@ -1,16 +1,21 @@
 package com.mE.Health.feature
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.mE.Health.R
 import com.mE.Health.databinding.ContactUsFragmentBinding
+import com.mE.Health.models.ContactUsRequest
+import com.mE.Health.retrofit.NetworkResult
 import com.mE.Health.utility.BottomSheetContactUs
-import com.mE.Health.utility.BottomSheetFilter
-import com.mE.Health.utility.FilterItem
+import com.mE.Health.utility.DialogOK
+import com.mE.Health.viewmodels.DeleteAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -20,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ContactUsFragment : BaseFragment() {
 
     private lateinit var binding: ContactUsFragmentBinding
+    private val viewModel: DeleteAccountViewModel by viewModels()
     private var filterList = ArrayList<String>()
     private var strEnquiries = ""
 
@@ -33,9 +39,11 @@ class ContactUsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        appSession = fileViewModel.getAppSession()
         setBottomNavigationVisibility(requireActivity())
         initHeader()
         initView()
+        observeResponse()
     }
 
     private fun initHeader() {
@@ -68,6 +76,32 @@ class ContactUsFragment : BaseFragment() {
                 requireActivity().supportFragmentManager, "BottomSheetContactUs"
             )
         }
+
+        binding.rtvSend.setOnClickListener {
+            val message = binding.etMessage.text.toString()
+            if (TextUtils.isEmpty(strEnquiries)) {
+                Toast.makeText(requireActivity(), "Please select subject", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            } else if (TextUtils.isEmpty(message.trim())) {
+                Toast.makeText(requireActivity(), "Please enter your thoughts", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            val userData = appSession.getUserData()?.data
+            val request = ContactUsRequest(
+                user = userData?.userId!!,
+                first_name = userData.firstName!!,
+                last_name = userData.lastName!!,
+                subject = strEnquiries,
+                phone = userData.phone!!,
+                address = userData.walletAddress?: "",
+                email = userData.email!!,
+                message = message
+            )
+            viewModel.makeContactUsApiCall(request)
+        }
     }
 
     private fun getSubjectList(): ArrayList<String> {
@@ -84,5 +118,36 @@ class ContactUsFragment : BaseFragment() {
             add("General Questions")
         }
         return filterList
+    }
+
+    private fun observeResponse() {
+        viewModel.contactUsStateData.observe(requireActivity()) {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    showProgressDialog()
+                }
+
+                is NetworkResult.Error -> {
+                    hideProgressDialog()
+                    showDialogOk(it.message!!)
+                }
+
+                is NetworkResult.Success -> {
+                    hideProgressDialog()
+                    DialogOK(requireActivity(), "",  it.data?.mETextRes ?: "Thank You. We will get back to you shortly.").apply {
+                        onClickCallback = object : DialogOK.OkClickCallback {
+                            override fun onOk() {
+                                requireActivity().onBackPressed()
+                            }
+                        }
+                    }.show()
+                }
+
+                else -> {
+                    hideProgressDialog()
+                    showDialogOk(it?.message!!)
+                }
+            }
+        }
     }
 }

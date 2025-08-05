@@ -48,6 +48,11 @@ class BillingDetailsFragment : BaseFragment() {
 
     private fun initView() {
         DetailSingleton.claim?.let { detail ->
+            setUserSaveFileData(
+                detail.claimId,
+                binding.userSavedFileLayout.rvFile,
+                binding.userSavedFileLayout.llFileLayout
+            )
             setUserSelectedDetails(detail.claimId,Constants.BILLING)
             binding.apply {
                 tvBillingDate.text = detail.createdDate?.toDisplayDate()
@@ -68,6 +73,9 @@ class BillingDetailsFragment : BaseFragment() {
         }
         binding.layoutSyncButton.llShareData.setOnClickListener {
             shareRecord(message = shareMessage)
+        }
+        binding.tvViewInvoice.setOnClickListener {
+            openPdfFromRaw(requireActivity())
         }
     }
 

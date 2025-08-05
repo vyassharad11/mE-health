@@ -1,5 +1,6 @@
 package com.mE.Health.repository
 
+import com.mE.Health.models.ContactUsRequest
 import com.mE.Health.models.DeleteAccountRequest
 import com.mE.Health.models.LoginRequest
 import com.mE.Health.retrofit.APIService
@@ -24,6 +25,14 @@ class AuthenticationRepository @Inject constructor(
         authorization: String,
         request: DeleteAccountRequest
     ) = apiService.deleteUserAccount(
+        authorization,
+        request
+    )
+
+    suspend fun contactUs(
+        authorization: String,
+        request: ContactUsRequest
+    ) = apiService.contactUs(
         authorization,
         request
     )

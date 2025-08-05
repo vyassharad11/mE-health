@@ -15,14 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginHorizontal="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_10">
 
         <TextView
             style="@style/textStyleBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_20"
             android:text="@string/my_health"
             android:textColor="@color/color_333333"
             android:textSize="@dimen/sp_34" />
@@ -32,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
             android:orientation="horizontal"
             tools:itemCount="1"
             tools:listitem="@layout/item_my_health_view_pager" />

@@ -1,8 +1,10 @@
 package com.mE.Health.retrofit
 
 import com.mE.Health.data.model.AccountResponse
+import com.mE.Health.data.model.ContactUsResponse
 import com.mE.Health.data.model.DeleteAccountResponse
 import com.mE.Health.data.model.ProviderResponse
+import com.mE.Health.models.ContactUsRequest
 import com.mE.Health.models.CountryStateData
 import com.mE.Health.models.DeleteAccountRequest
 import com.mE.Health.models.LoginRequest
@@ -57,5 +59,11 @@ interface APIService {
         @Header("Authorization") authorization: String,
         @Body request: DeleteAccountRequest
     ): Response<DeleteAccountResponse>
+
+    @POST("core/contact-us/")
+    suspend fun contactUs(
+        @Header("Authorization") authorization: String,
+        @Body request: ContactUsRequest
+    ): Response<ContactUsResponse>
 
 }

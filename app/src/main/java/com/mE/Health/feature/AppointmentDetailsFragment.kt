@@ -92,8 +92,8 @@ class AppointmentDetailsFragment : BaseFragment() {
                         delegate.backgroundColor =
                             ContextCompat.getColor(requireActivity(), R.color.color_1A0063F7)
                     }
-                    binding.tvEditAppointment.visibility = View.VISIBLE
-                    binding.tvCancelAppointment.visibility = View.VISIBLE
+                    binding.tvEditAppointment.visibility = View.GONE
+                    binding.tvCancelAppointment.visibility = View.GONE
                 } else if (detail.status?.lowercase() == getString(R.string.completed).lowercase()) {
                     binding.rtvStatus.apply {
                         text = getString(R.string.completed)

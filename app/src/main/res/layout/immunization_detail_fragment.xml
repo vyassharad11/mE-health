@@ -290,6 +290,7 @@
                 android:text="@string/add_immunization"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_17"
+                android:visibility="gone"
                 app:rv_backgroundColor="@color/color_FF6605"
                 app:rv_isRadiusHalfHeight="true" />
 

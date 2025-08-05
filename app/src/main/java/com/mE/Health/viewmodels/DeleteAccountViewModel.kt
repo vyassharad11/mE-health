@@ -1,19 +1,17 @@
 package com.mE.Health.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mE.Health.data.model.AccountResponse
+import com.mE.Health.data.model.ContactUsResponse
 import com.mE.Health.data.model.DeleteAccountResponse
+import com.mE.Health.models.ContactUsRequest
 import com.mE.Health.models.DeleteAccountRequest
-import com.mE.Health.models.LoginRequest
-import com.mE.Health.models.UserDataResponse
 import com.mE.Health.repository.AuthenticationRepository
 import com.mE.Health.retrofit.NetworkResult
 import com.mE.Health.utility.AppSession
-import com.mE.Health.utility.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +24,10 @@ class DeleteAccountViewModel @Inject constructor(
     private val appSession: AppSession
 ) : ViewModel() {
 
+    fun getAppSession(): AppSession {
+        return appSession
+    }
+
     private val _reasonStateData = MutableLiveData<NetworkResult<AccountResponse>>()
     val reasonStateData: LiveData<NetworkResult<AccountResponse>>
         get() {
@@ -36,6 +38,12 @@ class DeleteAccountViewModel @Inject constructor(
     val deleteStateData: LiveData<NetworkResult<DeleteAccountResponse>>
         get() {
             return _deleteStateData
+        }
+
+    private val _contactUsStateData = MutableLiveData<NetworkResult<ContactUsResponse>>()
+    val contactUsStateData: LiveData<NetworkResult<ContactUsResponse>>
+        get() {
+            return _contactUsStateData
         }
 
     fun getReasonData() {
@@ -83,6 +91,32 @@ class DeleteAccountViewModel @Inject constructor(
                     _deleteStateData.postValue(NetworkResult.Error(errorMsg))
                 } else {
                     _deleteStateData.postValue(NetworkResult.Error(response.body()?.mETextRes))
+                }
+            }
+        }
+    }
+
+    fun makeContactUsApiCall(request: ContactUsRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _contactUsStateData.postValue(NetworkResult.Loading())
+            repository.contactUs(appSession.token,request).let { response ->
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        _contactUsStateData.postValue(NetworkResult.Success(response.body()))
+                    } else {
+                        _contactUsStateData.postValue(NetworkResult.Error("Something went wrong"))
+                    }
+                }  else if (response.code() == 400) {
+                    val errorMsg = response.errorBody()?.string()?.let {
+                        try {
+                            JSONObject(it).optString("mE_text_res", "Bad request (400).")
+                        } catch (e: Exception) {
+                            "Bad request (400)."
+                        }
+                    } ?: "Bad request (400)."
+                    _contactUsStateData.postValue(NetworkResult.Error(errorMsg))
+                } else {
+                    _contactUsStateData.postValue(NetworkResult.Error(response.message()))
                 }
             }
         }

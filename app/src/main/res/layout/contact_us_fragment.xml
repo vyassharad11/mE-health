@@ -175,6 +175,7 @@
                             android:src="@drawable/ic_comment" />
 
                         <EditText
+                            android:id="@+id/etMessage"
                             style="@style/textStyleRegular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -197,12 +198,11 @@
                 </com.mE.Health.utility.roundview.RoundLinearLayout>
 
                 <com.mE.Health.utility.roundview.RoundTextView
-                    android:id="@+id/rtvDeleteAccount"
+                    android:id="@+id/rtvSend"
                     style="@style/textStyleSemiBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_45"
                     android:layout_marginTop="@dimen/dp_30"
-                    android:editable="true"
                     android:gravity="center"
                     android:text="@string/send"
                     android:textColor="@color/white"

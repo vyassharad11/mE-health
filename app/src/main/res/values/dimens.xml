@@ -57,4 +57,10 @@
     <dimen name="dp_240">240dp</dimen>
     <dimen name="dp_280">280dp</dimen>
     <dimen name="dp_7">7dp</dimen>
+    <dimen name="dp_160">160dp</dimen>
+    <dimen name="dp_125">125dp</dimen>
+    <dimen name="dp_190">190dp</dimen>
+
+    <dimen name="health_type_width">36dp</dimen>
+
 </resources>

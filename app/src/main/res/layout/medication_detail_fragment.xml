@@ -387,6 +387,7 @@
                 android:layout_marginHorizontal="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_20"
                 android:gravity="center"
+                android:visibility="gone"
                 android:text="@string/edit_medication"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_17"
