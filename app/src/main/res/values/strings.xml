@@ -225,6 +225,7 @@
     <string name="blank_record">You have not uploaded any record.</string>
     <string name="record_deleted_successfully">Record deleted successfully</string>
     <string name="you_want_delete_record">Are you sure you want to delete this record?</string>
+    <string name="mm_dd_yyyy">MM-DD-YYYY</string>
 
 </resources>
 
