@@ -109,6 +109,6 @@ class MyHealthTypeAdapter(private val mContext: Context,
     }
 
     fun getSelectedHealthType(): String {
-        return itemList[selectedItem].type
+        return itemList[selectedItem].name
     }
 }

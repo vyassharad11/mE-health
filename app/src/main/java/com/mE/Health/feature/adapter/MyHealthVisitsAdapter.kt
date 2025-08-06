@@ -41,7 +41,7 @@ class MyHealthVisitsAdapter(private val mContext: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = itemList?.get(position)
         item?.let {
-            holder.binding.tvVisitName.text = it.type_display
+            holder.binding.tvVisitName.text = it.description
             holder.binding.tvDate.text = "Date: ${it.createdAt?.toDisplayDate()}"
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(

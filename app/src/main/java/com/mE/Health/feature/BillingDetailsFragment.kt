@@ -53,9 +53,9 @@ class BillingDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.claimId,Constants.BILLING)
+            setUserSelectedDetails(detail.claimId,Constants.BILLING,detail.name!!,detail.createdDate?.toDisplayDate()!!)
             binding.apply {
-                tvBillingDate.text = detail.createdDate?.toDisplayDate()
+                tvBillingDate.text = detail.createdDate.toDisplayDate()
                 tvClinicName.text = detail.name
                 tvBillingAmount.text = "\$ ${detail.totalAmount}"
 

@@ -5,17 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.gson.Gson
 import com.mE.Health.R
-import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DetailSingleton
-import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.ConditionDetailFragmentBinding
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
-import com.mE.Health.utility.openCloseTime
 import com.mE.Health.utility.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,7 +61,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id,Constants.CONDITIONS)
+            setUserSelectedDetails(detail.id,Constants.CONDITIONS,detail.code_display!!,detail.recordedDate?.toDisplayDate()!!)
 
             binding.apply {
                 tvName.text = detail.code_display
@@ -86,7 +82,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
             R.id.tvPractitionersViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
-                bundle.putString(Constants.PN_TYPE,Constants.PRACTITIONER)
+                bundle.putString(Constants.PN_TYPE,Constants.PRACTITIONERS)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
@@ -98,7 +94,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
             R.id.tvMedicationViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
-                bundle.putString(Constants.PN_TYPE,Constants.MEDICATION)
+                bundle.putString(Constants.PN_TYPE,Constants.MEDICATIONS)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
@@ -110,7 +106,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
             R.id.tvVitalViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
-                bundle.putString(Constants.PN_TYPE,Constants.VITAL)
+                bundle.putString(Constants.PN_TYPE,Constants.VITALS)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
@@ -122,7 +118,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
              R.id.tvLabsViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
-                bundle.putString(Constants.PN_TYPE,Constants.LAB)
+                bundle.putString(Constants.PN_TYPE,Constants.LABS)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
@@ -134,7 +130,7 @@ class ConditionDetailsFragment : BaseFragment(), View.OnClickListener {
              R.id.tvVisitsViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
-                bundle.putString(Constants.PN_TYPE,Constants.VISIT)
+                bundle.putString(Constants.PN_TYPE,Constants.VISITS)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,

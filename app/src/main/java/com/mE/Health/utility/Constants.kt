@@ -31,12 +31,7 @@ object Constants {
     const val MY_CHART = "my_chart"
     const val READ_MORE = "read_more"
     const val DETAIL = "detail"
-    const val PRACTITIONER = "Practitioner"
-    const val MEDICATION = "Medication"
-    const val VITAL = "Vital"
-    const val LAB = "Lab"
-    const val VISIT = "Visit"
-    const val APPOINTMENT = "Appointment"
+
     const val CONNECTION_URL = "connection_url"
     const val FILE_DOCUMENT = "Document"
     const val FILE_VIDEO = "Video"
@@ -58,19 +53,19 @@ object Constants {
 
 
     //Main UI Tile Types
-    const val PRACTITIONES = "PRACTITIONES"
-    const val APPOINTMENTS = "APPOINTMENTS"
-    const val CONDITIONS = "CONDITIONS"
-    const val LABS = "LABS"
-    const val VITALS = "VITALS"
-    const val MEDICATIONS = "MEDICATIONS"
-    const val VISITS = "VISITS"
-    const val PROCEDURES = "PROCEDURES"
-    const val ALLERGIES = "ALLERGIES"
-    const val IMMUNIZATIONS = "IMMUNIZATIONS"
-    const val BILLING = "BILLING"
-    const val IMAGING = "IMAGING"
-    const val RECORD_VAULTS = " RECORD_VAULTS"
+    const val PRACTITIONERS = "Practitioners"
+    const val APPOINTMENTS = "Appointments"
+    const val VISITS = "Visits"
+    const val CONDITIONS = "Conditions"
+    const val LABS = "Labs"
+    const val VITALS = "Vitals"
+    const val MEDICATIONS = "Medications"
+    const val IMAGING = "Imaging"
+    const val PROCEDURES = "Procedures"
+    const val ALLERGIES = "Allergies"
+    const val IMMUNIZATIONS = "Immunizations"
+    const val BILLING = "Billing"
+    const val RECORD_VAULT = "Record Vault"
 
 
 

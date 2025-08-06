@@ -1,5 +1,6 @@
 package com.mE.Health.utility
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.mE.Health.R
@@ -42,10 +45,22 @@ class BottomSheetFilter(val list: ArrayList<FilterItem>) : BottomSheetDialogFrag
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(
-            BottomSheetDialogFragment.STYLE_NORMAL,
-            R.style.CustomBottomSheetDialogTheme
-        ) /* hack to make background transparent */
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = BottomSheetDialog(requireContext(), theme)
+        dialog.setOnShowListener {
+
+            val bottomSheetDialog = it as BottomSheetDialog
+            val parentLayout =
+                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            parentLayout?.let { it ->
+                val behaviour = BottomSheetBehavior.from(it)
+                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+        return dialog
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

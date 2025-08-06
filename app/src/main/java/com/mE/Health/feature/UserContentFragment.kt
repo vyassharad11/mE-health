@@ -15,17 +15,14 @@ import com.google.android.material.chip.Chip
 import com.mE.Health.R
 import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.databinding.UserContentFragmentBinding
-import com.mE.Health.feature.adapter.UploadDocItem
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.DialogOK
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.Utilities.openPdf
+import com.mE.Health.utility.getCurrentDateTime
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
-
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -40,8 +37,10 @@ class UserContentFragment : BaseFragment() {
         var height = 0
         var fileType = Constants.FILE_IMAGE
         var fileURI: Uri? = null
-        var healthItemType = Constants.PRACTITIONER
+        var healthItemType = Constants.PRACTITIONERS
+        var healthItemName = ""
         var healthItemId = ""
+        var healthItemDate = ""
     }
 
     override fun onCreateView(
@@ -61,7 +60,7 @@ class UserContentFragment : BaseFragment() {
     }
 
     private fun initView() {
-        binding.tvFilterType.text= fileType
+        binding.tvFilterType.text = fileType
         when (fileType) {
             Constants.FILE_IMAGE -> {
                 setImageView(fileURI!!)
@@ -96,8 +95,8 @@ class UserContentFragment : BaseFragment() {
                 if (binding.vwDivider.isVisible) View.GONE else View.VISIBLE
         }
 
-        for (item in getAllMyHealthType()) {
-            addChipToGroup(item.itemName)
+        for (item in Utilities.getAllMyHealthType()) {
+            addChipToGroup(item)
         }
     }
 
@@ -132,32 +131,13 @@ class UserContentFragment : BaseFragment() {
         val chip = Chip(requireActivity())
         chip.text = text
         chip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_tick_orange)
-        chip.isCloseIconVisible = true
-        chip.isClickable = true
+        chip.isCloseIconVisible = healthItemType.lowercase() == text.lowercase()
+        chip.isClickable = false
         chip.isCheckable = false
         binding.chipsGroup.addView(chip as View)
-        chip.setOnClickListener {
-            chip.isCloseIconVisible = !chip.isCloseIconVisible
-        }
-    }
-
-    private fun getAllMyHealthType(): ArrayList<UploadDocItem> {
-        val typeList: ArrayList<UploadDocItem> = ArrayList()
-        typeList.apply {
-            add(UploadDocItem("Practitioner"))
-            add(UploadDocItem("Appointments"))
-            add(UploadDocItem("Conditions"))
-            add(UploadDocItem("Labs"))
-            add(UploadDocItem("Vitals"))
-            add(UploadDocItem("Medications"))
-            add(UploadDocItem("Visits"))
-            add(UploadDocItem("Procedures"))
-            add(UploadDocItem("Allergies"))
-            add(UploadDocItem("Immunizations"))
-            add(UploadDocItem("Billings"))
-            add(UploadDocItem("Upload Documents"))
-        }
-        return typeList
+//        chip.setOnClickListener {
+//            chip.isCloseIconVisible = !chip.isCloseIconVisible
+//        }
     }
 
     private fun showPDFView(fileURI: Uri) {
@@ -223,12 +203,14 @@ class UserContentFragment : BaseFragment() {
         lifecycleScope.launch {
             val fileObject = UserSavedFile(
                 user_id = appSession.getUserId(),
-                health_type = healthItemType,
-                health_item_id = healthItemId,
+                category = healthItemType,
+                category_id = healthItemId,
                 file_name = fileName,
                 size = fileSizeString,
                 file_type = fileType,
-                file_path = imagePath
+                file_path = imagePath,
+                category_date = healthItemDate,
+                upload_date = getCurrentDateTime()
             )
             fileViewModel.insertFile(fileObject)
         }
@@ -244,27 +226,7 @@ class UserContentFragment : BaseFragment() {
     }
 
     private fun generateCustomFileName(): String {
-        val formattedTime = SimpleDateFormat(
-            "MM-dd-yyyy-HH-mm-ss",
-            Locale.getDefault()
-        ).format(Calendar.getInstance().time)
         val extension = getFileExtensionFromUri(fileURI!!, requireActivity())
-        return when (fileType) {
-            Constants.FILE_IMAGE -> {
-                "IMG_$formattedTime.$extension"
-            }
-
-            Constants.FILE_VIDEO -> {
-                "VID_$formattedTime.$extension"
-            }
-
-            Constants.FILE_DOCUMENT -> {
-                "DOC_$formattedTime.$extension"
-            }
-
-            else -> {
-                "FILE_$formattedTime.$extension"
-            }
-        }
+        return "${healthItemName}_${healthItemDate.replace("/","_")}.$extension"
     }
 }

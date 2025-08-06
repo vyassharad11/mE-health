@@ -51,12 +51,13 @@ class ImagingDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.IMAGING)
+            val title = "${detail.modality_display} (${detail.modality_code})"
+            setUserSelectedDetails(detail.id, Constants.IMAGING,title,detail.started?.toDisplayDate()!!)
 
             binding.apply {
-                tvName.text = "${detail.modality_display} (${detail.modality_code})"
+                tvName.text = title
                 tvDescription.text = detail.description
-                tvDate.text = detail.started?.toDisplayDate()
+                tvDate.text = detail.started.toDisplayDate()
                 tvStatus.text = detail.status
 
                 val statusDetail = Utilities.getLabUIStatus(requireActivity(), detail.status ?: "")

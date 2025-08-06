@@ -143,3 +143,9 @@ fun String.getCalendarFromString(sdf: SimpleDateFormat): Calendar {
     }
     return calendar
 }
+
+fun getCurrentDateTime(): String {
+    val current = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
+    return current.format(formatter)
+}

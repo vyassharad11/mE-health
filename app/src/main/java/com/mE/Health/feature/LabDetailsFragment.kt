@@ -57,7 +57,7 @@ class LabDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.LABS)
+            setUserSelectedDetails(detail.id, Constants.LABS,detail.code_display!!,detail.issued?.toDisplayDate()!!)
 
             if (detail.performerId != null) {
                 mockViewModel.getPractitionerDetail(detail.performerId)

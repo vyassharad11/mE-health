@@ -336,10 +336,12 @@ data class Imaging(
 data class UserSavedFile(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val user_id: String,
-    val health_type: String,
-    val health_item_id: String,
+    val category: String,
+    val category_id: String,
     val file_name: String,
     val size: String,
     val file_type: String,
-    val file_path: String
+    val file_path: String,
+    val category_date: String,
+    val upload_date: String
 )

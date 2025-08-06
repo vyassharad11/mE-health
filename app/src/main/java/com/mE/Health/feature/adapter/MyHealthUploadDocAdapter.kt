@@ -2,69 +2,69 @@ package com.mE.Health.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mE.Health.R
+import com.mE.Health.data.model.UserSavedFile
+import com.mE.Health.databinding.ItemMyHealthUploadDocBinding
+
+enum class TYPE {
+    DELETE, VIEW
+}
 
 class MyHealthUploadDocAdapter(private val mContext: Context) :
     RecyclerView.Adapter<MyHealthUploadDocAdapter.MyViewHolder>() {
 
+    var itemList: List<UserSavedFile>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     interface OnClickCallback {
-        fun onClicked(view: View?, position: Int)
+        fun onClicked(type: TYPE, data: UserSavedFile, position: Int)
     }
 
     var onItemClickListener: OnClickCallback? = null
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvName: TextView = itemView.findViewById(R.id.tvName)
-        var tvCategory: TextView = itemView.findViewById(R.id.tvCategory)
-        var tvDateTime: TextView = itemView.findViewById(R.id.tvDateTime)
-        var ivFileType: ImageView = itemView.findViewById(R.id.ivFileType)
-    }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyHealthUploadDocAdapter.MyViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_my_health_upload_doc, parent, false)
-        return MyViewHolder(view)
+    inner class MyViewHolder(val binding: ItemMyHealthUploadDocBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemMyHealthUploadDocBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MyViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MyHealthUploadDocAdapter.MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onClicked(
-                holder.itemView,
-                position
-            )
-        }
-
-        when (position) {
-            1 -> {
-                holder.tvName.text = "Report4.mp4"
-                holder.tvCategory.text = "Appointment"
-//                holder.tvDateTime.text = "${position + 1} days ago"
-                holder.ivFileType.setImageResource(R.drawable.ic_pdf_eye_icon)
+        itemList?.get(position).let { detail ->
+            holder.binding.tvName.text = detail!!.file_name
+            holder.binding.tvCategory.text = detail.category
+            holder.binding.tvDateTime.text = detail.upload_date
+            holder.binding.rllDelete.setOnClickListener {
+                onItemClickListener?.onClicked(
+                    TYPE.DELETE, detail,
+                    position
+                )
             }
-
-            2 -> {
-                holder.tvName.text = "Report.jpg"
-                holder.tvCategory.text = "Labs"
-//                holder.tvDateTime.text = "${position + 1} days ago"
-            }
-
-            else -> {
-                holder.tvName.text = "Blood Test-01.pdf"
-                holder.tvCategory.text = "Appointment"
+            holder.binding.llData.setOnClickListener {
+                onItemClickListener?.onClicked(
+                    TYPE.VIEW, detail,
+                    position
+                )
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return 3
+        return itemList?.size ?: 0
+    }
+
+    fun updateList(list: List<UserSavedFile>) {
+        this.itemList = list
+        notifyDataSetChanged()
     }
 }

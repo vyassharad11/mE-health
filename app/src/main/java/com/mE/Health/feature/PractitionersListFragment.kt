@@ -55,7 +55,7 @@ class PractitionersListFragment : BaseFragment() {
         val type = arguments?.getString(Constants.PN_TYPE, "")
 
         binding.rvAssist.layoutManager = LinearLayoutManager(requireActivity())
-        if (type == Constants.PRACTITIONER) {
+        if (type == Constants.PRACTITIONERS) {
             binding.tvPageTitle.text = getString(R.string.list_of_practitioners)
             var recyclerAdapter = PractitionersListAdapter(requireActivity())
             recyclerAdapter.itemList = mockViewModel.practitionerList.value
@@ -72,7 +72,7 @@ class PractitionersListFragment : BaseFragment() {
                     }
                 }
             }
-        } else if (type == Constants.VITAL) {
+        } else if (type == Constants.VITALS) {
             binding.tvPageTitle.text = getString(R.string.list_of_vitals)
             val recyclerAdapter = VitalListAdapter(requireActivity())
             recyclerAdapter.itemList = mockViewModel.vitalsList.value
@@ -83,7 +83,7 @@ class PractitionersListFragment : BaseFragment() {
                     }
                 }
             }
-        } else if (type == Constants.LAB) {
+        } else if (type == Constants.LABS) {
             binding.tvPageTitle.text = getString(R.string.list_of_labs)
             val recyclerAdapter = LabListAdapter(requireActivity())
             recyclerAdapter.itemList = mockViewModel.labList.value
@@ -94,7 +94,7 @@ class PractitionersListFragment : BaseFragment() {
                     }
                 }
             }
-        } else if (type == Constants.VISIT) {
+        } else if (type == Constants.VISITS) {
             binding.tvPageTitle.text = getString(R.string.list_of_visits)
             val recyclerAdapter = VisitListAdapter(requireActivity())
             recyclerAdapter.itemList = mockViewModel.visitList.value
@@ -105,7 +105,7 @@ class PractitionersListFragment : BaseFragment() {
                     }
                 }
             }
-        } else if (type == Constants.APPOINTMENT) {
+        } else if (type == Constants.APPOINTMENTS) {
             binding.tvPageTitle.text = getString(R.string.list_of_appointments)
             val recyclerAdapter = AppointmentListAdapter(requireActivity())
             recyclerAdapter.itemList = mockViewModel.appointmentList.value

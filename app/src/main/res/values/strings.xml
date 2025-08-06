@@ -220,7 +220,11 @@
     <string name="visit">Visit</string>
     <string name="appointment">Appointment</string>
     <string name="saved_files">Saved Files</string>
-
+    <string name="delete">Delete</string>
+    <string name="delete_record">Delete Record</string>
+    <string name="blank_record">You have not uploaded any record.</string>
+    <string name="record_deleted_successfully">Record deleted successfully</string>
+    <string name="you_want_delete_record">Are you sure you want to delete this record?</string>
 
 </resources>
 

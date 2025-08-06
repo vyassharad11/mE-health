@@ -1,24 +1,19 @@
 package com.mE.Health.feature
 
-import android.annotation.SuppressLint
-import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
 import com.mE.Health.data.model.AllergyIntolerance
@@ -34,6 +29,7 @@ import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.data.model.Procedure
+import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.databinding.MyHealthFragmentBinding
 import com.mE.Health.feature.adapter.ActionType
 import com.mE.Health.feature.adapter.ClickState
@@ -52,7 +48,7 @@ import com.mE.Health.feature.adapter.MyHealthTypeAdapter
 import com.mE.Health.feature.adapter.MyHealthUploadDocAdapter
 import com.mE.Health.feature.adapter.MyHealthVisitsAdapter
 import com.mE.Health.feature.adapter.MyHealthVitalAdapter
-import com.mE.Health.models.MyHealthTypeModel
+import com.mE.Health.feature.adapter.TYPE
 import com.mE.Health.utility.BottomSheetFilter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Constants.ALLERGIES
@@ -63,19 +59,22 @@ import com.mE.Health.utility.Constants.IMAGING
 import com.mE.Health.utility.Constants.IMMUNIZATIONS
 import com.mE.Health.utility.Constants.LABS
 import com.mE.Health.utility.Constants.MEDICATIONS
-import com.mE.Health.utility.Constants.PRACTITIONES
+import com.mE.Health.utility.Constants.PRACTITIONERS
 import com.mE.Health.utility.Constants.PROCEDURES
-import com.mE.Health.utility.Constants.RECORD_VAULTS
+import com.mE.Health.utility.Constants.RECORD_VAULT
 import com.mE.Health.utility.Constants.VISITS
 import com.mE.Health.utility.Constants.VITALS
+import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.FilterItem
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.extractContactInfo
 import com.mE.Health.utility.getCalendarFromString
+import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormateCalendar
+import com.mE.Health.viewmodels.FileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import java.io.IOException
 import java.util.Calendar
 
 
@@ -102,6 +101,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private var immunizationList: List<Immunization>? = ArrayList()
     private var billingList: List<Claim>? = ArrayList()
     private var imagingList: List<Imaging>? = ArrayList()
+    private var recordVaultList: ArrayList<UserSavedFile>? = ArrayList()
     private var practitionerAdapter: MyHealthPractitionerAdapter? = null
     private var appointmentAdapter: MyHealthAppointmentAdapter? = null
     private var conditionAdapter: MyHealthConditionAdapter? = null
@@ -114,6 +114,9 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private var immunizationAdapter: MyHealthImmunizationAdapter? = null
     private var billingsAdapter: MyHealthBillingsAdapter? = null
     private var imagingAdapter: MyHealthImagingAdapter? = null
+    private var recordVaultAdapter: MyHealthUploadDocAdapter? = null
+    private val recordVaultViewModel: FileViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -132,6 +135,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         initHeader()
         addTextChangedListener()
         getStatusFilterList()
+        observeRecordVaultResponse()
     }
 
     private fun initHeader() {
@@ -156,7 +160,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         setPractitionerData()
         binding.rvType.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-        myHealthTypeAdapter = MyHealthTypeAdapter(requireActivity(), getAllMyHealthType())
+        myHealthTypeAdapter =
+            MyHealthTypeAdapter(requireActivity(), Utilities.getAllMyHealthType(mockViewModel))
         binding.rvType.adapter = myHealthTypeAdapter
         myHealthTypeAdapter?.apply {
             onItemClickListener = object : MyHealthTypeAdapter.OnClickCallback {
@@ -166,7 +171,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     myHealthTypeAdapter?.notifyDataSetChanged()
                     initFilterUI()
                     when (getTileSelectedType()) {
-                        PRACTITIONES -> {
+                        PRACTITIONERS -> {
                             binding.ivFilter.visibility = View.GONE
                             setPractitionerData()
                         }
@@ -215,7 +220,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                             setImagingData()
                         }
 
-                        RECORD_VAULTS -> {
+                        RECORD_VAULT -> {
                             setUploadDocumentData()
                         }
                     }
@@ -290,7 +295,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
     private fun onTextChangedListener(char: CharSequence?) {
         when (getTileSelectedType()) {
-            PRACTITIONES -> {
+            PRACTITIONERS -> {
                 filterPractitionerList(char?.toString()!!)
             }
 
@@ -336,6 +341,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
             IMAGING -> {
                 filterImagingList(char?.toString()!!)
+            }
+
+           RECORD_VAULT -> {
+               filterRecordVaultList(char?.toString()!!)
             }
         }
         setNoRecordData()
@@ -461,6 +470,16 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+    private fun filterRecordVaultList(char: String) {
+        (if (char.trim().isNotEmpty()) recordVaultList?.filter { item ->
+            item.file_name.lowercase().contains(char.lowercase()) || item.category.lowercase().contains(char.lowercase())
+        } else recordVaultList!!)?.let {
+            recordVaultAdapter?.updateList(
+                it
+            )
+        }
+    }
+
     private fun initFilterUI() {
         binding.ivFilter.visibility = View.VISIBLE
         binding.rlDateLayout.visibility = View.GONE
@@ -488,7 +507,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         secondDateSelected = Calendar.getInstance().timeInMillis
         startDate = ""
         endDate = ""
-        binding.rllUpload.visibility = View.GONE
         binding.rlDateCalendarLayout.visibility = View.GONE
 
         filterStartDateCalendar = Calendar.getInstance()
@@ -582,117 +600,6 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun getAllMyHealthType(): ArrayList<MyHealthTypeModel> {
-        val typeList: ArrayList<MyHealthTypeModel> = ArrayList()
-        typeList.apply {
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.practitioners),
-                    mockViewModel.practitionerList.value?.size.toString(),
-                    R.drawable.ic_practitioner,
-                    PRACTITIONES
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.appointments),
-                    mockViewModel.appointmentList.value?.size.toString(),
-                    R.drawable.ic_appoinment,
-                    APPOINTMENTS
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.visits),
-                    mockViewModel.visitList.value?.size.toString(),
-                    R.drawable.ic_visits,
-                    VISITS
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.conditions),
-                    mockViewModel.conditionList.value?.size.toString(),
-                    R.drawable.ic_conditions_my_health,
-                    CONDITIONS
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.labs),
-                    mockViewModel.labList.value?.size.toString(),
-                    R.drawable.ic_labs,
-                    LABS
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.vitals),
-                    mockViewModel.vitalsList.value?.size.toString(),
-                    R.drawable.ic_vitals,
-                    VITALS
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.medications),
-                    mockViewModel.medicationList.value?.size.toString(),
-                    R.drawable.ic_medication_my_health,
-                    MEDICATIONS
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.imagings),
-                    mockViewModel.imagingList.value?.size.toString(),
-                    R.drawable.ic_imaging,
-                    IMAGING
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.procedures),
-                    mockViewModel.procedureList.value?.size.toString(),
-                    R.drawable.ic_procedures,
-                    PROCEDURES
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.allergies),
-                    mockViewModel.allergyList.value?.size.toString(),
-                    R.drawable.ic_allergy,
-                    ALLERGIES
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.immunizations),
-                    mockViewModel.immunizationList.value?.size.toString(),
-                    R.drawable.ic_immunization,
-                    IMMUNIZATIONS
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.billings),
-                    mockViewModel.claimList.value?.size.toString(),
-                    R.drawable.ic_billing,
-                    BILLING
-                )
-            )
-            add(
-                MyHealthTypeModel(
-                    getString(R.string.record_vaults),
-                    "6",
-                    R.drawable.ic_upload_health,
-                    RECORD_VAULTS
-                )
-            )
-        }
-        return typeList
-    }
-
     private fun showFilterData(itemList: ArrayList<String>) {
         binding.rvFilter.visibility = View.VISIBLE
         binding.ivFilter.setColorFilter(
@@ -735,10 +642,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         binding.rvList.adapter = practitionerAdapter
         practitionerAdapter?.apply {
             onItemClickListener = object : MyHealthPractitionerAdapter.OnClickCallback {
-                override fun onClicked(data: Practitioner,type: ActionType) {
+                override fun onClicked(data: Practitioner, type: ActionType) {
                     DetailSingleton.practitioner = data
                     val contactInfo = data.telecom?.extractContactInfo()
-                    when(type){
+                    when (type) {
                         ActionType.DETAIL -> {
                             addFragment(
                                 R.id.fragment_container,
@@ -749,15 +656,23 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                         }
 
                         ActionType.EMAIL -> {
-                            sendEmail(contactInfo?.email!!,"Practitioner Email : ${data.specialty}")
+                            sendEmail(
+                                contactInfo?.email!!,
+                                "Practitioner Email : ${data.specialty}"
+                            )
                         }
 
                         ActionType.PHONE -> {
-                           openDialPadWithNumber(contactInfo?.phone!!)
+                            openDialPadWithNumber(contactInfo?.phone!!)
                         }
 
                         ActionType.UPLOAD -> {
-                            setUserSelectedDetails(data.id,Constants.PRACTITIONER)
+                            setUserSelectedDetails(
+                                data.id,
+                                PRACTITIONERS,
+                                data.name!!,
+                                data.createdAt?.toDisplayDate()!!
+                            )
                             showUploadDocumentDialog(onFileUploadListener)
                         }
                     }
@@ -997,18 +912,79 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun setUploadDocumentData() {
-        binding.rllUpload.visibility = View.VISIBLE
-        binding.tvMyHealthType.text = getString(R.string.list_of_file)
-        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val practitionerAdapter = MyHealthUploadDocAdapter(requireActivity())
-        binding.rvList.adapter = practitionerAdapter
-        practitionerAdapter.apply {
-            onItemClickListener = object : MyHealthUploadDocAdapter.OnClickCallback {
-                override fun onClicked(view: View?, position: Int) {
+    private fun observeRecordVaultResponse() {
+        recordVaultViewModel.userSavedFileList.observe(viewLifecycleOwner) {
+            filterList = ArrayList()
+            if (it.isNotEmpty()) {
+                binding.emptyLayout.llEmptyLayout.visibility = View.GONE
+                recordVaultList = ArrayList()
+                recordVaultList?.addAll(it)
+                recordVaultAdapter?.updateList(recordVaultList!!)
+                for (item in recordVaultList!!) updateFilterList(item.category)
+            } else {
+                binding.emptyLayout.apply {
+                    llEmptyLayout.visibility = View.VISIBLE
+                    ivEmptyType.setImageResource(R.drawable.practitioner_no_record)
+                    tvEmptyTitle.text = getString(R.string.blank_record)
+                    tvEmptyDescription.text = ""
                 }
             }
         }
+    }
+
+    private fun setUploadDocumentData() {
+        recordVaultViewModel.getUserSavedFileList("")
+        binding.tvMyHealthType.text = getString(R.string.list_of_file)
+        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
+        recordVaultAdapter = MyHealthUploadDocAdapter(requireActivity())
+        binding.rvList.adapter = recordVaultAdapter
+        recordVaultAdapter?.apply {
+            onItemClickListener = object : MyHealthUploadDocAdapter.OnClickCallback {
+                override fun onClicked(type: TYPE, data: UserSavedFile, position: Int) {
+                    when (type) {
+                        TYPE.DELETE -> {
+                            showDeleteDialog(data, position)
+                        }
+
+                        TYPE.VIEW -> {
+                            if (data.file_type == Constants.FILE_IMAGE || data.file_type == Constants.FILE_VIDEO)
+                                openFileView(data)
+                            else if (data.file_type == Constants.FILE_DOCUMENT) openPdfView(data)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showDeleteDialog(data: UserSavedFile, position: Int) {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setTitle(getString(R.string.delete_record))
+            .setMessage(getString(R.string.you_want_delete_record))
+            .setPositiveButton(getString(R.string.delete)) { dialog, _ ->
+                recordVaultViewModel.deleteFile(data.category_id)
+                Toast.makeText(requireActivity(),getString(R.string.record_deleted_successfully),Toast.LENGTH_SHORT).show()
+                recordVaultList?.removeAt(position)
+                recordVaultAdapter?.notifyDataSetChanged()
+                if (recordVaultList.isNullOrEmpty()) {
+                    binding.emptyLayout.apply {
+                        llEmptyLayout.visibility = View.VISIBLE
+                        ivEmptyType.setImageResource(R.drawable.practitioner_no_record)
+                        tvEmptyTitle.text = getString(R.string.blank_record)
+                        tvEmptyDescription.text = ""
+                    }
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+        val alertDialog = builder.create()
+        alertDialog.show()
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            ?.setTextColor(ContextCompat.getColor(requireActivity(), R.color.color_FF6605))
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            ?.setTextColor(ContextCompat.getColor(requireActivity(), R.color.color_FF6605))
     }
 
     private fun setImagingData() {
@@ -1093,7 +1069,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         val startDateCalendar = startDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
         val endDateCalendar = endDate.getCalendarFromString(Constants.DD_MM_YYYY_FORMATE)
         when (getTileSelectedType()) {
-            PRACTITIONES -> setPractitionerDateRangeFilter(
+            PRACTITIONERS -> setPractitionerDateRangeFilter(
                 isFilterList, startDateCalendar, endDateCalendar
             )
 
@@ -1140,6 +1116,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             IMAGING -> setImagingDateRangeFilter(
                 isFilterList, startDateCalendar, endDateCalendar
             )
+
+//            RECORD_VAULT -> setRecordVaultDateRangeFilter(
+//                isFilterList, startDateCalendar, endDateCalendar
+//            )
         }
         setNoRecordData()
     }
@@ -1276,6 +1256,17 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         } else imagingList!!)
     }
 
+    private fun setRecordVaultDateRangeFilter(
+        isFilterList: Boolean, startCalendar: Calendar, endCalendar: Calendar
+    ) {
+        recordVaultAdapter?.updateList(if (isFilterList) recordVaultList!!.filter { item ->
+            val dateCalendar = item.upload_date.toFormateCalendar(
+                "dd-MM-yyyy", Constants.DD_MM_YYYY_FORMATE
+            )
+            isDateRangeAvailable(dateCalendar, startCalendar, endCalendar)
+        } else recordVaultList!!)
+    }
+
     private fun isDateRangeAvailable(
         dateCalendar: Calendar, startCalendar: Calendar, endCalendar: Calendar
     ): Boolean {
@@ -1371,6 +1362,14 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 }
                 imagingAdapter?.updateList(if (list.size > 0) list else imagingList!!)
             }
+
+            RECORD_VAULT -> {
+                val list = ArrayList<UserSavedFile>()
+                for (filterText in itemList) {
+                    list.addAll(recordVaultList!!.filter { item -> item.category.lowercase() == filterText.lowercase() })
+                }
+                recordVaultAdapter?.updateList(if (list.size > 0) list else recordVaultList!!)
+            }
         }
     }
 
@@ -1437,7 +1436,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setNoRecordData() {
         binding.emptyLayout.llEmptyLayout.visibility = View.GONE
         when (getTileSelectedType()) {
-            PRACTITIONES -> if (practitionerAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
+            PRACTITIONERS -> if (practitionerAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
 
             APPOINTMENTS -> if (appointmentAdapter?.itemList.isNullOrEmpty()) setNoRecordLayout()
 

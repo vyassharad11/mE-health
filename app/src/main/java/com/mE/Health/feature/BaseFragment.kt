@@ -404,7 +404,6 @@ open class BaseFragment : Fragment() {
     }
 
 
-
     fun log(tag: String, str: String) {
         Log.i(tag, str)
     }
@@ -478,14 +477,24 @@ open class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        parentFragmentManager.setFragmentResultListener("UpdateView", viewLifecycleOwner) { key, bundle ->
+        parentFragmentManager.setFragmentResultListener(
+            "UpdateView",
+            viewLifecycleOwner
+        ) { key, bundle ->
             fileViewModel.getUserSavedFileList(UserContentFragment.healthItemId)
         }
     }
 
-    fun setUserSelectedDetails(itemId: String, itemType: String) {
+    fun setUserSelectedDetails(
+        itemId: String,
+        itemType: String,
+        healthItemName: String,
+        healthItemDate: String
+    ) {
         UserContentFragment.healthItemId = itemId
         UserContentFragment.healthItemType = itemType
+        UserContentFragment.healthItemName = healthItemName
+        UserContentFragment.healthItemDate = healthItemDate
     }
 
     val onFileUploadListener = object : OnClickCallback {
@@ -509,7 +518,7 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    private fun pickFileFromStorage(input:String) {
+    private fun pickFileFromStorage(input: String) {
         pickFileLauncher.launch(input)
     }
 
@@ -517,7 +526,10 @@ open class BaseFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             UserContentFragment.fileURI = uri
             addFragment(
-                R.id.fragment_container, UserContentFragment(), "UserContentFragment", "MyHealthFragment"
+                R.id.fragment_container,
+                UserContentFragment(),
+                "UserContentFragment",
+                "MyHealthFragment"
             )
         }
 
@@ -526,7 +538,10 @@ open class BaseFragment : Fragment() {
             uri?.let {
                 UserContentFragment.fileURI = it
                 addFragment(
-                    R.id.fragment_container, UserContentFragment(), "UserContentFragment", "MyHealthFragment"
+                    R.id.fragment_container,
+                    UserContentFragment(),
+                    "UserContentFragment",
+                    "MyHealthFragment"
                 )
             } ?: run {
                 // Handle the case where no file was selected
@@ -680,35 +695,15 @@ open class BaseFragment : Fragment() {
         userSavedFileAdapter.onItemClickListener = onSaveFileItemClickListener
     }
 
-     private val onSaveFileItemClickListener = object : UserSavedFileAdapter.OnClickCallback {
+    private val onSaveFileItemClickListener = object : UserSavedFileAdapter.OnClickCallback {
         override fun onClicked(item: UserSavedFile?, position: Int) {
             when (item?.file_type) {
-                Constants.FILE_IMAGE,Constants.FILE_VIDEO -> {
-                    val bottomSheet = BottomSheetUserSavedFilePreview(
-                        requireActivity(),
-                        item.file_name, item.file_type, item.file_path
-                    )
-                    bottomSheet.show(
-                        requireActivity().supportFragmentManager,
-                        "BottomSheetUserSavedFilePreview"
-                    )
+                Constants.FILE_IMAGE, Constants.FILE_VIDEO -> {
+                    openFileView(item)
                 }
 
                 Constants.FILE_DOCUMENT -> {
-                    val pdfFile = File(item.file_path)
-                    if (!pdfFile.exists()) {
-                        Log.e("PDF Error", "File does not exist: ${pdfFile.absolutePath}")
-                        return
-                    }
-                    val pdfUri = FileProvider.getUriForFile(
-                        requireActivity(),
-                        requireActivity().packageName + ".provider",
-                        pdfFile
-                    )
-                    openPdf(
-                        requireActivity(),
-                        pdfUri
-                    )
+                    openPdfView(item)
                 }
 
                 else -> {
@@ -716,6 +711,34 @@ open class BaseFragment : Fragment() {
                 }
             }
         }
+    }
+
+    fun openFileView(item: UserSavedFile) {
+        val bottomSheet = BottomSheetUserSavedFilePreview(
+            requireActivity(),
+            item.file_name, item.file_type, item.file_path
+        )
+        bottomSheet.show(
+            requireActivity().supportFragmentManager,
+            "BottomSheetUserSavedFilePreview"
+        )
+    }
+
+    fun openPdfView(item: UserSavedFile) {
+        val pdfFile = File(item.file_path)
+        if (!pdfFile.exists()) {
+            Log.e("PDF Error", "File does not exist: ${pdfFile.absolutePath}")
+            return
+        }
+        val pdfUri = FileProvider.getUriForFile(
+            requireActivity(),
+            requireActivity().packageName + ".provider",
+            pdfFile
+        )
+        openPdf(
+            requireActivity(),
+            pdfUri
+        )
     }
 
     fun openPdfFromRaw(context: Context) {

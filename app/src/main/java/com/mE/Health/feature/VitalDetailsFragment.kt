@@ -55,7 +55,7 @@ class VitalDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.VITALS)
+            setUserSelectedDetails(detail.id, Constants.VITALS,detail.description!!,detail.effectiveDate?.toDisplayDate()!!)
 
             if (detail.patientId != null) {
                 mockViewModel.getPatientDetail(detail.patientId)

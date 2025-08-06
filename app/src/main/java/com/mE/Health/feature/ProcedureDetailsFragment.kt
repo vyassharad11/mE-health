@@ -54,12 +54,12 @@ class ProcedureDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.PROCEDURES)
+            setUserSelectedDetails(detail.id, Constants.PROCEDURES,detail.code_display!!,detail.performedDate?.toDisplayDate()!!)
 
             binding.apply {
                 generateShareMessage(detail)
                 tvName.text = detail.code_display
-                tvProcedureDate.text = detail.performedDate?.toDisplayDate()
+                tvProcedureDate.text = detail.performedDate.toDisplayDate()
 
                 Utilities.getProcedureUIStatus(requireActivity(), detail.status ?: "").let {
                     tvStatus.text = detail.status?.capitalFirstChar()

@@ -1,6 +1,7 @@
 package com.mE.Health.data.repository
 
 import android.app.Application
+import android.text.TextUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mE.Health.data.dao.MockDataDao
@@ -189,7 +190,8 @@ class MockRepository @Inject constructor(
 
     suspend fun getProviderItems() = mockDataDao.getProviderListItem()
 
-    suspend fun updateProviderStatus(status:Boolean,id:String) = mockDataDao.updateProviderStatus(status,id)
+    suspend fun updateProviderStatus(status: Boolean, id: String) =
+        mockDataDao.updateProviderStatus(status, id)
 
     suspend fun insertFile(list: UserSavedFile) = mockDataDao.insertFile(list)
 
@@ -241,6 +243,12 @@ class MockRepository @Inject constructor(
 
 
     suspend fun getUserSavedItemList(id: String, userId: String) =
-        mockDataDao.getUserSavedItemList(id, userId)
+        if (TextUtils.isEmpty(id))
+            mockDataDao.getUserSavedList(userId)
+        else
+            mockDataDao.getUserSavedItemList(id, userId)
+
+    suspend fun deleteFile(id: String, userId: String) =
+        mockDataDao.deleteUserSavedFiles(id, userId)
 
 }

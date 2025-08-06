@@ -52,7 +52,7 @@ class VisitsDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.VISITS)
+            setUserSelectedDetails(detail.id, Constants.VISITS,detail.description!!,detail.createdAt?.toDisplayDate()!!)
 
             binding.apply {
                 tvType.text = detail.type_display

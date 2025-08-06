@@ -10,8 +10,22 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.mE.Health.MainActivity
 import com.mE.Health.R
+import com.mE.Health.models.MyHealthTypeModel
+import com.mE.Health.utility.Constants.ALLERGIES
+import com.mE.Health.utility.Constants.APPOINTMENTS
+import com.mE.Health.utility.Constants.BILLING
+import com.mE.Health.utility.Constants.CONDITIONS
+import com.mE.Health.utility.Constants.IMAGING
+import com.mE.Health.utility.Constants.IMMUNIZATIONS
+import com.mE.Health.utility.Constants.LABS
+import com.mE.Health.utility.Constants.MEDICATIONS
+import com.mE.Health.utility.Constants.PRACTITIONERS
+import com.mE.Health.utility.Constants.PROCEDURES
+import com.mE.Health.utility.Constants.RECORD_VAULT
+import com.mE.Health.utility.Constants.VISITS
+import com.mE.Health.utility.Constants.VITALS
+import com.mE.Health.viewmodels.mockData.MockDataViewModel
 
 object Utilities {
 
@@ -87,4 +101,120 @@ object Utilities {
         return Pair(screenWidth, screenHeight)
     }
 
+    fun getAllMyHealthType(mockViewModel: MockDataViewModel): ArrayList<MyHealthTypeModel> {
+        val typeList: ArrayList<MyHealthTypeModel> = ArrayList()
+        typeList.apply {
+            add(
+                MyHealthTypeModel(
+                    PRACTITIONERS,
+                    mockViewModel.practitionerList.value?.size.toString(),
+                    R.drawable.ic_practitioner
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    APPOINTMENTS,
+                    mockViewModel.appointmentList.value?.size.toString(),
+                    R.drawable.ic_appoinment
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    VISITS,
+                    mockViewModel.visitList.value?.size.toString(),
+                    R.drawable.ic_visits
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    CONDITIONS,
+                    mockViewModel.conditionList.value?.size.toString(),
+                    R.drawable.ic_conditions_my_health
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    LABS,
+                    mockViewModel.labList.value?.size.toString(),
+                    R.drawable.ic_labs
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    VITALS,
+                    mockViewModel.vitalsList.value?.size.toString(),
+                    R.drawable.ic_vitals
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    MEDICATIONS,
+                    mockViewModel.medicationList.value?.size.toString(),
+                    R.drawable.ic_medication_my_health
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    IMAGING,
+                    mockViewModel.imagingList.value?.size.toString(),
+                    R.drawable.ic_imaging
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    PROCEDURES,
+                    mockViewModel.procedureList.value?.size.toString(),
+                    R.drawable.ic_procedures
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    ALLERGIES,
+                    mockViewModel.allergyList.value?.size.toString(),
+                    R.drawable.ic_allergy
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    IMMUNIZATIONS,
+                    mockViewModel.immunizationList.value?.size.toString(),
+                    R.drawable.ic_immunization
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    BILLING,
+                    mockViewModel.claimList.value?.size.toString(),
+                    R.drawable.ic_billing
+                )
+            )
+            add(
+                MyHealthTypeModel(
+                    RECORD_VAULT,
+                    "6",
+                    R.drawable.ic_upload_health
+                )
+            )
+        }
+        return typeList
+    }
+
+    fun getAllMyHealthType(): ArrayList<String> {
+        val typeList: ArrayList<String> = ArrayList()
+        typeList.apply {
+            add(PRACTITIONERS)
+            add(APPOINTMENTS)
+            add(VISITS)
+            add(CONDITIONS)
+            add(LABS )
+            add(VITALS)
+            add(MEDICATIONS)
+            add(IMAGING )
+            add(PROCEDURES )
+            add(ALLERGIES )
+            add(IMMUNIZATIONS)
+            add(BILLING )
+        }
+        return typeList
+    }
 }

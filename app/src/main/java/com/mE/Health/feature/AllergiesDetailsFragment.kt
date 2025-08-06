@@ -55,9 +55,9 @@ class AllergiesDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id,Constants.ALLERGIES)
+            setUserSelectedDetails(detail.id,Constants.ALLERGIES,detail.code_display!!,detail.recordedDate?.toDisplayDate()!!)
             binding.apply {
-                tvRecordedDate.text = detail.recordedDate?.toDisplayDate()
+                tvRecordedDate.text = detail.recordedDate.toDisplayDate()
                 tvName.text = detail.code_display
                 Utilities.getLabUIStatus(requireActivity(), detail.clinicalStatus ?: "").let {
                     tvStatus.text = detail.clinicalStatus?.capitalFirstChar()

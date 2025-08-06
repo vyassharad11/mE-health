@@ -51,11 +51,11 @@ class ImmunizationDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id,Constants.IMMUNIZATIONS)
+            setUserSelectedDetails(detail.id,Constants.IMMUNIZATIONS,detail.vaccineCode_display!!,detail.occurrenceDate?.toDisplayDate()!!)
             binding.apply {
                 tvName.text = detail.vaccineCode_display
 
-                val text = "Recorded Date: ${detail.occurrenceDate?.toDisplayDate()}"
+                val text = "Recorded Date: ${detail.occurrenceDate.toDisplayDate()}"
                 tvRecordedDate.text = text
                 tvStatus.text = detail.status?.capitalFirstChar()
                 Utilities.getProcedureUIStatus(requireActivity(), detail.status ?: "").let {

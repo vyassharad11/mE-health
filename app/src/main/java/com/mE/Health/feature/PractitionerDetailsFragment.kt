@@ -59,7 +59,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(it.id, Constants.PRACTITIONER)
+            setUserSelectedDetails(it.id, Constants.PRACTITIONERS,it.name!!,it.createdAt?.toDisplayDate()!!)
 
             mockViewModel.getOrganizationsByPractitionerId(it.id)
             mockViewModel.getAppointmentsByPractitionerId(it.id)
@@ -124,7 +124,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
             R.id.tvAppointmentViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
-                bundle.putString(Constants.PN_TYPE, Constants.APPOINTMENT)
+                bundle.putString(Constants.PN_TYPE, Constants.APPOINTMENTS)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
@@ -137,7 +137,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
             R.id.tvVisitViewAll -> {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
-                bundle.putString(Constants.PN_TYPE, Constants.VISIT)
+                bundle.putString(Constants.PN_TYPE, Constants.VISITS)
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,

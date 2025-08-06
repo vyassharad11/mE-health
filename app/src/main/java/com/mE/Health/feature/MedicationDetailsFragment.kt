@@ -59,7 +59,7 @@ class MedicationDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.MEDICATION)
+            setUserSelectedDetails(detail.id, Constants.MEDICATIONS,detail.medicationCode_display!!,detail.authoredOn?.toDisplayDate()!!)
 
             binding.tvMedicationDisplay.text = detail.medicationCode_display
             binding.tvMedicationId.text =

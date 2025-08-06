@@ -40,4 +40,10 @@ class FileViewModel @Inject constructor(
             mockRepository.insertFile(list)
         }
     }
+
+    fun deleteFile(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mockRepository.deleteFile(id, appSession.getUserId())
+        }
+    }
 }

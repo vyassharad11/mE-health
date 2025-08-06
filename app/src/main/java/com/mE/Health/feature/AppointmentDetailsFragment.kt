@@ -54,7 +54,7 @@ class AppointmentDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id,Constants.APPOINTMENTS)
+            setUserSelectedDetails(detail.id,Constants.APPOINTMENTS,detail.practitionerName!!,detail.createdAt?.toDisplayDate()!!)
             val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)
 
             val datTimePair = openCloseTime(detail.startTime, detail.endTime)
