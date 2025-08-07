@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mE.Health.R
 import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.DiagnosticReport
@@ -14,14 +16,16 @@ import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.databinding.PractitionersListFragmentBinding
-import com.mE.Health.feature.adapter.AppointmentListAdapter
 import com.mE.Health.feature.adapter.LabListAdapter
 import com.mE.Health.feature.adapter.MedicationListAdapter
+import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
+import com.mE.Health.feature.adapter.PractitionerVisitAdapter
 import com.mE.Health.feature.adapter.PractitionersListAdapter
 import com.mE.Health.feature.adapter.VisitListAdapter
 import com.mE.Health.feature.adapter.VitalListAdapter
 import com.mE.Health.utility.Constants
 import dagger.hilt.android.AndroidEntryPoint
+
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -96,23 +100,28 @@ class PractitionersListFragment : BaseFragment() {
             }
         } else if (type == Constants.VISITS) {
             binding.tvPageTitle.text = getString(R.string.list_of_visits)
-            val recyclerAdapter = VisitListAdapter(requireActivity())
-            recyclerAdapter.itemList = mockViewModel.visitList.value
-            binding.rvAssist.adapter = recyclerAdapter
-            recyclerAdapter.apply {
-                onItemClickListener = object : VisitListAdapter.OnClickCallback {
-                    override fun onClicked(item: Encounter, position: Int) {
-                    }
-                }
+            if (arguments != null) {
+                val jsonList = requireArguments().getString(Constants.PN_CUSTOM_LIST)
+                val visitList: List<Encounter> = Gson().fromJson(
+                    jsonList,
+                    object : TypeToken<ArrayList<Encounter?>?>() {}.type
+                )
+                val recyclerAdapter = PractitionerVisitAdapter(requireActivity())
+                recyclerAdapter.itemList = visitList
+                binding.rvAssist.adapter = recyclerAdapter
             }
         } else if (type == Constants.APPOINTMENTS) {
-            binding.tvPageTitle.text = getString(R.string.list_of_appointments)
-            val recyclerAdapter = AppointmentListAdapter(requireActivity())
-            recyclerAdapter.itemList = mockViewModel.appointmentList.value
-            binding.rvAssist.adapter = recyclerAdapter
-            recyclerAdapter.apply {
-                onItemClickListener = object : AppointmentListAdapter.OnClickCallback {
-                    override fun onClicked(item: Appointment, position: Int) {
+            if (arguments != null) {
+                val jsonList = requireArguments().getString(Constants.PN_CUSTOM_LIST)
+                val appointmentList: List<Appointment> = Gson().fromJson(jsonList, object : TypeToken<ArrayList<Appointment?>?>() {}.type)
+                binding.tvPageTitle.text = getString(R.string.list_of_appointments)
+                val recyclerAdapter = PractitionerAppointmentAdapter(requireActivity())
+                recyclerAdapter.itemList = appointmentList
+                binding.rvAssist.adapter = recyclerAdapter
+                recyclerAdapter.apply {
+                    onItemClickListener = object : PractitionerAppointmentAdapter.OnClickCallback {
+                        override fun onClicked(item: Appointment, position: Int) {
+                        }
                     }
                 }
             }

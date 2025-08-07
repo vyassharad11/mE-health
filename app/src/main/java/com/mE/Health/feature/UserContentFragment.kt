@@ -98,6 +98,7 @@ class UserContentFragment : BaseFragment() {
         for (item in Utilities.getAllMyHealthType()) {
             addChipToGroup(item)
         }
+        binding.llFilterType.performClick()
     }
 
     private fun setImageView(uri: Uri) {

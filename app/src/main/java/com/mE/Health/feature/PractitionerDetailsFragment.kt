@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Encounter
+import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
 import com.mE.Health.databinding.PractitionerDetailsFragmentBinding
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
@@ -28,6 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: PractitionerDetailsFragmentBinding
+    private var appointmentList: ArrayList<Appointment>? = ArrayList()
+    private var visitList: ArrayList<Encounter>? = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +55,9 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
         setHeaderTitleProperties(getString(R.string.practitioner), binding.toolbar.tvTitle, true)
 
         binding.toolbar.ivCalendar.visibility = View.VISIBLE
+        binding.toolbar.ivCalendar.setOnClickListener {
+            binding.rlDate.visibility = if (binding.rlDate.isVisible) View.GONE else View.VISIBLE
+        }
     }
 
     private fun setPractitionerData() {
@@ -59,7 +67,12 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(it.id, Constants.PRACTITIONERS,it.name!!,it.createdAt?.toDisplayDate()!!)
+            setUserSelectedDetails(
+                it.id,
+                Constants.PRACTITIONERS,
+                it.name!!,
+                it.createdAt?.toDisplayDate()!!
+            )
 
             mockViewModel.getOrganizationsByPractitionerId(it.id)
             mockViewModel.getAppointmentsByPractitionerId(it.id)
@@ -104,18 +117,32 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setAppointmentData(list: List<Appointment>?) {
+        appointmentList = ArrayList()
+        appointmentList?.addAll(list!!)
+        if (!appointmentList.isNullOrEmpty() && appointmentList?.size!! > 2) {
+            binding.tvAppointmentViewAll.visibility = View.VISIBLE
+        } else {
+            binding.tvAppointmentViewAll.visibility = View.GONE
+        }
         binding.rvAppointments.layoutManager =
             LinearLayoutManager(requireActivity())
         val adapter = PractitionerAppointmentAdapter(requireActivity())
-        adapter.itemList = list
+        adapter.itemList = appointmentList
         binding.rvAppointments.adapter = adapter
     }
 
     private fun setVisitData(list: List<Encounter>?) {
+        visitList = ArrayList()
+        visitList?.addAll(list!!)
+        if (!visitList.isNullOrEmpty() && visitList?.size!! > 2) {
+            binding.tvVisitViewAll.visibility = View.VISIBLE
+        } else {
+            binding.tvVisitViewAll.visibility = View.GONE
+        }
         binding.rvVisits.layoutManager =
             LinearLayoutManager(requireActivity())
         val adapter = PractitionerVisitAdapter(requireActivity())
-        adapter.itemList = list
+        adapter.itemList = if (!list.isNullOrEmpty() && list.size > 2) list.subList(0, 2) else list
         binding.rvVisits.adapter = adapter
     }
 
@@ -125,6 +152,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
                 bundle.putString(Constants.PN_TYPE, Constants.APPOINTMENTS)
+                bundle.putString(Constants.PN_CUSTOM_LIST, Gson().toJson(appointmentList))
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,
@@ -138,6 +166,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
                 val fragment = PractitionersListFragment()
                 val bundle = Bundle()
                 bundle.putString(Constants.PN_TYPE, Constants.VISITS)
+                bundle.putString(Constants.PN_CUSTOM_LIST, Gson().toJson(visitList))
                 fragment.arguments = bundle
                 addFragment(
                     R.id.fragment_container,

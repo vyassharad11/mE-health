@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.data.model.Appointment
+import com.mE.Health.data.model.Encounter
 import com.mE.Health.databinding.ItemPractitionerAppointmentBinding
 import com.mE.Health.utility.openCloseTime
 
@@ -17,6 +18,12 @@ class PractitionerAppointmentAdapter(val context: Context) :
             field = value
             notifyDataSetChanged()
         }
+
+    interface OnClickCallback {
+        fun onClicked(detail: Appointment, position: Int)
+    }
+
+    var onItemClickListener: OnClickCallback? = null
 
     inner class MyViewHolder(val binding: ItemPractitionerAppointmentBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -40,8 +47,7 @@ class PractitionerAppointmentAdapter(val context: Context) :
         holder.itemView.setOnClickListener {
         }
 
-        holder.binding.rtvAddCalendar.visibility = if (position == 0) View.GONE else View.VISIBLE
-
+        holder.binding.rtvAddCalendar.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {

@@ -54,7 +54,7 @@ class UserSavedFileAdapter(private val mContext: Context) :
     ) {
         val item: UserSavedFile? = itemList?.get(position)
         item?.let {
-            holder.binding.tvName.text = "File name : "+it.file_name
+            holder.binding.tvName.text = it.file_name
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,

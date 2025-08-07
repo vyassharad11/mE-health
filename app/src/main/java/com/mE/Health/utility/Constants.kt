@@ -20,6 +20,7 @@ object Constants {
 
     const val USER_TYPE = "seller"
     const val PN_TYPE = "type"
+    const val PN_CUSTOM_LIST = "customList"
     const val PN_SEARCH = "search"
     const val PN_NAME = "name"
     const val ALL = "Recent"

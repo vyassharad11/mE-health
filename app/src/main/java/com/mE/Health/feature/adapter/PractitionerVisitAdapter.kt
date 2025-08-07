@@ -46,7 +46,7 @@ class PractitionerVisitAdapter(val context: Context) :
         holder.itemView.setOnClickListener {
         }
 
-        holder.binding.rtvAddCalendar.visibility = if (position == 0) View.GONE else View.VISIBLE
+        holder.binding.rtvAddCalendar.visibility =  View.GONE
 
     }
 

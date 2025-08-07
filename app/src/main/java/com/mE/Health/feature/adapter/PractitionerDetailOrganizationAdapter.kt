@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.data.model.PractitionerOrganizationWithDetails
 import com.mE.Health.databinding.ItemPractitionerOrganizationBinding
+import com.mE.Health.utility.Utilities
 
 class PractitionerDetailOrganizationAdapter(val context: Context) :
     RecyclerView.Adapter<PractitionerDetailOrganizationAdapter.MyViewHolder>() {
@@ -34,9 +35,13 @@ class PractitionerDetailOrganizationAdapter(val context: Context) :
             holder.binding.tvName.text = it.name
             holder.binding.tvDate.text = "Start Time: 01/01/2022"
         }
-        holder.itemView.setOnClickListener {
+        val displayMetrics = Utilities.getDeviceDisplayMetrics()
+        val itemWidth = displayMetrics.first/1.2
 
-        }
+
+        val layoutParams = holder.binding.cvMain.layoutParams
+        layoutParams.width = itemWidth.toInt()
+        holder.binding.cvMain.layoutParams = layoutParams
     }
 
     override fun getItemCount(): Int {
