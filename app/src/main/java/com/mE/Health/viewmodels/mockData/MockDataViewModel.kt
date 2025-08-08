@@ -121,7 +121,6 @@ class MockDataViewModel @Inject constructor(
     val adviceList: LiveData<List<AdviceInteraction>> = _adviceList
 
 
-
     init {
         insertPatients()
     }

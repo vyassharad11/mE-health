@@ -251,4 +251,26 @@ class MockRepository @Inject constructor(
     suspend fun deleteFile(id: String, userId: String) =
         mockDataDao.deleteUserSavedFiles(id, userId)
 
+    fun getOrganizationNameByEncounterId(encounterId: String) =
+        mockDataDao.getOrganizationNameByEncounterId(encounterId)
+
+    fun getObservationByEncounterId(encounterId: String) =
+        mockDataDao.getObservationByEncounterId(encounterId)
+
+    fun getLabsDataByEncounterId(encounterId: String) =
+        mockDataDao.getLabsDataByEncounterId(encounterId)
+
+    fun getOrganizationsByIds(id: List<String>) =
+        mockDataDao.getOrganizationsByIds(id)
+
+    fun getVisitDataByEncounterId(id: String) =
+        mockDataDao.getVisitDataByEncounterId(id)
+
+    fun getMedicationByEncounterId(id: String) =
+        mockDataDao.getMedicationByEncounterId(id)
+
+    fun getPractitionerName(practitionerId: String) = mockDataDao.getPractitionerName(practitionerId)
+
+    fun getOrganizationName(organizationId: String) = mockDataDao.getOrganizationName(organizationId)
+
 }

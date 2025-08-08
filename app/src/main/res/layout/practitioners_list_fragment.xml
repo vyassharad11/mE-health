@@ -35,10 +35,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvAssist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_10"
                 android:paddingTop="@dimen/dp_10"
-                android:layout_marginBottom="@dimen/dp_10"
                 tools:listitem="@layout/item_assist" />
 
             <include layout="@layout/bottom_view" />

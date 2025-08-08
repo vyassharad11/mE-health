@@ -117,33 +117,34 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setAppointmentData(list: List<Appointment>?) {
-        appointmentList = ArrayList()
-        appointmentList?.addAll(list!!)
-        if (!appointmentList.isNullOrEmpty() && appointmentList?.size!! > 2) {
-            binding.tvAppointmentViewAll.visibility = View.VISIBLE
+        if (!list.isNullOrEmpty() && list.size > 0) {
+            appointmentList = ArrayList()
+            appointmentList?.addAll(list)
+            binding.tvAppointmentViewAll.isVisible = appointmentList!!.size > 2
+            binding.rvAppointments.layoutManager =
+                LinearLayoutManager(requireActivity())
+            val adapter = PractitionerAppointmentAdapter(requireActivity())
+            adapter.itemList = appointmentList
+            binding.rvAppointments.adapter = adapter
         } else {
-            binding.tvAppointmentViewAll.visibility = View.GONE
+            binding.rlAppointment.isVisible = false
         }
-        binding.rvAppointments.layoutManager =
-            LinearLayoutManager(requireActivity())
-        val adapter = PractitionerAppointmentAdapter(requireActivity())
-        adapter.itemList = appointmentList
-        binding.rvAppointments.adapter = adapter
     }
 
     private fun setVisitData(list: List<Encounter>?) {
-        visitList = ArrayList()
-        visitList?.addAll(list!!)
-        if (!visitList.isNullOrEmpty() && visitList?.size!! > 2) {
-            binding.tvVisitViewAll.visibility = View.VISIBLE
+        if (!list.isNullOrEmpty()) {
+            visitList = ArrayList()
+            visitList?.addAll(list)
+            binding.tvVisitViewAll.isVisible = visitList!!.size > 2
+            binding.rvVisits.layoutManager =
+                LinearLayoutManager(requireActivity())
+            val adapter = PractitionerVisitAdapter(requireActivity())
+            adapter.itemList =
+                if (list.isNotEmpty() && list.size > 2) list.subList(0, 2) else list
+            binding.rvVisits.adapter = adapter
         } else {
-            binding.tvVisitViewAll.visibility = View.GONE
+            binding.rlVisits.visibility = View.GONE
         }
-        binding.rvVisits.layoutManager =
-            LinearLayoutManager(requireActivity())
-        val adapter = PractitionerVisitAdapter(requireActivity())
-        adapter.itemList = if (!list.isNullOrEmpty() && list.size > 2) list.subList(0, 2) else list
-        binding.rvVisits.adapter = adapter
     }
 
     override fun onClick(view: View?) {

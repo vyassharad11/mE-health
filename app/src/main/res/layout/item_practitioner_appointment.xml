@@ -7,7 +7,7 @@
     android:paddingHorizontal="@dimen/dp_10"
     android:paddingVertical="@dimen/dp_5"
     android:layout_marginTop="@dimen/dp_5"
-    android:layout_marginHorizontal="@dimen/dp_5"
+    android:layout_marginHorizontal="@dimen/dp_10"
     app:rv_backgroundColor="@color/white">
 
     <com.mE.Health.utility.roundview.RoundLinearLayout

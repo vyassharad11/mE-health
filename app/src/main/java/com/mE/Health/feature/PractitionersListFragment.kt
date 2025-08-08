@@ -16,13 +16,14 @@ import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Practitioner
 import com.mE.Health.databinding.PractitionersListFragmentBinding
-import com.mE.Health.feature.adapter.LabListAdapter
+import com.mE.Health.feature.adapter.ConditionLabAdapter
+import com.mE.Health.feature.adapter.ConditionMedicationAdapter
+import com.mE.Health.feature.adapter.ConditionVisitAdapter
+import com.mE.Health.feature.adapter.ConditionVitalAdapter
 import com.mE.Health.feature.adapter.MedicationListAdapter
 import com.mE.Health.feature.adapter.PractitionerAppointmentAdapter
 import com.mE.Health.feature.adapter.PractitionerVisitAdapter
 import com.mE.Health.feature.adapter.PractitionersListAdapter
-import com.mE.Health.feature.adapter.VisitListAdapter
-import com.mE.Health.feature.adapter.VitalListAdapter
 import com.mE.Health.utility.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,7 +53,7 @@ class PractitionersListFragment : BaseFragment() {
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
 //        setHeaderSettingProperties(binding.toolbar.ivSetting,true)
-        setHeaderTitleProperties(getString(R.string.back),binding.toolbar.tvTitle,true)
+        setHeaderTitleProperties(getString(R.string.back), binding.toolbar.tvTitle, true)
     }
 
     private fun initView() {
@@ -77,28 +78,26 @@ class PractitionersListFragment : BaseFragment() {
                 }
             }
         } else if (type == Constants.VITALS) {
+
             binding.tvPageTitle.text = getString(R.string.list_of_vitals)
-            val recyclerAdapter = VitalListAdapter(requireActivity())
-            recyclerAdapter.itemList = mockViewModel.vitalsList.value
+            val organizationName = arguments?.getString(Constants.PN_ORGANIZATION_NAME, "")
+            val jsonList = arguments?.getString(Constants.PN_CUSTOM_LIST)
+            val vitalList: List<Observation> =
+                Gson().fromJson(jsonList, object : TypeToken<ArrayList<Observation?>?>() {}.type)
+            val recyclerAdapter = ConditionVitalAdapter(requireActivity(), organizationName)
+            recyclerAdapter.itemList = vitalList
             binding.rvAssist.adapter = recyclerAdapter
-            recyclerAdapter.apply {
-                onItemClickListener = object : VitalListAdapter.OnClickCallback {
-                    override fun onClicked(item: Observation, position: Int) {
-                    }
-                }
-            }
         } else if (type == Constants.LABS) {
+
             binding.tvPageTitle.text = getString(R.string.list_of_labs)
-            val recyclerAdapter = LabListAdapter(requireActivity())
-            recyclerAdapter.itemList = mockViewModel.labList.value
+            val jsonList = arguments?.getString(Constants.PN_CUSTOM_LIST)
+            val labList: List<DiagnosticReport> =
+                Gson().fromJson(jsonList, object : TypeToken<ArrayList<DiagnosticReport?>?>() {}.type)
+            val recyclerAdapter = ConditionLabAdapter(requireActivity())
+            recyclerAdapter.itemList = labList
             binding.rvAssist.adapter = recyclerAdapter
-            recyclerAdapter.apply {
-                onItemClickListener = object : LabListAdapter.OnClickCallback {
-                    override fun onClicked(item: DiagnosticReport, position: Int) {
-                    }
-                }
-            }
         } else if (type == Constants.VISITS) {
+
             binding.tvPageTitle.text = getString(R.string.list_of_visits)
             if (arguments != null) {
                 val jsonList = requireArguments().getString(Constants.PN_CUSTOM_LIST)
@@ -110,10 +109,26 @@ class PractitionersListFragment : BaseFragment() {
                 recyclerAdapter.itemList = visitList
                 binding.rvAssist.adapter = recyclerAdapter
             }
+        } else if (type == Constants.CONDITION_VISIT) {
+
+            binding.tvPageTitle.text = getString(R.string.list_of_visits)
+            if (arguments != null) {
+                val jsonList = requireArguments().getString(Constants.PN_CUSTOM_LIST)
+                val visitList: List<Encounter> = Gson().fromJson(
+                    jsonList,
+                    object : TypeToken<ArrayList<Encounter?>?>() {}.type
+                )
+                val recyclerAdapter = ConditionVisitAdapter(requireActivity())
+                recyclerAdapter.itemList = visitList
+                binding.rvAssist.adapter = recyclerAdapter
+            }
         } else if (type == Constants.APPOINTMENTS) {
             if (arguments != null) {
                 val jsonList = requireArguments().getString(Constants.PN_CUSTOM_LIST)
-                val appointmentList: List<Appointment> = Gson().fromJson(jsonList, object : TypeToken<ArrayList<Appointment?>?>() {}.type)
+                val appointmentList: List<Appointment> = Gson().fromJson(
+                    jsonList,
+                    object : TypeToken<ArrayList<Appointment?>?>() {}.type
+                )
                 binding.tvPageTitle.text = getString(R.string.list_of_appointments)
                 val recyclerAdapter = PractitionerAppointmentAdapter(requireActivity())
                 recyclerAdapter.itemList = appointmentList
@@ -124,6 +139,19 @@ class PractitionersListFragment : BaseFragment() {
                         }
                     }
                 }
+            }
+        }  else if (type == Constants.MEDICATIONS) {
+            if (arguments != null) {
+
+                binding.tvPageTitle.text = getString(R.string.list_of_medications)
+                val jsonList = requireArguments().getString(Constants.PN_CUSTOM_LIST)
+                val medicationList: List<MedicationRequest> = Gson().fromJson(
+                    jsonList,
+                    object : TypeToken<ArrayList<MedicationRequest?>?>() {}.type
+                )
+                val recyclerAdapter = ConditionMedicationAdapter(requireActivity())
+                recyclerAdapter.itemList = medicationList
+                binding.rvAssist.adapter = recyclerAdapter
             }
         } else {
             binding.tvPageTitle.text = getString(R.string.list_of_medications)

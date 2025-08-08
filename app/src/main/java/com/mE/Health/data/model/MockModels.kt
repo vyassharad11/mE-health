@@ -93,7 +93,9 @@ data class DiagnosticReport(
     val organizationId: String?,
     val result: List<Result>?, // JSON array string
     val createdAt: String?,
-    val updatedAt: String?
+    val updatedAt: String?,
+    var organizationName: String?,
+    var organizationAddress: String?
 )
 
 data class Result(
@@ -116,7 +118,9 @@ data class Encounter(
     val description: String?,
     val type: String?, // JSON string
     val createdAt: String?,
-    val updatedAt: String?
+    val updatedAt: String?,
+    var organizationName: String?,
+    var organizationAddress: String?
 )
 
 @Entity(tableName = "immunization")

@@ -132,7 +132,7 @@ interface MockDataDao {
     fun getProviderListItem(): List<ProviderDTO>
 
     @Query("UPDATE provider_items SET isRecent=:status WHERE id LIKE :itemId")
-    fun updateProviderStatus(status:Boolean,itemId:String)
+    fun updateProviderStatus(status: Boolean, itemId: String)
 
 //    @Query("UPDATE practitioner SET fileDetail=:list WHERE id LIKE :itemId")
 //    fun updateFile(list:List<UserSavedImages>, itemId:String)
@@ -175,4 +175,34 @@ interface MockDataDao {
     @Query("DELETE FROM user_saved_file WHERE category_id = :id AND user_id = :userId")
     fun deleteUserSavedFiles(id: String, userId: String)
 
+    @Query(
+        """
+    SELECT o.name FROM organization o
+    INNER JOIN encounter e ON o.id = e.organizationId
+    WHERE e.id = :encounterId
+    LIMIT 1
+"""
+    )
+    fun getOrganizationNameByEncounterId(encounterId: String): String?
+
+    @Query("SELECT * FROM observation WHERE encounterId = :encounterId")
+    fun getObservationByEncounterId(encounterId: String): List<Observation>
+
+    @Query("SELECT * FROM diagnostic_report WHERE encounterId = :encounterId")
+    fun getLabsDataByEncounterId(encounterId: String): List<DiagnosticReport>
+
+    @Query("SELECT * FROM encounter WHERE id = :encounterId")
+    fun getVisitDataByEncounterId(encounterId: String): List<Encounter>
+
+    @Query("SELECT * FROM organization WHERE id IN (:ids)")
+    fun getOrganizationsByIds(ids: List<String>): List<Organization>
+
+    @Query("SELECT * FROM medication_request WHERE encounterId = :encounterId")
+    fun getMedicationByEncounterId(encounterId: String): List<MedicationRequest>
+
+    @Query("SELECT name FROM organization WHERE id = :organizationId LIMIT 1")
+    fun getOrganizationName(organizationId: String): String?
+
+    @Query("SELECT name FROM practitioner WHERE id = :practitionerId LIMIT 1")
+    fun getPractitionerName(practitionerId: String): String?
 }

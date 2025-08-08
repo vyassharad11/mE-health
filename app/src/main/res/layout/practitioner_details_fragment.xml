@@ -328,6 +328,7 @@
                 tools:listitem="@layout/item_practitioner_organization" />
 
             <RelativeLayout
+                android:id="@+id/rlAppointment"
                 android:layout_width="match_parent"
                 android:layout_marginEnd="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_10"
@@ -375,6 +376,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/rlVisits"
                 android:layout_width="match_parent"
                 android:layout_marginEnd="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_10"
