@@ -209,7 +209,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_10"
-                            android:text="Dr. Ashley David"
                             android:textColor="@color/color_333333"
                             android:textSize="@dimen/sp_14" />
 
@@ -219,7 +218,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_6"
-                            android:text="Gynecologist"
                             android:textColor="@color/color_333333"
                             android:textSize="@dimen/sp_12" />
 
@@ -231,7 +229,6 @@
                             android:layout_marginTop="@dimen/dp_6"
                             android:drawableLeft="@drawable/ic_phone"
                             android:drawablePadding="@dimen/dp_20"
-                            android:text="(212) 555-1234"
                             android:textColor="@color/color_6E6B78"
                             android:textSize="@dimen/sp_12" />
 
@@ -243,7 +240,6 @@
                             android:layout_marginTop="@dimen/dp_6"
                             android:drawableLeft="@drawable/ic_mail"
                             android:drawablePadding="@dimen/dp_20"
-                            android:text="info@totalcaremaintenance.com"
                             android:textColor="@color/color_6E6B78"
                             android:textSize="@dimen/sp_12" />
                     </LinearLayout>

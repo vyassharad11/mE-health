@@ -73,7 +73,6 @@
                                     style="@style/textStyleBold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Blood Pressure"
                                     android:textColor="@color/text_color_primary"
                                     android:textSize="@dimen/sp_18" />
 
@@ -103,7 +102,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"
-                                android:text="120/80 mmHg Active"
                                 android:textColor="@color/text_color_primary"
                                 android:textSize="@dimen/sp_14" />
 
@@ -113,7 +111,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"
-                                android:text="February 15, 2025 at 09:30 Am"
                                 android:textColor="@color/text_color_primary"
                                 android:textSize="@dimen/sp_14" />
                         </LinearLayout>
@@ -184,7 +181,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:text="Jhon Doe"
                                     android:textColor="@color/text_color_primary"
                                     android:textSize="@dimen/sp_14" />
                             </RelativeLayout>
@@ -209,7 +205,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:text="obs-123456"
                                     android:textColor="@color/text_color_primary"
                                     android:textSize="@dimen/sp_14" />
                             </RelativeLayout>
@@ -252,7 +247,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <com.mE.Health.utility.roundview.RoundTextView
-                            android:id="@+id/tvVisitStatus"
+                            android:id="@+id/rtvVisitStatus"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -270,7 +265,7 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/tvStartDate"
+                        android:id="@+id/tvVisitDate"
                         style="@style/textStyleRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

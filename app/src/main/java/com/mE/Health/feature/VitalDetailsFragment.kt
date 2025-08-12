@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
@@ -13,9 +14,11 @@ import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.VitalDetailFragmentBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.formatIntoPrettyDate
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ConditionDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -25,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class VitalDetailsFragment : BaseFragment() {
 
     private lateinit var binding: VitalDetailFragmentBinding
+    private val viewModel: ConditionDataViewModel by viewModels()
     private var patientName = ""
 
     override fun onCreateView(
@@ -38,6 +42,7 @@ class VitalDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        observeData()
         initHeader()
         initView()
     }
@@ -56,19 +61,17 @@ class VitalDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.llFileLayout
             )
             setUserSelectedDetails(detail.id, Constants.VITALS,detail.description!!,detail.effectiveDate?.toDisplayDate()!!)
-
+            viewModel.getFirstVisitDataByEncounterId(detail.encounterId!!)
             if (detail.patientId != null) {
                 mockViewModel.getPatientDetail(detail.patientId)
             }
             val values = Gson().fromJson(detail.value, Value::class.java)
             binding.apply {
-                tvName.text = detail.description
-                tvDateTime.text = detail.effectiveDate?.formatIntoPrettyDate()
+                tvName.text = detail.code_display
+                tvDateTime.text = detail.effectiveDate.formatIntoPrettyDate()
                 tvStatus.text = detail.status?.capitalFirstChar()
                 tvValues.text = getString(R.string.value_with_unit, values.value, values.unit)
                 tvVitalId.text = detail.id.uppercase()
-                tvStartDate.text =
-                    getString(R.string.start_date_with_value, detail.createdAt?.toDisplayDate())
             }
         }
 
@@ -80,6 +83,17 @@ class VitalDetailsFragment : BaseFragment() {
         binding.layoutSyncButton.llShareData.setOnClickListener {
             generateShareMessage(DetailSingleton.vital!!)
             shareRecord(message = shareMessage)
+        }
+    }
+
+    private fun observeData() {
+        viewModel.encounterObjectData.observe(viewLifecycleOwner) {
+            val statusDetail =
+                Utilities.getVisitUIStatus(requireActivity(), it.first.status ?: "")
+            binding.rtvVisitStatus.text = it.first.status?.capitalFirstChar()
+            binding.rtvVisitStatus.setTextColor(statusDetail.first)
+            binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
+            binding.tvVisitDate.text =getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
         }
     }
 

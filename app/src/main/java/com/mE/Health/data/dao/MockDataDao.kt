@@ -205,4 +205,16 @@ interface MockDataDao {
 
     @Query("SELECT name FROM practitioner WHERE id = :practitionerId LIMIT 1")
     fun getPractitionerName(practitionerId: String): String?
+
+    @Query("SELECT * FROM encounter WHERE id = :encounterId LIMIT 1")
+    fun getFirstVisitDataByEncounterId(encounterId: String): Encounter
+
+    @Query("SELECT * FROM condition WHERE encounterId = :encounterId")
+    fun getConditionByEncounterId(encounterId: String): List<Condition>
+
+    @Query("SELECT * FROM procedure WHERE encounterId = :encounterId")
+    fun getProcedureDataByEncounterId(encounterId: String): List<Procedure>
+
+    @Query("SELECT * FROM allergy_intolerance WHERE encounterId = :encounterId")
+    fun getAllergyDataByEncounterId(encounterId: String): List<AllergyIntolerance>
 }

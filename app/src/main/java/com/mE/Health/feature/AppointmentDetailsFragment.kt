@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.Appointment
@@ -13,9 +14,11 @@ import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.AppointmentDetailFragmentBinding
 import com.mE.Health.utility.Constants
+import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ConditionDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -25,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class AppointmentDetailsFragment : BaseFragment() {
 
     private lateinit var binding: AppointmentDetailFragmentBinding
+    private val viewModel: ConditionDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +41,7 @@ class AppointmentDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        observeData()
         initHeader()
         initView()
     }
@@ -61,27 +66,16 @@ class AppointmentDetailsFragment : BaseFragment() {
             val dateTime = "${datTimePair.first},\n${datTimePair.second}"
             generateShareMessage(detail)
             binding.apply {
+                viewModel.getFirstVisitDataByEncounterId(detail.encounterId!!)
                 tvDrName.text = detail.practitionerName
-                tvSpeciality.text = detail.practitionerSpecialty
+                tvId.text = "Id: "+detail.id
                 tvDateTime.text = dateTime
                 tvDate.text = datTimePair.first
                 tvTime.text = datTimePair.second
                 tvReason.text = reasonCodeObject.display
-                tvVisitDate.text = "Start Date: "+detail.createdAt?.toDisplayDate()
 
                 if (detail.status?.lowercase() == getString(R.string.booked).lowercase()) {
                     binding.rtvStatus.apply {
-                        text = getString(R.string.booked)
-                        setTextColor(
-                            ContextCompat.getColor(
-                                requireActivity(),
-                                R.color.color_0063F7
-                            )
-                        )
-                        delegate.backgroundColor =
-                            ContextCompat.getColor(requireActivity(), R.color.color_1A0063F7)
-                    }
-                    binding.rtvVisitStatus.apply {
                         text = getString(R.string.booked)
                         setTextColor(
                             ContextCompat.getColor(
@@ -106,30 +100,8 @@ class AppointmentDetailsFragment : BaseFragment() {
                         delegate.backgroundColor =
                             ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
                     }
-                    binding.rtvVisitStatus.apply {
-                        text = getString(R.string.completed)
-                        setTextColor(
-                            ContextCompat.getColor(
-                                requireActivity(),
-                                R.color.color_06C270
-                            )
-                        )
-                        delegate.backgroundColor =
-                            ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
-                    }
                 } else if (detail.status?.lowercase() == getString(R.string.cancelled).lowercase()) {
                     binding.rtvStatus.apply {
-                        text = getString(R.string.cancelled)
-                        setTextColor(
-                            ContextCompat.getColor(
-                                requireActivity(),
-                                R.color.color_F02C2C
-                            )
-                        )
-                        delegate.backgroundColor =
-                            ContextCompat.getColor(requireActivity(), R.color.color_1AF02C2C)
-                    }
-                    binding.rtvVisitStatus.apply {
                         text = getString(R.string.cancelled)
                         setTextColor(
                             ContextCompat.getColor(
@@ -152,23 +124,24 @@ class AppointmentDetailsFragment : BaseFragment() {
                         delegate.backgroundColor =
                             ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
                     }
-                    binding.rtvVisitStatus.apply {
-                        text = detail.status?.capitalFirstChar()
-                        setTextColor(
-                            ContextCompat.getColor(
-                                requireActivity(),
-                                R.color.color_06C270
-                            )
-                        )
-                        delegate.backgroundColor =
-                            ContextCompat.getColor(requireActivity(), R.color.color_A06C270)
-                    }
                 }
             }
         }
 
         binding.layoutSyncButton.llShareData.setOnClickListener {
             shareRecord(message = shareMessage)
+        }
+    }
+
+    private fun observeData() {
+        viewModel.encounterObjectData.observe(viewLifecycleOwner) {
+            val statusDetail =
+                Utilities.getVisitUIStatus(requireActivity(), it.first.status ?: "")
+            binding.rtvVisitStatus.text = it.first.status?.capitalFirstChar()
+            binding.rtvVisitStatus.setTextColor(statusDetail.first)
+            binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
+            binding.tvVisitDate.text =getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
+            binding.tvSpeciality.text = it.second
         }
     }
 

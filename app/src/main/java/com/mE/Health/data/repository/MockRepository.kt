@@ -273,4 +273,10 @@ class MockRepository @Inject constructor(
 
     fun getOrganizationName(organizationId: String) = mockDataDao.getOrganizationName(organizationId)
 
+    fun getConditionByEncounterId(encounterId: String) = mockDataDao.getConditionByEncounterId(encounterId)
+
+    fun getProcedureDataByEncounterId(encounterId: String) = mockDataDao.getProcedureDataByEncounterId(encounterId)
+
+    fun getAllergyDataByEncounterId(encounterId: String) = mockDataDao.getAllergyDataByEncounterId(encounterId)
+
 }

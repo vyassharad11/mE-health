@@ -204,6 +204,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <com.mE.Health.utility.roundview.RoundTextView
+                            android:id="@+id/rtvVisitStatus"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -221,6 +222,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tvVisitDate"
                         style="@style/textStyleRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

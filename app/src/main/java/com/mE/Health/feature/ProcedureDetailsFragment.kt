@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
@@ -16,6 +17,7 @@ import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ConditionDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -25,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProcedureDetailsFragment : BaseFragment() {
 
     private lateinit var binding: ProcedureDetailFragmentBinding
+    private val viewModel: ConditionDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +40,7 @@ class ProcedureDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        observeData()
         initHeader()
         initView()
     }
@@ -55,7 +59,7 @@ class ProcedureDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.llFileLayout
             )
             setUserSelectedDetails(detail.id, Constants.PROCEDURES,detail.code_display!!,detail.performedDate?.toDisplayDate()!!)
-
+            viewModel.getFirstVisitDataByEncounterId(detail.encounterId!!)
             binding.apply {
                 generateShareMessage(detail)
                 tvName.text = detail.code_display
@@ -77,6 +81,16 @@ class ProcedureDetailsFragment : BaseFragment() {
         }
     }
 
+    private fun observeData() {
+        viewModel.encounterObjectData.observe(viewLifecycleOwner) {
+            val statusDetail =
+                Utilities.getVisitUIStatus(requireActivity(), it.first.status ?: "")
+            binding.rtvVisitStatus.text = it.first.status?.capitalFirstChar()
+            binding.rtvVisitStatus.setTextColor(statusDetail.first)
+            binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
+            binding.tvVisitDate.text =getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
+        }
+    }
 
     private fun generateShareMessage(detail: Procedure) {
         val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)

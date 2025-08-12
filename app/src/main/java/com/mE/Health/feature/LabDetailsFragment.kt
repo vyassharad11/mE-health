@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.Appointment
@@ -13,11 +15,14 @@ import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.LabDetailFragmentBinding
+import com.mE.Health.feature.adapter.LabResultAdapter
+import com.mE.Health.feature.adapter.VisitAllergyAdapter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ConditionDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -27,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LabDetailsFragment : BaseFragment() {
 
     private lateinit var binding: LabDetailFragmentBinding
+    private val viewModel: ConditionDataViewModel by viewModels()
     private var practitionerName = ""
 
     override fun onCreateView(
@@ -40,14 +46,15 @@ class LabDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        observeData()
         initHeader()
         setDetails()
     }
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
-        setHeaderTitleProperties(getString(R.string.lab),binding.toolbar.tvTitle,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting, true)
+        setHeaderTitleProperties(getString(R.string.lab), binding.toolbar.tvTitle, true)
     }
 
     private fun setDetails() {
@@ -57,22 +64,52 @@ class LabDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.LABS,detail.code_display!!,detail.issued?.toDisplayDate()!!)
+            setUserSelectedDetails(
+                detail.id,
+                Constants.LABS,
+                detail.code_display!!,
+                detail.issued?.toDisplayDate()!!
+            )
 
             if (detail.performerId != null) {
                 mockViewModel.getPractitionerDetail(detail.performerId)
             }
             binding.apply {
-                tvLabId.text = "Lab ID: "+detail.id.uppercase()
+                viewModel.getFirstVisitDataByEncounterId(detail.encounterId!!)
+
+                tvLabId.text = "Lab ID: " + detail.id.uppercase()
                 tvDate.text = detail.issued?.toDisplayDate()
-                tvStartDate.text = "Start Date: "+detail.effectiveDate?.toDisplayDate()
                 tvName.text = detail.code_display
 
                 tvStatus.apply {
                     text = detail.status?.capitalFirstChar()
-                    val statusDetail = Utilities.getLabUIStatus(requireActivity(), detail.status ?: "")
+                    val statusDetail =
+                        Utilities.getLabUIStatus(requireActivity(), detail.status ?: "")
                     setTextColor(statusDetail.first)
                     delegate.backgroundColor = statusDetail.second
+                }
+                val list = ArrayList<Pair<String, String>>()
+                if (!detail.result.isNullOrEmpty()) {
+                    for (result in detail.result) {
+                        if (result.display != null) {
+                            val splitText = Utilities.splitReport(result.display)
+                            if (splitText != null) {
+                                list.add(
+                                    Pair(
+                                        splitText.first,
+                                        splitText.second
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    binding.rvResult.layoutManager =
+                        LinearLayoutManager(requireActivity())
+                    val adapter = LabResultAdapter(requireActivity())
+                    adapter.itemList = list
+                    binding.rvResult.adapter = adapter
+                } else {
+                    binding.cvResult.visibility = View.GONE
                 }
             }
         }
@@ -85,6 +122,18 @@ class LabDetailsFragment : BaseFragment() {
         binding.layoutSyncButton.llShareData.setOnClickListener {
             generateShareMessage(DetailSingleton.lab!!)
             shareRecord(message = shareMessage)
+        }
+    }
+
+    private fun observeData() {
+        viewModel.encounterObjectData.observe(viewLifecycleOwner) {
+            val statusDetail =
+                Utilities.getVisitUIStatus(requireActivity(), it.first.status ?: "")
+            binding.rtvVisitStatus.text = it.first.status?.capitalFirstChar()
+            binding.rtvVisitStatus.setTextColor(statusDetail.first)
+            binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
+            binding.tvVisitDate.text =
+                getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
         }
     }
 

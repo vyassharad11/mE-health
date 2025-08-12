@@ -76,7 +76,6 @@
                                 android:layout_marginTop="@dimen/dp_5"
                                 android:layout_marginEnd="@dimen/dp_10"
                                 android:layout_toStartOf="@+id/tvStatus"
-                                android:text="Clinic Name "
                                 android:textColor="@color/color_333333"
                                 android:textSize="@dimen/sp_18" />
 
@@ -111,7 +110,6 @@
                                 style="@style/textStyleRegular"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="19/05/2025"
                                 android:textColor="@color/color_333333"
                                 android:textSize="@dimen/sp_16" />
 
@@ -122,7 +120,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:text="$8.40"
                                 android:textColor="@color/color_333333"
                                 android:textSize="@dimen/sp_18" />
 
@@ -201,7 +198,6 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_weight="1"
                                     android:gravity="right"
-                                    android:text="Blue Cross Blue Shield"
                                     android:textColor="@color/text_color_primary"
                                     android:textSize="@dimen/sp_12" />
 

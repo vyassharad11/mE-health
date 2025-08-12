@@ -121,7 +121,7 @@
 
 
                     <TextView
-                        android:id="@+id/tvName"
+                        android:id="@+id/tvId"
                         style="@style/textStyleBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -232,7 +232,6 @@
                             style="@style/textStyleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Dr. Davide Joe"
                             android:textColor="@color/text_color_orange"
                             android:textSize="@dimen/sp_18" />
 
@@ -242,7 +241,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Hospital Name"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_14" />
                     </LinearLayout>
@@ -278,7 +276,7 @@
                         style="@style/textStyleBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Reason"
+                        android:text="@string/reason"
                         android:textColor="@color/text_color_primary"
                         android:textSize="@dimen/sp_17" />
 
@@ -288,7 +286,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="To go for regular checkups\nfor diabetes "
                         android:textColor="@color/color_6E6B78"
                         android:textSize="@dimen/sp_14" />
 
@@ -333,7 +330,6 @@
                             android:layout_marginRight="@dimen/dp_10"
                             android:paddingHorizontal="@dimen/dp_25"
                             android:paddingVertical="@dimen/dp_5"
-                            android:text="Completed"
                             android:textColor="@color/color_06C270"
                             android:textSize="@dimen/sp_10"
                             app:rv_backgroundColor="@color/color_A06C270"
@@ -347,7 +343,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_5"
-                        android:text="Start Date: 11/06/2025"
                         android:textColor="@color/text_color_primary"
                         android:textSize="@dimen/sp_17" />
 

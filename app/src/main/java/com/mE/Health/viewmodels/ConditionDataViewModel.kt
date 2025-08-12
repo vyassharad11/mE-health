@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mE.Health.data.model.AllergyIntolerance
+import com.mE.Health.data.model.Condition
 import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.repository.MockRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +35,20 @@ class ConditionDataViewModel @Inject constructor(
     private val _medicationData = MutableLiveData<List<MedicationRequest>>()
     val medicationData: LiveData<List<MedicationRequest>> = _medicationData
 
-
     private val _practitionerData = MutableLiveData<Pair<String, String>>()
     val practitionerData: LiveData<Pair<String, String>> = _practitionerData
+
+    private val _encounterObjectData = MutableLiveData<Pair<Encounter, String>>()
+    val encounterObjectData: LiveData<Pair<Encounter, String>> = _encounterObjectData
+
+    private val _conditionData = MutableLiveData<List<Condition>>()
+    val conditionData: LiveData<List<Condition>> = _conditionData
+
+    private val _procedureData = MutableLiveData<List<Procedure>>()
+    val procedureData: LiveData<List<Procedure>> = _procedureData
+
+    private val _allergyData = MutableLiveData<List<AllergyIntolerance>>()
+    val allergyData: LiveData<List<AllergyIntolerance>> = _allergyData
 
 
     fun getObservationMapByEncounterId(encounterId: String) {
@@ -111,6 +125,38 @@ class ConditionDataViewModel @Inject constructor(
                     Pair("Unknown Practitioner", "Unknown Organization")
                 )
             }
+        }
+    }
+
+    fun getFirstVisitDataByEncounterId(encounterId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val encounter = repository.getVisitDataByEncounterId(encounterId).firstOrNull()
+            if (encounter != null) {
+                val organizationId = encounter.organizationId
+                val organizationName = organizationId?.let { repository.getOrganizationName(it) }
+                _encounterObjectData.postValue(
+                    Pair(encounter,
+                        organizationName ?: "Unknown Organization"
+                    )
+                )
+            }
+        }
+    }
+
+    fun getConditionByEncounterId(encounterId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _conditionData.postValue(repository.getConditionByEncounterId(encounterId))
+        }
+    }
+
+    fun getProcedureDataByEncounterId(encounterId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _procedureData.postValue(repository.getProcedureDataByEncounterId(encounterId))
+        }
+    }
+    fun getAllergyDataByEncounterId(encounterId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _allergyData.postValue(repository.getAllergyDataByEncounterId(encounterId))
         }
     }
 }

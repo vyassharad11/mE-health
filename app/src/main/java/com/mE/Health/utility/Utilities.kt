@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.mE.Health.R
@@ -26,6 +27,9 @@ import com.mE.Health.utility.Constants.RECORD_VAULT
 import com.mE.Health.utility.Constants.VISITS
 import com.mE.Health.utility.Constants.VITALS
 import com.mE.Health.viewmodels.mockData.MockDataViewModel
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 object Utilities {
 
@@ -216,5 +220,24 @@ object Utilities {
             add(BILLING )
         }
         return typeList
+    }
+
+    fun splitReport(input: String) : Pair<String, String>? {
+        val lines = input.split("\\r?\\n".toRegex()).dropLastWhile { it.isEmpty() }
+            .toTypedArray() // Split into lines
+
+        val pattern: Pattern = Pattern.compile("^(.*?)(\\d.*)$")
+
+        for (line in lines) {
+            val matcher: Matcher = pattern.matcher(line)
+            if (matcher.find()) {
+                val part1 = matcher.group(1).trim { it <= ' ' }
+                val part2 = matcher.group(2).trim { it <= ' ' }
+                return Pair(part1, part2)
+            } else {
+                return null
+            }
+        }
+        return null
     }
 }

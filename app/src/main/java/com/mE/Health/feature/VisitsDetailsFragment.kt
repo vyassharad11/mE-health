@@ -5,15 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.databinding.VisitsDetailFragmentBinding
+import com.mE.Health.feature.adapter.ConditionVitalAdapter
+import com.mE.Health.feature.adapter.VisitAllergyAdapter
+import com.mE.Health.feature.adapter.VisitConditionAdapter
+import com.mE.Health.feature.adapter.VisitMedicationAdapter
+import com.mE.Health.feature.adapter.VisitProcedureAdapter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ConditionDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -23,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class VisitsDetailsFragment : BaseFragment() {
 
     private lateinit var binding: VisitsDetailFragmentBinding
+    private val viewModel: ConditionDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +44,7 @@ class VisitsDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        observeData()
         initHeader()
         initView()
     }
@@ -52,9 +62,21 @@ class VisitsDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.VISITS,detail.description!!,detail.createdAt?.toDisplayDate()!!)
+            setUserSelectedDetails(
+                detail.id,
+                Constants.VISITS,
+                detail.description!!,
+                detail.createdAt?.toDisplayDate()!!
+            )
 
             binding.apply {
+                viewModel.getPractitionerOrganizationName(detail.id)
+                viewModel.getConditionByEncounterId(detail.id)
+                viewModel.getProcedureDataByEncounterId(detail.id)
+                viewModel.getMedicationByEncounterId(detail.id)
+                viewModel.getAllergyDataByEncounterId(detail.id)
+
+                tvVisitId.text = detail.id.uppercase()
                 tvType.text = detail.type_display
                 tvStatus.text = detail.status?.capitalFirstChar()
                 generateShareMessage(detail)
@@ -73,6 +95,61 @@ class VisitsDetailsFragment : BaseFragment() {
         }
         binding.layoutSyncButton.llShareData.setOnClickListener {
             shareRecord(message = shareMessage)
+        }
+    }
+
+    private fun observeData() {
+        viewModel.practitionerData.observe(viewLifecycleOwner) {
+            binding.tvPractitionerName.text = it.first
+            binding.tvOrganizationName.text = it.second
+        }
+        viewModel.conditionData.observe(viewLifecycleOwner) {
+            if (it != null && it.isNotEmpty()) {
+                binding.tvConditionTitle.text = "Conditions (${it.size})"
+                binding.rvCondition.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                val adapter = VisitConditionAdapter(requireActivity())
+                adapter.itemList = it
+                binding.rvCondition.adapter = adapter
+            } else {
+                binding.cvCondition.visibility = View.GONE
+            }
+        }
+        viewModel.procedureData.observe(viewLifecycleOwner) {
+            if (it != null && it.isNotEmpty()) {
+                binding.tvProcedureTitle.text = "Procedures (${it.size})"
+                binding.rvProcedure.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                val adapter = VisitProcedureAdapter(requireActivity())
+                adapter.itemList = it
+                binding.rvProcedure.adapter = adapter
+            } else {
+                binding.cvProcedure.visibility = View.GONE
+            }
+        }
+        viewModel.medicationData.observe(viewLifecycleOwner) {
+            if (it != null && it.isNotEmpty()) {
+                binding.tvMedicationTitle.text = "Medications (${it.size})"
+                binding.rvMedication.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                val adapter = VisitMedicationAdapter(requireActivity())
+                adapter.itemList = it
+                binding.rvMedication.adapter = adapter
+            } else {
+                binding.cvMedication.visibility = View.GONE
+            }
+        }
+        viewModel.allergyData.observe(viewLifecycleOwner) {
+            if (it != null && it.isNotEmpty()) {
+                binding.tvAllergyTitle.text = "Allergies (${it.size})"
+                binding.rvAllergy.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                val adapter = VisitAllergyAdapter(requireActivity())
+                adapter.itemList = it
+                binding.rvAllergy.adapter = adapter
+            } else {
+                binding.cvAllergy.visibility = View.GONE
+            }
         }
     }
 
