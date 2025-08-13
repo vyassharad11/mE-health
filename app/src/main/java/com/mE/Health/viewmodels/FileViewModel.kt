@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mE.Health.data.model.Imaging
+import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.data.repository.MockRepository
 import com.mE.Health.repository.ProviderRepository
@@ -27,6 +29,9 @@ class FileViewModel @Inject constructor(
     private val _userSavedFileList = MutableLiveData<List<UserSavedFile>>()
     val userSavedFileList: LiveData<List<UserSavedFile>> = _userSavedFileList
 
+    private val _observationByEncounterId = MutableLiveData<HashMap<String, String>>()
+    val observationData: LiveData<HashMap<String, String>> = _observationByEncounterId
+
     fun getUserSavedFileList(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _userSavedFileList.postValue(
@@ -44,6 +49,16 @@ class FileViewModel @Inject constructor(
     fun deleteFile(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             mockRepository.deleteFile(id, appSession.getUserId())
+        }
+    }
+
+    fun getOrganizationNameByEncounterId(imagingList: List<Imaging>?) {
+        val resultMap = HashMap<String, String>()
+        viewModelScope.launch(Dispatchers.IO) {
+            for (item in imagingList!!) {
+                resultMap[item.encounterId!!] = mockRepository.getOrganizationNameByEncounterId(item.encounterId!!)!!
+            }
+            _observationByEncounterId.postValue(resultMap)
         }
     }
 }

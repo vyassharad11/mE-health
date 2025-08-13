@@ -70,6 +70,7 @@
                 android:textSize="@dimen/sp_12" />
 
             <TextView
+                android:id="@+id/tvPatientName"
                 style="@style/textStyleRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,11 +81,11 @@
 
 
             <TextView
+                android:id="@+id/tvDescription"
                 style="@style/textStyleRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
-                android:text="Annual Check-up"
                 android:textColor="@color/color_878787"
                 android:textSize="@dimen/sp_12" />
 

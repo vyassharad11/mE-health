@@ -116,6 +116,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private var imagingAdapter: MyHealthImagingAdapter? = null
     private var recordVaultAdapter: MyHealthUploadDocAdapter? = null
     private val recordVaultViewModel: FileViewModel by viewModels()
+    private var resultMap = HashMap<String, String>()
 
 
     override fun onCreateView(
@@ -277,6 +278,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         imagingList = ArrayList()
         imagingList = mockViewModel.imagingList.value
 
+        recordVaultViewModel.getOrganizationNameByEncounterId(imagingList)
     }
 
     private fun addTextChangedListener() {
@@ -930,6 +932,11 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                 }
             }
         }
+
+        recordVaultViewModel.observationData.observe(viewLifecycleOwner) {
+            resultMap = HashMap<String, String>()
+            resultMap = it
+        }
     }
 
     private fun setUploadDocumentData() {
@@ -990,7 +997,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setImagingData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_imagings)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        imagingAdapter = MyHealthImagingAdapter(requireActivity())
+        imagingAdapter = MyHealthImagingAdapter(requireActivity(), resultMap)
         imagingAdapter?.itemList = imagingList
         binding.rvList.adapter = imagingAdapter
         imagingAdapter?.apply {

@@ -12,7 +12,7 @@ import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.toDisplayDate
 import com.mE.Health.utility.toFormattedDate
 
-class MyHealthImagingAdapter(private val mContext: Context) :
+class MyHealthImagingAdapter(private val mContext: Context, val resultMap : HashMap<String, String>) :
     RecyclerView.Adapter<MyHealthImagingAdapter.MyViewHolder>() {
 
     var itemList: List<Imaging>? = ArrayList()
@@ -49,6 +49,7 @@ class MyHealthImagingAdapter(private val mContext: Context) :
                 tvDescription.text = item.description
                 tvDate.text = item.started?.toDisplayDate()
                 tvStatus.text = item.status
+                tvOrganizationName.text = resultMap[it.encounterId]
             }
             val statusDetail = Utilities.getLabUIStatus(mContext, it.status ?: "")
             holder.binding.tvStatus.apply {

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
@@ -13,6 +14,7 @@ import com.mE.Health.data.model.MedicationCode
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.ReasonCode
+import com.mE.Health.data.model.Vaccine
 import com.mE.Health.data.model.Value
 import com.mE.Health.databinding.MedicationDetailFragmentBinding
 import com.mE.Health.utility.Constants
@@ -21,6 +23,7 @@ import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.formatIntoPrettyDate
 import com.mE.Health.utility.fromJson
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ConditionDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -30,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MedicationDetailsFragment : BaseFragment() {
 
     private lateinit var binding: MedicationDetailFragmentBinding
+    private val viewModel: ConditionDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,14 +46,15 @@ class MedicationDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        observeData()
         initHeader()
         setDetails()
     }
 
     private fun initHeader() {
         setHeaderBackProperties(binding.toolbar.ivBack)
-        setHeaderUploadProperties(binding.toolbar.ivSetting,true)
-        setHeaderTitleProperties(getString(R.string.medication),binding.toolbar.tvTitle,true)
+        setHeaderUploadProperties(binding.toolbar.ivSetting, true)
+        setHeaderTitleProperties(getString(R.string.medication), binding.toolbar.tvTitle, true)
     }
 
     private fun setDetails() {
@@ -59,7 +64,12 @@ class MedicationDetailsFragment : BaseFragment() {
                 binding.userSavedFileLayout.rvFile,
                 binding.userSavedFileLayout.llFileLayout
             )
-            setUserSelectedDetails(detail.id, Constants.MEDICATIONS,detail.medicationCode_display!!,detail.authoredOn?.toDisplayDate()!!)
+            setUserSelectedDetails(
+                detail.id,
+                Constants.MEDICATIONS,
+                detail.medicationCode_display!!,
+                detail.authoredOn?.toDisplayDate()!!
+            )
 
             binding.tvMedicationDisplay.text = detail.medicationCode_display
             binding.tvMedicationId.text =
@@ -68,6 +78,10 @@ class MedicationDetailsFragment : BaseFragment() {
                 fromJson(detail.dosageInstruction, DosageInstruction::class.java).text
             binding.tvReason.text = fromJson(detail.reasonCode, ReasonCode::class.java).display
             binding.tvDate.text = detail.authoredOn?.toDisplayDate()
+
+            viewModel.getPractitionerOrganizationName(detail.encounterId!!)
+            viewModel.getFirstVisitDataByEncounterId(detail.encounterId!!)
+
             binding.tvStatus.apply {
                 text = detail.status?.capitalFirstChar()
                 val statusDetail = Utilities.getLabUIStatus(requireActivity(), detail.status ?: "")
@@ -79,6 +93,22 @@ class MedicationDetailsFragment : BaseFragment() {
 
         binding.layoutSyncButton.llShareData.setOnClickListener {
             shareRecord(message = shareMessage)
+        }
+    }
+
+    private fun observeData() {
+        viewModel.practitionerData.observe(viewLifecycleOwner) {
+            binding.tvPractitionerName.text = it.first
+            binding.tvOrganizationName.text = it.second
+        }
+
+        viewModel.encounterObjectData.observe(viewLifecycleOwner) {
+            val statusDetail =
+                Utilities.getVisitUIStatus(requireActivity(), it.first.status ?: "")
+            binding.rtvVisitStatus.text = it.first.status?.capitalFirstChar()
+            binding.rtvVisitStatus.setTextColor(statusDetail.first)
+            binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
+            binding.tvVisitDate.text =getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
         }
     }
 
@@ -95,7 +125,12 @@ class MedicationDetailsFragment : BaseFragment() {
                     "Date\n" +
                     "${detail.authoredOn?.toDisplayDate()}\n\n" +
                     "Details\n" +
-                    "Medication ID : ${fromJson(detail.medicationCode, MedicationCode::class.java).code}\n" +
+                    "Medication ID : ${
+                        fromJson(
+                            detail.medicationCode,
+                            MedicationCode::class.java
+                        ).code
+                    }\n" +
                     "Label Field Notes : Take with food\n" +
                     "Dosage Instruction\n" +
                     "${fromJson(detail.dosageInstruction, DosageInstruction::class.java).text}\n" +

@@ -60,7 +60,6 @@
                                 style="@style/textStyleSemiBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="COVID-19 Booster"
                                 android:layout_marginRight="@dimen/dp_5"
                                 android:layout_alignParentLeft="true"
                                 android:layout_toStartOf="@+id/tvStatus"
@@ -87,15 +86,16 @@
 
 
                         <TextView
+                            android:id="@+id/tvPatientName"
                             style="@style/textStyleRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_10"
-                            android:text="Sarah Parker"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_14" />
 
                         <TextView
+                            android:id="@+id/tvDescription"
                             style="@style/textStyleRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -137,6 +137,7 @@
                             android:textSize="@dimen/sp_18" />
 
                         <com.mE.Health.utility.roundview.RoundTextView
+                            android:id="@+id/rtvVisitStatus"
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -154,12 +155,11 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/tvRecordedDate"
+                        android:id="@+id/tvVisitDate"
                         style="@style/textStyleRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_5"
-                        android:text="Recorded Date: 06/11/2025"
                         android:textColor="@color/text_color_primary"
                         android:textSize="@dimen/sp_17" />
 
@@ -199,10 +199,10 @@
 
 
                     <TextView
+                        android:id="@+id/tvImmunizationId"
                         style="@style/textStyleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="#IMM78901"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:textColor="@color/text_color_primary"
@@ -227,10 +227,10 @@
 
 
                     <TextView
+                        android:id="@+id/tvOrganizationName"
                         style="@style/textStyleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Apollo Hospital"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:textColor="@color/text_color_primary"
@@ -255,10 +255,10 @@
 
 
                     <TextView
+                        android:id="@+id/tvPractitionerName"
                         style="@style/textStyleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dr. Sarah Johnson"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:textColor="@color/text_color_primary"

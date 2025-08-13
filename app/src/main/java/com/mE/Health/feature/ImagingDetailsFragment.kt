@@ -5,14 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mE.Health.R
 import com.mE.Health.data.model.DetailSingleton
 import com.mE.Health.data.model.Imaging
+import com.mE.Health.data.model.Performer
 import com.mE.Health.databinding.ImagingDetailFragmentBinding
+import com.mE.Health.feature.adapter.VisitConditionAdapter
+import com.mE.Health.feature.adapter.VisitProcedureAdapter
 import com.mE.Health.utility.Constants
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
+import com.mE.Health.utility.openCloseTime
 import com.mE.Health.utility.toDisplayDate
+import com.mE.Health.viewmodels.ConditionDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -22,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ImagingDetailsFragment : BaseFragment() {
 
     private lateinit var binding: ImagingDetailFragmentBinding
+    private val viewModel: ConditionDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +44,7 @@ class ImagingDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBottomNavigationVisibility(requireActivity())
+        observeData()
         initHeader()
         initView()
     }
@@ -53,8 +64,26 @@ class ImagingDetailsFragment : BaseFragment() {
             )
             val title = "${detail.modality_display} (${detail.modality_code})"
             setUserSelectedDetails(detail.id, Constants.IMAGING,title,detail.started?.toDisplayDate()!!)
+            viewModel.getPractitionerOrganizationName(detail.encounterId!!)
+
+            val datTimePair = openCloseTime(detail.started, detail.started)
+
+            viewModel.getConditionByEncounterId(detail.id)
+            viewModel.getProcedureDataByEncounterId(detail.id)
+            viewModel.getFirstVisitDataByEncounterId(detail.encounterId)
+
+            val performerList: List<Performer> =
+                Gson().fromJson(detail.performer, object : TypeToken<ArrayList<Performer?>?>() {}.type)
 
             binding.apply {
+                if (performerList.isNotEmpty()){
+                    tvPerformerName.text = performerList[0].display
+                }
+
+                tvImagingDate.text = datTimePair.first
+                tvImagingTime.text = datTimePair.second
+
+                tvImagingId.text = "#${detail.id}".uppercase()
                 tvName.text = title
                 tvDescription.text = detail.description
                 tvDate.text = detail.started.toDisplayDate()
@@ -74,6 +103,49 @@ class ImagingDetailsFragment : BaseFragment() {
 
         binding.layoutSyncButton.llShareData.setOnClickListener {
             shareRecord(message = shareMessage)
+        }
+    }
+
+    private fun observeData() {
+        viewModel.practitionerData.observe(viewLifecycleOwner) {
+            binding.tvPractitionerName.text = it.first
+            binding.tvOrganizationName.text = it.second
+            binding.tvHospitalName.text = it.second
+        }
+
+        viewModel.conditionData.observe(viewLifecycleOwner) {
+            if (it != null && it.isNotEmpty()) {
+                binding.tvConditionTitle.text = "Conditions (${it.size})"
+                binding.rvCondition.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                val adapter = VisitConditionAdapter(requireActivity())
+                adapter.itemList = it
+                binding.rvCondition.adapter = adapter
+            } else {
+                binding.cvCondition.visibility = View.GONE
+            }
+        }
+
+        viewModel.procedureData.observe(viewLifecycleOwner) {
+            if (it != null && it.isNotEmpty()) {
+                binding.tvProcedureTitle.text = "Procedures (${it.size})"
+                binding.rvProcedure.layoutManager =
+                    LinearLayoutManager(requireActivity())
+                val adapter = VisitProcedureAdapter(requireActivity())
+                adapter.itemList = it
+                binding.rvProcedure.adapter = adapter
+            } else {
+                binding.cvProcedure.visibility = View.GONE
+            }
+        }
+
+        viewModel.encounterObjectData.observe(viewLifecycleOwner) {
+            val statusDetail =
+                Utilities.getVisitUIStatus(requireActivity(), it.first.status ?: "")
+            binding.rtvVisitStatus.text = it.first.status?.capitalFirstChar()
+            binding.rtvVisitStatus.setTextColor(statusDetail.first)
+            binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
+            binding.tvVisitDate.text =getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
         }
     }
 

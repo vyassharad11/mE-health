@@ -11,7 +11,9 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.mE.Health.data.model.Immunization
+import com.mE.Health.data.model.Vaccine
 import com.mE.Health.databinding.ItemMyHealthImmunizationBinding
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
@@ -69,6 +71,8 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
                     ClickState.DETAIL
                 )
             }
+            val reasonObject = Gson().fromJson(it.vaccineCode, Vaccine::class.java)
+            holder.binding.tvDescription.text = reasonObject?.display
             holder.binding.tvStatus.text = it.status?.capitalFirstChar()
             Utilities.getProcedureUIStatus(mContext, it.status ?: "").let {
                 holder.binding.tvStatus.setTextColor(it.first)

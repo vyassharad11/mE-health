@@ -134,7 +134,8 @@ data class Immunization(
     val patientId: String?,
     val encounterId: String?,
     val createdAt: String?,
-    val updatedAt: String?
+    val updatedAt: String?,
+    val vaccineCode: String?
 )
 
 @Entity(tableName = "medication_request")
@@ -163,6 +164,11 @@ data class MedicationCode(
 
 data class DosageInstruction(
     val text: String?
+)
+
+data class Vaccine(
+    val code: String?,
+    val display: String?
 )
 
 @Entity(tableName = "observation")
@@ -333,7 +339,8 @@ data class Imaging(
     val reasonCode: String?,
     val procedureCode_display: String?,
     val performer: String?,
-    val note: String?
+    val note: String?,
+    val encounterId: String?
 )
 
 @Entity(tableName = "user_saved_file")
@@ -348,4 +355,10 @@ data class UserSavedFile(
     val file_path: String,
     val category_date: String,
     val upload_date: String
+)
+
+// Note
+data class Performer(
+    val reference: String?,
+    val display: String?
 )

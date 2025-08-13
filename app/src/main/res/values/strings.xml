@@ -228,6 +228,7 @@
     <string name="mm_dd_yyyy">MM-DD-YYYY</string>
     <string name="status_title">Clinical Status:</string>
     <string name="record_date_with_value">Recorded Date: %1$s</string>
+    <string name="performer">Performer</string>
 
 </resources>
 

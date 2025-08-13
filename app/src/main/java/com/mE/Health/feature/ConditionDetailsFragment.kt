@@ -105,7 +105,8 @@ class ConditionDetailsFragment : BaseFragment(), OnClickListener {
                     tvStatus.delegate.backgroundColor = it.second
                 }
                 tvOnsetDate.text = detail.onsetDate?.toDisplayDate()
-                tvRecordedDate.text = detail.recordedDate?.toDisplayDate()
+                tvRecordedDate.text = detail.recordedDate.toDisplayDate()
+                tvConditionId.text = "#"+detail.id.uppercase()
             }
             generateShareMessage(detail)
         }

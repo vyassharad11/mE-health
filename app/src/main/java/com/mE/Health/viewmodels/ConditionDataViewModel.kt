@@ -10,6 +10,7 @@ import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Patient
 import com.mE.Health.data.model.Procedure
 import com.mE.Health.data.repository.MockRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,6 +51,8 @@ class ConditionDataViewModel @Inject constructor(
     private val _allergyData = MutableLiveData<List<AllergyIntolerance>>()
     val allergyData: LiveData<List<AllergyIntolerance>> = _allergyData
 
+    private val _patientDetail = MutableLiveData<Patient>()
+    val patientDetail: LiveData<Patient> = _patientDetail
 
     fun getObservationMapByEncounterId(encounterId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -157,6 +160,12 @@ class ConditionDataViewModel @Inject constructor(
     fun getAllergyDataByEncounterId(encounterId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _allergyData.postValue(repository.getAllergyDataByEncounterId(encounterId))
+        }
+    }
+
+    fun getPatientDetail(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _patientDetail.postValue(repository.getPatientDetail(id))
         }
     }
 }
