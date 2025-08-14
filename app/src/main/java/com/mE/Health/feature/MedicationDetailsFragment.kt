@@ -72,8 +72,7 @@ class MedicationDetailsFragment : BaseFragment() {
             )
 
             binding.tvMedicationDisplay.text = detail.medicationCode_display
-            binding.tvMedicationId.text =
-                fromJson(detail.medicationCode, MedicationCode::class.java).code
+            binding.tvMedicationId.text = detail.id.uppercase()
             binding.tvDosageInstruction.text =
                 fromJson(detail.dosageInstruction, DosageInstruction::class.java).text
             binding.tvReason.text = fromJson(detail.reasonCode, ReasonCode::class.java).display

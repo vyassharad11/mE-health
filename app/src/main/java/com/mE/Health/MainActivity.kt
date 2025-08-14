@@ -3,7 +3,6 @@ package com.mE.Health
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.mE.Health.databinding.ActivityMainBinding
-import com.mE.Health.feature.LoginFragment
 import com.mE.Health.feature.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 

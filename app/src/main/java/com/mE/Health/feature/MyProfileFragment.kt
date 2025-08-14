@@ -55,6 +55,8 @@ class MyProfileFragment : BaseFragment() {
     private fun initView() {
         binding.ivToggle.setOnClickListener {
             status = !status
+            appSession.isMarried = status
+            setAnniversaryCardVisibility()
             binding.ivToggle.setImageResource(
                 if (status) R.drawable.toggle_on else R.drawable.toggle_off
             )
@@ -62,7 +64,6 @@ class MyProfileFragment : BaseFragment() {
 
         binding.anniversaryCard.setOnClickListener {
             showAnniversaryDatePicker()
-
         }
     }
 
@@ -84,7 +85,8 @@ class MyProfileFragment : BaseFragment() {
                 if (data.isMarried == true) R.drawable.toggle_on else R.drawable.toggle_off
             )
             status = data.isMarried == true
-
+            appSession.isMarried = status
+            setAnniversaryCardVisibility()
         }
 
         viewModel.error.observe(viewLifecycleOwner) {
@@ -101,15 +103,25 @@ class MyProfileFragment : BaseFragment() {
             { _, year, month, dayOfMonth ->
                 val selectedDate = String.format("%02d/%02d/%04d", month + 1, dayOfMonth, year)
                 binding.tvAnniversary.text = selectedDate
+                appSession.anniversaryDate = selectedDate
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
-
+        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
         datePickerDialog.setCanceledOnTouchOutside(true)
         datePickerDialog.show()
     }
 
-
+    private fun setAnniversaryCardVisibility() {
+        if (appSession.isMarried) {
+            binding.ivToggle.setImageResource(R.drawable.toggle_on)
+            binding.anniversaryCard.visibility = View.VISIBLE
+        } else {
+            binding.ivToggle.setImageResource(R.drawable.toggle_off)
+            binding.anniversaryCard.visibility = View.GONE
+        }
+        binding.tvAnniversary.text = appSession.anniversaryDate
+    }
 }

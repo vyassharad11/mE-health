@@ -82,11 +82,9 @@ fun String.capitalFirstChar(): String {
 
 fun String.formatIntoPrettyDate(): String {
     val zonedDateTime = ZonedDateTime.parse(this)
-    val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault())
-
     val outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mm a")
 
-    return localDateTime.format(outputFormatter)
+    return zonedDateTime.format(outputFormatter)
 }
 
 

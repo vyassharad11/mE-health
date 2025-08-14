@@ -57,4 +57,17 @@ class AppSession @Inject constructor(
         prefsEditor?.putString(key, value)
         prefsEditor?.apply()
     }
+
+    var isMarried: Boolean
+        get() = sharedPref.getBoolean("MarriedStatus", false)
+        set(status) {
+            sharedPref.edit { putBoolean("MarriedStatus", status) }
+        }
+
+
+    var anniversaryDate: String
+        get() = sharedPref.getString("anniversaryDate", "")!!
+        set(date) {
+            sharedPref.edit { putString("anniversaryDate", date) }
+        }
 }

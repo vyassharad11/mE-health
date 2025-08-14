@@ -64,19 +64,46 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tvMedicationDisplay"
-                                style="@style/textStyleBold"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/text_color_primary"
-                                android:textSize="@dimen/sp_18" />
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <TextView
+                                    android:id="@+id/tvMedicationDisplay"
+                                    style="@style/textStyleBold"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toStartOf="@+id/tvStatus"
+                                    android:textColor="@color/text_color_primary"
+                                    android:textSize="@dimen/sp_18" />
+
+                                <com.mE.Health.utility.roundview.RoundTextView
+                                    android:id="@+id/tvStatus"
+                                    style="@style/textStyleSemiBold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginRight="@dimen/dp_10"
+                                    android:layout_alignParentRight="true"
+                                    android:paddingHorizontal="@dimen/dp_20"
+                                    android:paddingVertical="@dimen/dp_5"
+                                    android:text="Active"
+                                    android:textColor="@color/color_06C270"
+                                    android:textSize="@dimen/sp_8"
+                                    app:rv_backgroundColor="@color/color_A06C270"
+                                    app:rv_isRadiusHalfHeight="true" />
+
+
+                            </RelativeLayout>
+
 
                             <TextView
                                 style="@style/textStyleRegular"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_15"
+                                android:visibility="gone"
                                 android:textColor="@color/text_color_primary"
                                 android:textSize="@dimen/sp_14" />
 
@@ -89,22 +116,6 @@
                                 android:textColor="@color/text_color_primary"
                                 android:textSize="@dimen/sp_14" />
                         </LinearLayout>
-
-                        <com.mE.Health.utility.roundview.RoundTextView
-                            android:id="@+id/tvStatus"
-                            style="@style/textStyleSemiBold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:paddingHorizontal="@dimen/dp_20"
-                            android:paddingVertical="@dimen/dp_5"
-                            android:text="Active"
-                            android:textColor="@color/color_06C270"
-                            android:textSize="@dimen/sp_8"
-                            app:rv_backgroundColor="@color/color_A06C270"
-                            app:rv_isRadiusHalfHeight="true" />
-
 
                     </LinearLayout>
 
@@ -184,15 +195,16 @@
                     android:orientation="vertical"
                     android:padding="@dimen/sp_12">
 
-
                     <RelativeLayout
                         android:layout_width="match_parent"
+                        android:paddingVertical="@dimen/dp_8"
                         android:layout_height="wrap_content">
 
                         <TextView
                             style="@style/textStyleBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:text="@string/medication_id"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_18" />
@@ -202,6 +214,7 @@
                             style="@style/textStyleSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_alignParentRight="true"
                             android:textColor="@color/text_color_primary"
                             android:textSize="@dimen/sp_13" />
@@ -210,6 +223,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_marginTop="@dimen/dp_6">
 
                         <TextView
