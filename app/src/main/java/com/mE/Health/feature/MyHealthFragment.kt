@@ -64,7 +64,6 @@ import com.mE.Health.utility.Constants.PROCEDURES
 import com.mE.Health.utility.Constants.RECORD_VAULT
 import com.mE.Health.utility.Constants.VISITS
 import com.mE.Health.utility.Constants.VITALS
-import com.mE.Health.utility.DialogOK
 import com.mE.Health.utility.FilterItem
 import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
@@ -116,7 +115,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private var imagingAdapter: MyHealthImagingAdapter? = null
     private var recordVaultAdapter: MyHealthUploadDocAdapter? = null
     private val recordVaultViewModel: FileViewModel by viewModels()
-    private var resultMap = HashMap<String, String>()
+    private var imagingOrganizationMap = HashMap<String, String>()
+    private var appointmentOrganizationMap = HashMap<String, String>()
 
 
     override fun onCreateView(
@@ -278,7 +278,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         imagingList = ArrayList()
         imagingList = mockViewModel.imagingList.value
 
-        recordVaultViewModel.getOrganizationNameByEncounterId(imagingList)
+        recordVaultViewModel.getOrganizationNameByEncounterId(imagingList!!,appointmentList!!)
     }
 
     private fun addTextChangedListener() {
@@ -686,7 +686,8 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setAppointmentData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_appointments)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        appointmentAdapter = MyHealthAppointmentAdapter(requireActivity())
+        appointmentAdapter =
+            MyHealthAppointmentAdapter(requireActivity(), appointmentOrganizationMap)
         appointmentAdapter?.itemList = appointmentList
         binding.rvList.adapter = appointmentAdapter
         appointmentAdapter?.apply {
@@ -934,8 +935,10 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         }
 
         recordVaultViewModel.observationData.observe(viewLifecycleOwner) {
-            resultMap = HashMap<String, String>()
-            resultMap = it
+            imagingOrganizationMap = HashMap()
+            appointmentOrganizationMap = HashMap()
+            imagingOrganizationMap = it.first
+            appointmentOrganizationMap = it.second
         }
     }
 
@@ -997,7 +1000,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setImagingData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_imagings)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        imagingAdapter = MyHealthImagingAdapter(requireActivity(), resultMap)
+        imagingAdapter = MyHealthImagingAdapter(requireActivity(), imagingOrganizationMap)
         imagingAdapter?.itemList = imagingList
         binding.rvList.adapter = imagingAdapter
         imagingAdapter?.apply {

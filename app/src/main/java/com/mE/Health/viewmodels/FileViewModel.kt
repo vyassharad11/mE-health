@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.Imaging
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.UserSavedFile
@@ -29,8 +30,8 @@ class FileViewModel @Inject constructor(
     private val _userSavedFileList = MutableLiveData<List<UserSavedFile>>()
     val userSavedFileList: LiveData<List<UserSavedFile>> = _userSavedFileList
 
-    private val _observationByEncounterId = MutableLiveData<HashMap<String, String>>()
-    val observationData: LiveData<HashMap<String, String>> = _observationByEncounterId
+    private val _observationByEncounterId = MutableLiveData<Pair<HashMap<String, String>, HashMap<String, String>>>()
+    val observationData: LiveData<Pair<HashMap<String, String>, HashMap<String, String>>> = _observationByEncounterId
 
     fun getUserSavedFileList(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,13 +53,17 @@ class FileViewModel @Inject constructor(
         }
     }
 
-    fun getOrganizationNameByEncounterId(imagingList: List<Imaging>?) {
-        val resultMap = HashMap<String, String>()
+    fun getOrganizationNameByEncounterId(imagingList: List<Imaging>, appointmentList: List<Appointment>) {
+        val imagingMap = HashMap<String, String>()
+        val appointmentMap = HashMap<String, String>()
         viewModelScope.launch(Dispatchers.IO) {
-            for (item in imagingList!!) {
-                resultMap[item.encounterId!!] = mockRepository.getOrganizationNameByEncounterId(item.encounterId!!)!!
+            for (item in imagingList) {
+                imagingMap[item.encounterId!!] = mockRepository.getOrganizationNameByEncounterId(item.encounterId)!!
             }
-            _observationByEncounterId.postValue(resultMap)
+            for (item in appointmentList) {
+                appointmentMap[item.encounterId!!] = mockRepository.getOrganizationNameByEncounterId(item.encounterId)!!
+            }
+            _observationByEncounterId.postValue(Pair(imagingMap, appointmentMap))
         }
     }
 }

@@ -13,7 +13,7 @@ import com.mE.Health.utility.Utilities
 import com.mE.Health.utility.capitalFirstChar
 import com.mE.Health.utility.openCloseTime
 
-class MyHealthAppointmentAdapter(private val mContext: Context) :
+class MyHealthAppointmentAdapter(private val mContext: Context, private val resultMap: HashMap<String, String>) :
     RecyclerView.Adapter<MyHealthAppointmentAdapter.MyViewHolder>() {
 
     var itemList: List<Appointment>? = ArrayList()
@@ -49,7 +49,7 @@ class MyHealthAppointmentAdapter(private val mContext: Context) :
             val dateTime = "${datTimePair.first},\n${datTimePair.second}"
             holder.binding.tvAppointmentTime.text = dateTime
             holder.binding.tvName.text = it.practitionerName
-
+            holder.binding.tvOrganizationName.text = resultMap[it.encounterId]
             holder.binding.tvReadMore.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,

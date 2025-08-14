@@ -140,7 +140,8 @@ class AppointmentDetailsFragment : BaseFragment() {
             binding.rtvVisitStatus.text = it.first.status?.capitalFirstChar()
             binding.rtvVisitStatus.setTextColor(statusDetail.first)
             binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
-            binding.tvVisitDate.text =getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
+            binding.tvVisitDate.text =
+                getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
             binding.tvSpeciality.text = it.second
         }
     }
