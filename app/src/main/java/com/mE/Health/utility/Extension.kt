@@ -4,16 +4,25 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import com.mE.Health.data.model.ContactInfo
+import com.mE.Health.utility.DateUtils.dateFormatter
+import com.mE.Health.utility.DateUtils.dateTimeFormatter
+import com.mE.Health.utility.DateUtils.formatter
+import com.mE.Health.utility.DateUtils.outputPrettyFormatter
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
+
+object DateUtils {
+    var dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM-dd-yyyy")
+    var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM-dd-yyyy, hh:mm a")
+    val outputPrettyFormatter = DateTimeFormatter.ofPattern("MMM-dd-yyyy 'at' hh:mm a")
+    val formatter = DateTimeFormatter.ofPattern("MMM-dd-yyyy HH:mm:ss")
+}
 
 fun String.extractContactInfo(): ContactInfo {
     val parts = this.split(";")
@@ -33,8 +42,7 @@ fun String.extractContactInfo(): ContactInfo {
 fun String.toFormattedDate(): String {
     return try {
         val zonedDateTime = ZonedDateTime.parse(this)
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        zonedDateTime.format(formatter)
+        zonedDateTime.format(dateFormatter)
     } catch (e: Exception) {
         // In case the date string is not in expected format
         ""
@@ -44,8 +52,7 @@ fun String.toFormattedDate(): String {
 fun String.toDisplayDate(): String {
     return try {
         val zonedDateTime = ZonedDateTime.parse(this)
-        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-        zonedDateTime.format(formatter)
+        zonedDateTime.format(dateFormatter)
     } catch (e: Exception) {
         // In case the date string is not in expected format
         ""
@@ -55,8 +62,7 @@ fun String.toDisplayDate(): String {
 fun String.toDisplayDateTime(): String {
     return try {
         val zonedDateTime = ZonedDateTime.parse(this)
-        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy, hh:mm a", Locale.ENGLISH)
-        zonedDateTime.format(formatter)
+        zonedDateTime.format(dateTimeFormatter)
     } catch (e: Exception) {
         ""
     }
@@ -82,9 +88,7 @@ fun String.capitalFirstChar(): String {
 
 fun String.formatIntoPrettyDate(): String {
     val zonedDateTime = ZonedDateTime.parse(this)
-    val outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mm a")
-
-    return zonedDateTime.format(outputFormatter)
+    return zonedDateTime.format(outputPrettyFormatter)
 }
 
 
@@ -144,6 +148,5 @@ fun String.getCalendarFromString(sdf: SimpleDateFormat): Calendar {
 
 fun getCurrentDateTime(): String {
     val current = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
     return current.format(formatter)
 }

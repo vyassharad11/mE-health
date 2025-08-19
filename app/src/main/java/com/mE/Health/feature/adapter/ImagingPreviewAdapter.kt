@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mE.Health.databinding.ItemImagingPreviewBinding
 
-class ImagingPreviewAdapter(private val mContext: Context) :
+class ImagingPreviewAdapter(private val mContext: Context, private val count: Int) :
     RecyclerView.Adapter<ImagingPreviewAdapter.MyViewHolder>() {
 
     interface OnClickCallback {
@@ -43,6 +43,6 @@ class ImagingPreviewAdapter(private val mContext: Context) :
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return count
     }
 }

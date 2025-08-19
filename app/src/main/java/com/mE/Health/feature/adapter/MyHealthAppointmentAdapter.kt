@@ -48,6 +48,7 @@ class MyHealthAppointmentAdapter(private val mContext: Context, private val resu
             val datTimePair = openCloseTime(it.startTime, it.endTime)
             val dateTime = "${datTimePair.first},\n${datTimePair.second}"
             holder.binding.tvAppointmentTime.text = dateTime
+            holder.binding.tvDescription.text = item.description
             holder.binding.tvName.text = it.practitionerName
             holder.binding.tvOrganizationName.text = resultMap[it.encounterId]
             holder.binding.tvReadMore.setOnClickListener {

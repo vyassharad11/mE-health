@@ -191,6 +191,7 @@ class PractitionerDetailsFragment : BaseFragment(), View.OnClickListener {
             }
 
             R.id.llUpload -> {
+                showUploadDocumentDialog(onFileUploadListener)
             }
         }
     }

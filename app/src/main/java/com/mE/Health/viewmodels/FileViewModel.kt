@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mE.Health.data.model.Appointment
 import com.mE.Health.data.model.Imaging
+import com.mE.Health.data.model.Immunization
 import com.mE.Health.data.model.Observation
 import com.mE.Health.data.model.UserSavedFile
 import com.mE.Health.data.repository.MockRepository
@@ -32,6 +33,9 @@ class FileViewModel @Inject constructor(
 
     private val _observationByEncounterId = MutableLiveData<Pair<HashMap<String, String>, HashMap<String, String>>>()
     val observationData: LiveData<Pair<HashMap<String, String>, HashMap<String, String>>> = _observationByEncounterId
+
+    private val _patientData = MutableLiveData<HashMap<String, String>>()
+    val patientData: LiveData<HashMap<String, String>> = _patientData
 
     fun getUserSavedFileList(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -64,6 +68,16 @@ class FileViewModel @Inject constructor(
                 appointmentMap[item.encounterId!!] = mockRepository.getOrganizationNameByEncounterId(item.encounterId)!!
             }
             _observationByEncounterId.postValue(Pair(imagingMap, appointmentMap))
+        }
+    }
+
+    fun getPatientDetail(list: List<Immunization>) {
+        val patientMap = HashMap<String, String>()
+        viewModelScope.launch(Dispatchers.IO) {
+            for (item in list) {
+                patientMap[item.patientId!!] = mockRepository.getPatientDetail(item.patientId)?.name!!
+            }
+            _patientData.postValue(patientMap)
         }
     }
 }

@@ -35,7 +35,6 @@ class VisitAllergyAdapter(val context: Context) :
         val item = itemList?.get(position)
         item?.let {
             holder.binding.tvDisplayName.text = item.code_display
-            holder.binding.tvTitle.text = "Severity :"
             holder.binding.tvClinicalStatus.text = item.clinicalStatus?.capitalFirstChar()
         }
     }

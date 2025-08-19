@@ -219,6 +219,7 @@
                                     android:textSize="@dimen/sp_14" />
 
                                 <TextView
+                                    android:id="@+id/tvCoverageType"
                                     style="@style/textStyleSemiBold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -246,6 +247,7 @@
                                     android:textSize="@dimen/sp_14" />
 
                                 <TextView
+                                    android:id="@+id/tvPlanId"
                                     style="@style/textStyleSemiBold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"

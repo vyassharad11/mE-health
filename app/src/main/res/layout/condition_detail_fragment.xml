@@ -177,11 +177,11 @@
                                         android:textSize="@dimen/sp_14" />
 
                                     <TextView
+                                        android:id="@+id/tvCategory"
                                         style="@style/textStyleSemiBold"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/dp_2"
-                                        android:text="Chronic"
                                         android:textColor="@color/text_color_primary"
                                         android:textSize="@dimen/sp_16" />
 

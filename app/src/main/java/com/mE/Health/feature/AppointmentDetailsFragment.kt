@@ -68,11 +68,13 @@ class AppointmentDetailsFragment : BaseFragment() {
             binding.apply {
                 viewModel.getFirstVisitDataByEncounterId(detail.encounterId!!)
                 tvDrName.text = detail.practitionerName
+                binding.tvSpeciality.text = detail.practitionerSpecialty
                 tvId.text = "Id: "+detail.id
                 tvDateTime.text = dateTime
                 tvDate.text = datTimePair.first
                 tvTime.text = datTimePair.second
                 tvReason.text = reasonCodeObject.display
+                tvDescription.text = detail.description
 
                 if (detail.status?.lowercase() == getString(R.string.booked).lowercase()) {
                     binding.rtvStatus.apply {
@@ -142,7 +144,6 @@ class AppointmentDetailsFragment : BaseFragment() {
             binding.rtvVisitStatus.delegate.backgroundColor = statusDetail.second
             binding.tvVisitDate.text =
                 getString(R.string.start_date_with_value, it.first.periodStart?.toDisplayDate())
-            binding.tvSpeciality.text = it.second
         }
     }
 

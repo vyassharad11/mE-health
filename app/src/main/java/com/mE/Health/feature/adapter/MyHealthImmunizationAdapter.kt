@@ -24,7 +24,7 @@ enum class ClickState {
     DETAIL, VIEW_PATIENT
 }
 
-class MyHealthImmunizationAdapter(private val mContext: Context) :
+class MyHealthImmunizationAdapter(private val mContext: Context,  private val resultMap: HashMap<String, String>) :
     RecyclerView.Adapter<MyHealthImmunizationAdapter.MyViewHolder>() {
 
     var itemList: List<Immunization>? = ArrayList()
@@ -64,6 +64,7 @@ class MyHealthImmunizationAdapter(private val mContext: Context) :
             spannableStringBuilder.setSpan(StyleSpan(Typeface.BOLD), 15, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             holder.binding.tvAdministeredDate.text = spannableStringBuilder
             holder.binding.tvName.text = it.vaccineCode_display
+            holder.binding.tvPatientName.text = resultMap[it.patientId]
             holder.binding.tvViewDetails.setOnClickListener {
                 onItemClickListener?.onClicked(
                     item,

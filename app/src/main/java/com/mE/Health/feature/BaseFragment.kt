@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -73,6 +74,15 @@ open class BaseFragment : Fragment() {
 
     @Inject
     lateinit var appSession: AppSession
+
+    fun hideKeyboard() {
+        val view = requireActivity().currentFocus
+        if (view != null) {
+            val imm = requireActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
 
     fun replaceFragmentLogin(
         containerViewId: Int,
@@ -583,9 +593,9 @@ open class BaseFragment : Fragment() {
         startActivity(Intent.createChooser(intent, "title"))
     }
 
-    fun setPreviewDetail(rvPreview: RecyclerView) {
+    fun setPreviewDetail(rvPreview: RecyclerView, count: Int) {
         rvPreview.layoutManager = GridLayoutManager(requireActivity(), 2)
-        val previewAdapter = ImagingPreviewAdapter(requireActivity())
+        val previewAdapter = ImagingPreviewAdapter(requireActivity(), count)
         rvPreview.adapter = previewAdapter
         previewAdapter.apply {
             onItemClickListener = object : ImagingPreviewAdapter.OnClickCallback {

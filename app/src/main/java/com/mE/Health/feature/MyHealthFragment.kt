@@ -2,6 +2,7 @@ package com.mE.Health.feature
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
@@ -9,6 +10,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -117,6 +119,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private val recordVaultViewModel: FileViewModel by viewModels()
     private var imagingOrganizationMap = HashMap<String, String>()
     private var appointmentOrganizationMap = HashMap<String, String>()
+    private var immunizationMap = HashMap<String, String>()
 
 
     override fun onCreateView(
@@ -171,6 +174,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
                     myHealthTypeAdapter?.selectedItem = position
                     myHealthTypeAdapter?.notifyDataSetChanged()
                     initFilterUI()
+                    hideKeyboard()
                     when (getTileSelectedType()) {
                         PRACTITIONERS -> {
                             binding.ivFilter.visibility = View.GONE
@@ -279,6 +283,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         imagingList = mockViewModel.imagingList.value
 
         recordVaultViewModel.getOrganizationNameByEncounterId(imagingList!!,appointmentList!!)
+        recordVaultViewModel.getPatientDetail(immunizationList!!)
     }
 
     private fun addTextChangedListener() {
@@ -520,6 +525,15 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
         when (v?.id) {
             R.id.ivSearch -> {
                 binding.rlSearchLayout.visibility = View.VISIBLE
+                binding.etSearch.post {
+                    binding.etSearch.requestFocus()
+                    val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                    imm!!.showSoftInput(
+                        binding.etSearch,
+                        InputMethodManager.SHOW_IMPLICIT
+                    )
+                }
+
                 binding.ivSearch.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity(), R.color.color_FF6605
@@ -529,6 +543,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
 
             R.id.ivSearchCross -> {
                 binding.etSearch.setText("")
+                hideKeyboard()
                 binding.rlSearchLayout.visibility = View.GONE
                 binding.ivSearch.setColorFilter(
                     ContextCompat.getColor(
@@ -870,7 +885,7 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
     private fun setImmunizationData() {
         binding.tvMyHealthType.text = getString(R.string.list_of_immunizations)
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        immunizationAdapter = MyHealthImmunizationAdapter(requireActivity())
+        immunizationAdapter = MyHealthImmunizationAdapter(requireActivity(),immunizationMap)
         immunizationAdapter?.itemList = immunizationList
         binding.rvList.adapter = immunizationAdapter
         immunizationAdapter?.apply {
@@ -939,6 +954,11 @@ class MyHealthFragment : BaseFragment(), View.OnClickListener {
             appointmentOrganizationMap = HashMap()
             imagingOrganizationMap = it.first
             appointmentOrganizationMap = it.second
+        }
+
+       recordVaultViewModel.patientData.observe(viewLifecycleOwner) {
+           immunizationMap = HashMap()
+           immunizationMap = it
         }
     }
 

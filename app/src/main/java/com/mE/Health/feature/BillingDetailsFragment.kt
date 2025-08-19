@@ -61,6 +61,7 @@ class BillingDetailsFragment : BaseFragment() {
 
                 tvCompanyName.text =
                     fromJson(detail.insurance, Insurance::class.java).coverage?.display
+                val data = fromJson(detail.insurance, Insurance::class.java).coverage?.reference
                 Utilities.getVisitUIStatus(requireActivity(), detail.status ?: "").let {
                     tvStatus.apply {
                         text = detail.status?.capitalFirstChar()

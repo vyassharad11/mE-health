@@ -97,9 +97,9 @@ class ImagingDetailsFragment : BaseFragment() {
                 }
             }
             generateShareMessage(detail)
+            setPreviewDetail(binding.rvPreview,detail.numberOfSeries!!)
         }
 
-        setPreviewDetail(binding.rvPreview)
 
         binding.layoutSyncButton.llShareData.setOnClickListener {
             shareRecord(message = shareMessage)

@@ -72,7 +72,7 @@ class ProcedureDetailsFragment : BaseFragment() {
                 }
                 val reasonCodeObject = Gson().fromJson(detail.reasonCode, ReasonCode::class.java)
 
-                tvProcedureId.text = "#${reasonCodeObject.code}"
+                tvProcedureId.text = detail.id.uppercase()
                 tvReason.text = reasonCodeObject.display
             }
         }

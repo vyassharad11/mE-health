@@ -32,20 +32,19 @@
                 android:textSize="@dimen/sp_14" />
 
             <TextView
-                android:id="@+id/tvDate"
-                style="@style/textStyleSemiBold"
+                android:id="@+id/tvAddress"
+                style="@style/textStyleRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_5"
-                android:textColor="@color/color_FF6605"
-                android:textSize="@dimen/sp_13" />
+                android:textColor="@color/text_color_primary"
+                android:textSize="@dimen/sp_12" />
 
         </LinearLayout>
 
         <ImageView
             android:layout_width="@dimen/dp_60"
             android:layout_height="@dimen/dp_60"
-            android:layout_marginStart="@dimen/dp_8"
             android:src="@drawable/ic_user_profile" />
 
     </LinearLayout>

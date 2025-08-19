@@ -157,13 +157,14 @@
                                 android:textSize="@dimen/sp_12" />
 
                             <TextView
+                                android:id="@+id/tvDescription"
                                 style="@style/textStyleRegular"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_5"
                                 android:text="Based on your recent activity and climate,\nhere’s personalized guidance on your daily\nwater intake to stay hydrated and healthy."
                                 android:textColor="@color/text_color_primary"
-                                android:textSize="@dimen/sp_10" />
+                                android:textSize="@dimen/sp_14" />
 
                             <TextView
                                 style="@style/textStyleSemiBold"
@@ -171,6 +172,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_5"
                                 android:text="@string/read_more"
+                                android:visibility="gone"
                                 android:textColor="@color/text_color_orange"
                                 android:textSize="@dimen/sp_13" />
 

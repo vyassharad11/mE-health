@@ -19,6 +19,8 @@ import com.mE.Health.data.model.DiagnosticReport
 import com.mE.Health.data.model.Encounter
 import com.mE.Health.data.model.MedicationRequest
 import com.mE.Health.data.model.Observation
+import com.mE.Health.data.model.Performer
+import com.mE.Health.data.model.ReasonCode
 import com.mE.Health.databinding.ConditionDetailFragmentBinding
 import com.mE.Health.feature.adapter.ConditionLabAdapter
 import com.mE.Health.feature.adapter.ConditionMedicationAdapter
@@ -97,6 +99,9 @@ class ConditionDetailsFragment : BaseFragment(), OnClickListener {
             viewModel.getLabsDataByEncounterId(detail.encounterId)
             viewModel.getVisitDataByEncounterId(detail.encounterId)
             viewModel.getMedicationByEncounterId(detail.encounterId)
+
+            val categoryObject = Gson().fromJson(detail.category, Performer::class.java)
+
             binding.apply {
                 tvName.text = detail.code_display
                 Utilities.getConditionUIStatus(requireActivity(), detail.clinicalStatus ?: "").let {
@@ -107,6 +112,7 @@ class ConditionDetailsFragment : BaseFragment(), OnClickListener {
                 tvOnsetDate.text = detail.onsetDate?.toDisplayDate()
                 tvRecordedDate.text = detail.recordedDate.toDisplayDate()
                 tvConditionId.text = "#"+detail.id.uppercase()
+                tvCategory.text = categoryObject.display
             }
             generateShareMessage(detail)
         }

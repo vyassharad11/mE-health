@@ -340,6 +340,7 @@ data class Imaging(
     val procedureCode_display: String?,
     val performer: String?,
     val note: String?,
+    val numberOfSeries: Int?,
     val encounterId: String?
 )
 
